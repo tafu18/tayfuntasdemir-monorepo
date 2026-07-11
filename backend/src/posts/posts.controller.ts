@@ -19,6 +19,11 @@ export class PostsController {
     return this.postsService.getTrackingList();
   }
 
+  @Get('home')
+  async getHomeData() {
+    return this.postsService.getHomeData();
+  }
+
   @Get('slug/:slug')
   async getBySlug(@Param('slug') slug: string) {
     return this.postsService.findOneBySlug(slug);

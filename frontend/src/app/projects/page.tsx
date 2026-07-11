@@ -129,7 +129,7 @@ export default function Projects() {
     <PageTransition>
       {/* Cover Header */}
       <section className="relative overflow-hidden bg-zinc-900 py-24 sm:py-32 text-center text-white">
-        <div className="absolute inset-0 bg-cover bg-center opacity-40 bg-[url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600&auto=format&fit=crop')]" />
+        <div className="absolute inset-0 bg-cover bg-center opacity-40 bg-[url('/project-bg.jpeg')]" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h1
             initial={{ opacity: 0, y: -10 }}

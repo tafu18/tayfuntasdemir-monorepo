@@ -136,4 +136,47 @@ export class PostsService {
       totalViews,
     };
   }
+
+  async getHomeData(): Promise<any> {
+    const lastThreePosts = await this.postRepository.find({
+      where: { status: 'published' },
+      order: { created_at: 'DESC' },
+      take: 4,
+    });
+
+    const mostReadPosts = await this.postRepository.find({
+      where: { status: 'published' },
+      order: { views: 'DESC' },
+      take: 9,
+    });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const todayViewsRaw = await this.postViewRepository.createQueryBuilder('pv')
+      .select('pv.post_id', 'post_id')
+      .addSelect('COUNT(pv.id)', 'today_views_count')
+      .where('pv.viewed_at >= :today', { today })
+      .groupBy('pv.post_id')
+      .orderBy('today_views_count', 'DESC')
+      .limit(10)
+      .getRawMany();
+
+    const mostReadPostsToday: any[] = [];
+    for (const raw of todayViewsRaw) {
+      const post = await this.postRepository.findOne({ where: { id: raw.post_id, status: 'published' } });
+      if (post) {
+        mostReadPostsToday.push({
+          ...post,
+          today_views_count: parseInt(raw.today_views_count, 10),
+        });
+      }
+    }
+
+    return {
+      lastThreePosts,
+      mostReadPosts,
+      mostReadPostsToday,
+    };
+  }
 }

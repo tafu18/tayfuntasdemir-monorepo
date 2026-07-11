@@ -25,9 +25,6 @@ export default function Header() {
       <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#154667] text-white transition-transform duration-300 group-hover:scale-105">
-            <Code className="h-5 w-5" />
-          </div>
           <span className="font-semibold text-lg tracking-tight text-zinc-900 dark:text-white group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
             Tayfun Taşdemir
           </span>
@@ -66,7 +63,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="ml-4 py-2 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-bold transition-all transform hover:scale-105 shadow-md flex items-center border border-emerald-400/30"
           >
-            <span className="mr-1.5 font-bold">🌙</span>
+            <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-2 object-contain" />
             Vakt-i Huzur
           </a>
         </nav>
@@ -111,9 +108,9 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center py-2.5 px-4 mt-2 bg-emerald-605 hover:bg-emerald-600 text-white rounded-lg font-bold border border-emerald-500/50"
+              className="flex items-center justify-center py-2.5 px-4 mt-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold border border-emerald-500/50"
             >
-              <span className="mr-2">🌙</span>
+              <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-3 object-contain" />
               Vakt-i Huzur'u İndir
             </a>
           </motion.div>
