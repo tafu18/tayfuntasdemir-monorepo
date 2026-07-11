@@ -1,201 +1,205 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
-import { Shield, Zap, EyeOff, ChevronDown, Check, Copy } from 'lucide-react';
+import { Copy, Check, ShieldAlert, Zap, EyeOff, ChevronDown } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
-export default function IpAddressTool() {
-  const [ipv4, setIpv4] = useState('');
-  const [ipv6, setIpv6] = useState('');
-  const [copied4, setCopied4] = useState(false);
-  const [copied6, setCopied6] = useState(false);
+export default function IpAddress() {
+  const [ipv4, setIpv4] = useState('Yükleniyor...');
+  const [ipv6, setIpv6] = useState('Yükleniyor...');
+  const [copiedv4, setCopiedv4] = useState(false);
+  const [copiedv6, setCopiedv6] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   useEffect(() => {
-    // Fetch IPv4 strictly
-    fetch('https://api.ipify.org?format=json')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.ip) {
-          setIpv4(data.ip);
-        }
-      })
-      .catch((err) => {
-        console.error('IPv4 adresi alınamadı:', err);
-        setIpv4('Tespit edilemedi');
-      });
+    // Fetch IPv4
+    const fetchIpv4 = async () => {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        setIpv4(data.ip);
+      } catch (e) {
+        setIpv4('Bulunamadı');
+      }
+    };
 
-    // Fetch IPv6/IPv4 fallback
-    fetch('https://api64.ipify.org?format=json')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.ip) {
-          if (data.ip.includes(':')) {
-            setIpv6(data.ip);
-          } else {
-            setIpv6('Bağlantınız IPv6 desteklemiyor');
-          }
-        }
-      })
-      .catch((err) => {
-        console.error('IPv6 adresi alınamadı:', err);
-        setIpv6('Tespit edilemedi');
-      });
+    // Fetch IPv6
+    const fetchIpv6 = async () => {
+      try {
+        const res = await fetch('https://api6.ipify.org?format=json');
+        const data = await res.json();
+        setIpv6(data.ip);
+      } catch (e) {
+        setIpv6('Desteklenmiyor veya Bulunamadı');
+      }
+    };
+
+    fetchIpv4();
+    fetchIpv6();
   }, []);
 
-  const copyToClipboard = (text: string, type: 'ipv4' | 'ipv6') => {
-    if (!text || text.includes('Tespit') || text.includes('desteklemiy')) return;
-    navigator.clipboard.writeText(text);
-    if (type === 'ipv4') {
-      setCopied4(true);
-      setTimeout(() => setCopied4(false), 2000);
-    } else {
-      setCopied6(true);
-      setTimeout(() => setCopied6(false), 2000);
-    }
+  const copyIp = (text: string, type: 'v4' | 'v6') => {
+    if (!text || text === 'Yükleniyor...' || text.includes('Bulunamadı') || text.includes('Desteklenmiyor')) return;
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'v4') {
+        setCopiedv4(true);
+        setTimeout(() => setCopiedv4(false), 2500);
+      } else {
+        setCopiedv6(true);
+        setTimeout(() => setCopiedv6(false), 2500);
+      }
+    });
   };
 
-  const faqs = [
-    {
-      q: 'IP adresi nedir?',
-      a: 'IP adresi (İnternet Protokolü Adresi), internet veya yerel ağ üzerindeki cihazlara atanan benzersiz bir sayısal etikettir. Tıpkı bir posta adresi gibi, veri paketlerinin doğru hedefe ulaşmasını sağlar. IPv4 (örn. 192.168.1.1) ve IPv6 (örn. 2001:db8::1) olmak üzere iki sürümü vardır.',
-    },
-    {
-      q: 'IPv4 ile IPv6 arasındaki fark nedir?',
-      a: 'IPv4, 32 bitlik adreslerle yaklaşık 4,3 milyar benzersiz adres sunar. IPv6 ise 128 bitlik yapısıyla pratik olarak sınırsız sayıda adres sağlar. İnternet cihazlarının hızlı artışı nedeniyle IPv4 adresleri tükenmekte, dünya giderek IPv6\'ya geçmektedir.',
-    },
-    {
-      q: 'IP adresim neden sürekli değişiyor?',
-      a: 'Çoğu internet servis sağlayıcısı (ISS) "dinamik IP" atar; yani modem yeniden başlatıldığında veya belirli süre geçtikten sonra IP adresiniz değişebilir. Sabit bir IP\'ye ihtiyaç duyuyorsanız ISS\'nizden "statik IP" talep edebilirsiniz.',
-    },
-    {
-      q: 'Bu araç verilerimi saklıyor mu?',
-      a: 'Hayır, mahremiyetiniz bizim için önceliklidir. Bu araç sadece o anki bağlantınız üzerinden tespit edilen adresi size göstermek için çalışır. Hiçbir veri kaydedilmez, loglanmaz veya üçüncü taraflarla paylaşılmaz.',
-    },
-  ];
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
 
   return (
     <PageTransition>
-      <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-brand-blue">
-            IP Sorgulama Aracı
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            IP Adresim <span className="text-brand-dark dark:text-brand-blue">Nedir?</span>
-          </h1>
-          <p className="mt-4 text-zinc-550 dark:text-zinc-400">
-            Cihazınızın IPv4 ve IPv6 adreslerini anında tespit edin, tek tıkla kopyalayın.
-          </p>
-        </header>
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-zinc-950 font-['Plus_Jakarta_Sans',sans-serif] py-12 px-4 relative z-0">
+        
+        {/* Background gradient */}
+        <div className="fixed inset-0 pointer-events-none z-[-1]" style={{
+          background: 'radial-gradient(circle at 0% 0%, rgba(37,99,255,0.03) 0%, transparent 40%), radial-gradient(circle at 100% 100%, rgba(124,58,237,0.03) 0%, transparent 40%)'
+        }}></div>
 
-        <div className="grid grid-cols-1 gap-6">
-          {/* IPv4 Card */}
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-4 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                <span className="h-2.5 w-2.5 rounded-full bg-brand-blue animate-pulse" />
-                <span className="font-bold text-xs uppercase tracking-wider">IPv4 Adresiniz</span>
+        <style dangerouslySetInnerHTML={{__html: `
+          .ip-eyebrow { display: inline-block; background: rgba(37,99,255,0.1); color: #2563ff; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 1.25rem; border-radius: 100px; margin-bottom: 1.5rem; }
+          .ip-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 32px; padding: 2.5rem; box-shadow: 0 20px 50px -12px rgba(0,0,0,0.05); position: relative; z-index: 10; }
+          .dark .ip-card { background: #09090b; border-color: #27272a; }
+          .ip-card::before { content: ''; position: absolute; inset: -1px; border-radius: 33px; padding: 2px; background: linear-gradient(135deg, #2563ff, #7c3aed); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.3; pointer-events: none; }
+          
+          .ip-row { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+          .ip-label { font-size: 0.85rem; font-weight: 700; color: #64748b; text-transform: uppercase; tracking-wider; display: flex; align-items: center; gap: 0.5rem; }
+          .dark .ip-label { color: #a1a1aa; }
+          
+          .pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); animation: pulse-anim 2s infinite; }
+          @keyframes pulse-anim { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+          
+          .ip-flex { display: flex; align-items: center; gap: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.75rem; border-radius: 20px; transition: all 0.3s ease; }
+          .dark .ip-flex { background: #18181b; border-color: #27272a; }
+          .ip-flex:hover { border-color: #2563ff; background: #fff; box-shadow: 0 10px 30px -5px rgba(37,99,255,0.1); }
+          .dark .ip-flex:hover { background: #000; box-shadow: 0 10px 30px -5px rgba(37,99,255,0.2); }
+          
+          .ip-display { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 3vw, 1.75rem); font-weight: 700; color: #0f172a; padding-left: 1rem; overflow-wrap: break-word; word-break: break-all; }
+          .dark .ip-display { color: #f8fafc; }
+          
+          .copy-btn { background: #2563ff; color: #ffffff; border: none; padding: 0.75rem 1.5rem; border-radius: 14px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-size: 0.9rem; }
+          .copy-btn:hover { background: #1d4fd8; transform: translateY(-1px); box-shadow: 0 8px 16px -4px rgba(37,99,255,0.4); }
+          .copy-btn.copied { background: #10b981; box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4); }
+          
+          .info-strip { display: flex; justify-content: center; gap: 2rem; margin-top: 3rem; flex-wrap: wrap; }
+          .info-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 600; color: #64748b; }
+          .dark .info-item { color: #a1a1aa; }
+          
+          .faq-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; transition: all 0.3s ease; }
+          .dark .faq-card { background: #09090b; border-color: #27272a; }
+          .faq-card:hover { border-color: #2563ff; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+          .faq-card.active { border-color: rgba(37,99,255,0.1); background: #fbfcfe; }
+          .dark .faq-card.active { border-color: #27272a; background: #18181b; }
+          
+          .faq-trigger { width: 100%; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; text-align: left; font-weight: 700; font-size: 1rem; color: #0f172a; font-family: 'Outfit', sans-serif; }
+          .dark .faq-trigger { color: #f8fafc; }
+          .faq-icon { color: #2563ff; transition: transform 0.3s ease; }
+          .faq-card.active .faq-icon { transform: rotate(180deg); }
+          
+          .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+          .faq-card.active .faq-content { max-height: 500px; }
+          .faq-body { padding: 0 2rem 2rem 2rem; color: #64748b; font-size: 0.95rem; line-height: 1.7; }
+          .dark .faq-body { color: #a1a1aa; }
+          
+          @media (max-width: 640px) { .ip-flex { flex-direction: column; padding: 1.25rem; align-items: stretch; } .ip-display { padding: 0 0 1rem 0; text-align: center; font-size: 1.1rem; padding-left: 0; } .copy-btn { justify-content: center; width: 100%; } }
+        `}} />
+
+        <div className="max-w-[800px] mx-auto w-full">
+          
+          <header className="text-center mb-16 mt-4">
+            <span className="ip-eyebrow">IP Sorgulama Aracı</span>
+            <h1 className="font-['Outfit'] font-extrabold text-[clamp(2.5rem,6vw,4rem)] tracking-tight leading-[1.1] mb-5 text-slate-900 dark:text-white">
+              IP Adresim <span className="text-[#2563ff]">Nedir?</span>
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-[1.1rem] max-w-[500px] mx-auto">
+              Dijital imzanızı anında görün, tek tıkla panonuza kopyalayın.
+            </p>
+          </header>
+
+          <section className="ip-card mb-24">
+            {/* IPv4 Row */}
+            <div className="ip-row">
+              <div className="ip-label">
+                <span className="pulse-dot"></span>
+                <span>IPv4 Adresiniz</span>
+              </div>
+              <div className="ip-flex">
+                <div className="ip-display">{ipv4}</div>
+                <button 
+                  className={`copy-btn ${copiedv4 ? 'copied' : ''}`} 
+                  onClick={() => copyIp(ipv4, 'v4')}
+                  disabled={ipv4 === 'Yükleniyor...' || ipv4.includes('Bulunamadı')}
+                >
+                  {copiedv4 ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedv4 ? 'Kopyalandı' : 'Kopyala'}</span>
+                </button>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-2xl sm:text-3xl font-mono font-bold text-zinc-900 dark:text-white select-all break-all">
-                {ipv4 || 'Yükleniyor...'}
+            {/* IPv6 Row */}
+            <div className="ip-row mt-6">
+              <div className="ip-label">
+                <span className="pulse-dot" style={{ background: '#3b82f6' }}></span>
+                <span>IPv6 Adresiniz</span>
               </div>
-              {ipv4 && !ipv4.includes('Tespit') && (
-                <button
-                  onClick={() => copyToClipboard(ipv4, 'ipv4')}
-                  className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                    copied4
-                      ? 'bg-brand-dark text-white'
-                      : 'bg-zinc-950 text-white hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100'
-                  }`}
+              <div className="ip-flex">
+                <div className="ip-display">{ipv6}</div>
+                <button 
+                  className={`copy-btn ${copiedv6 ? 'copied' : ''}`} 
+                  onClick={() => copyIp(ipv6, 'v6')}
+                  disabled={ipv6 === 'Yükleniyor...' || ipv6.includes('Bulunamadı') || ipv6.includes('Desteklenmiyor')}
+                  style={{ background: ipv6.includes('Desteklenmiyor') ? '#64748b' : undefined }}
                 >
-                  {copied4 ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied4 ? 'Kopyalandı' : 'Kopyala'}
+                  {copiedv6 ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedv6 ? 'Kopyalandı' : ipv6.includes('Desteklenmiyor') ? 'Kopyalanamaz' : 'Kopyala'}</span>
                 </button>
-              )}
+              </div>
+            </div>
+
+            <div className="info-strip">
+              <div className="info-item"><ShieldAlert className="w-4 h-4 text-emerald-500" /> %100 Güvenli</div>
+              <div className="info-item"><Zap className="w-4 h-4 text-emerald-500" /> Anlık Tespit</div>
+              <div className="info-item"><EyeOff className="w-4 h-4 text-emerald-500" /> Gizlilik Odaklı</div>
             </div>
           </section>
 
-          {/* IPv6 Card */}
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-4 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                <span className="h-2.5 w-2.5 rounded-full bg-brand-blue animate-pulse" />
-                <span className="font-bold text-xs uppercase tracking-wider">IPv6 Adresiniz</span>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xl sm:text-2xl font-mono font-bold text-zinc-900 dark:text-white select-all break-all">
-                {ipv6 || 'Yükleniyor...'}
-              </div>
-              {ipv6 && !ipv6.includes('desteklemiy') && !ipv6.includes('Tespit') && (
-                <button
-                  onClick={() => copyToClipboard(ipv6, 'ipv6')}
-                  className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                    copied6
-                      ? 'bg-brand-dark text-white'
-                      : 'bg-zinc-950 text-white hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100'
-                  }`}
-                >
-                  {copied6 ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied6 ? 'Kopyalandı' : 'Kopyala'}
-                </button>
-              )}
-            </div>
-          </section>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-zinc-150 dark:border-zinc-800 pt-8 mt-8">
-          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <Shield className="h-4 w-4 text-brand-blue" />
-            %100 Güvenli
-          </div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <Zap className="h-4 w-4 text-amber-500" />
-            Çift Protokol (v4/v6)
-          </div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <EyeOff className="h-4 w-4 text-brand-blue" />
-            Gizlilik Odaklı
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <section className="mt-16 space-y-6">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white text-center">Hakkında Sık Sorulan Sorular</h2>
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900 overflow-hidden"
-              >
-                <button
-                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                  className="w-full flex items-center justify-between p-5 text-left text-sm font-bold text-zinc-900 dark:text-white"
-                >
-                  {faq.q}
-                  <ChevronDown
-                    className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${
-                      activeFaq === index ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                {activeFaq === index && (
-                  <div className="px-5 pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed border-t border-zinc-100 dark:border-zinc-800/50 pt-4">
-                    {faq.a}
+          <section className="mb-12">
+            <h2 className="font-['Outfit'] font-extrabold text-[1.75rem] text-slate-900 dark:text-white text-center mb-10">Hakkında Sık Sorulan Sorular</h2>
+            
+            <div className="flex flex-col gap-4">
+              {[
+                { title: 'IP adresi nedir?', content: 'IP adresi (İnternet Protokolü Adresi), internet veya yerel ağ üzerindeki cihazlara atanan benzersiz bir sayısal etikettir. Tıpkı bir posta adresi gibi, veri paketlerinin doğru hedefe ulaşmasını sağlar. IPv4 (örn. 192.168.1.1) ve IPv6 (örn. 2001:db8::1) olmak üzere iki sürümü vardır.' },
+                { title: 'IPv4 ile IPv6 arasındaki fark nedir?', content: 'IPv4, 32 bitlik adreslerle yaklaşık 4,3 milyar benzersiz adres sunar. IPv6 ise 128 bitlik yapısıyla pratik olarak sınırsız sayıda adres sağlar. İnternet cihazlarının hızlı artışı nedeniyle IPv4 adresleri tükenmekte, dünya giderek IPv6\'ya geçmektedir.' },
+                { title: 'IP adresim neden sürekli değişiyor?', content: 'Çoğu internet servis sağlayıcısı (ISS) "dinamik IP" atar; yani modem yeniden başlatıldığında veya belirli süre geçtikten sonra IP adresiniz değişebilir. Sabit bir IP\'ye ihtiyaç duyuyorsanız ISS\'nizden "statik IP" talep edebilirsiniz.' },
+                { title: 'Bu araç verilerimi saklıyor mu?', content: 'Hayır, mahremiyetiniz bizim için önceliklidir. Bu araç sadece o anki bağlantınız üzerinden tespit edilen adresi size göstermek için çalışır. Hiçbir veri kaydedilmez, loglanmaz veya üçüncü taraflarla paylaşılmaz.' },
+              ].map((faq, idx) => (
+                <div key={idx} className={`faq-card ${activeFaq === idx ? 'active' : ''}`}>
+                  <button className="faq-trigger" onClick={() => toggleFaq(idx)}>
+                    {faq.title}
+                    <ChevronDown className="w-5 h-5 faq-icon" />
+                  </button>
+                  <div className="faq-content">
+                    <div className="faq-body">
+                      {faq.content}
+                    </div>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <OtherTools />
+          <OtherTools />
+
+        </div>
       </div>
     </PageTransition>
   );

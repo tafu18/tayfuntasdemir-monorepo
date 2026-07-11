@@ -1,277 +1,323 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
-import { Clock, RefreshCw, Calendar, ArrowRightLeft } from 'lucide-react';
+import { Clock, Check, Copy, CalendarDays, History, Cpu, Globe, Shield, ArrowRightLeft } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
 export default function EpochConverter() {
-  // Live Ticker
-  const [currentUnix, setCurrentUnix] = useState(0);
+  const [currentEpochMs, setCurrentEpochMs] = useState<number>(0);
+  const [currentEpochSec, setCurrentEpochSec] = useState<number>(0);
 
-  // Convert Epoch -> Date
+  const [inputDate, setInputDate] = useState('');
+  const [resultEpoch, setResultEpoch] = useState<number | null>(null);
+  const [resultEpochMs, setResultEpochMs] = useState<number | null>(null);
+
   const [inputEpoch, setInputEpoch] = useState('');
-  const [outputDate, setOutputDate] = useState<any>(null);
+  const [resultDate, setResultDate] = useState('');
+  const [resultRelative, setResultRelative] = useState('');
 
-  // Convert Date -> Epoch
-  const [inputDate, setInputDate] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
-    hours: new Date().getHours(),
-    minutes: new Date().getMinutes(),
-    seconds: new Date().getSeconds(),
-    tz: 'local',
-  });
-  const [outputEpoch, setOutputEpoch] = useState<any>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [copiedSec, setCopiedSec] = useState(false);
+  const [copiedMs, setCopiedMs] = useState(false);
+  const [copiedResults, setCopiedResults] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    setCurrentUnix(Math.floor(Date.now() / 1000));
+    // Set initial date format for input
+    const now = new Date();
+    // YYYY-MM-DDThh:mm format required by datetime-local
+    const formatted = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+    setInputDate(formatted);
+    
+    setCurrentEpochMs(Date.now());
+    setCurrentEpochSec(Math.floor(Date.now() / 1000));
+
     const interval = setInterval(() => {
-      setCurrentUnix(Math.floor(Date.now() / 1000));
-    }, 1000);
+      setCurrentEpochMs(Date.now());
+      setCurrentEpochSec(Math.floor(Date.now() / 1000));
+    }, 100);
+
     return () => clearInterval(interval);
   }, []);
 
-  const handleEpochToDate = () => {
-    if (!inputEpoch) return;
-    try {
-      const val = Number(inputEpoch);
-      const isMillis = val > 9999999999; // Simple heuristic for milliseconds
-      const date = new Date(isMillis ? val : val * 1000);
+  const copyVal = (val: string, type: string) => {
+    navigator.clipboard.writeText(val).then(() => {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
 
-      if (isNaN(date.getTime())) {
-        setOutputDate({ error: 'Geçersiz zaman damgası.' });
-        return;
+      if (type === 'sec') {
+        setCopiedSec(true);
+        setTimeout(() => setCopiedSec(false), 2000);
+      } else if (type === 'ms') {
+        setCopiedMs(true);
+        setTimeout(() => setCopiedMs(false), 2000);
+      } else {
+        setCopiedResults(prev => ({ ...prev, [type]: true }));
+        setTimeout(() => setCopiedResults(prev => ({ ...prev, [type]: false })), 2000);
       }
-
-      setOutputDate({
-        local: date.toLocaleString('tr-TR'),
-        gmt: date.toUTCString(),
-        isMillis,
-      });
-    } catch {
-      setOutputDate({ error: 'Dönüştürme hatası.' });
-    }
+    });
   };
 
-  const handleDateToEpoch = () => {
-    try {
-      const { year, month, day, hours, minutes, seconds, tz } = inputDate;
-      let date: Date;
+  const convertToEpoch = () => {
+    if (!inputDate) return;
+    const date = new Date(inputDate);
+    setResultEpoch(Math.floor(date.getTime() / 1000));
+    setResultEpochMs(date.getTime());
+  };
 
-      if (tz === 'gmt') {
-        date = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
-      } else {
-        date = new Date(year, month - 1, day, hours, minutes, seconds);
-      }
+  const setNow = () => {
+    const ms = Date.now().toString();
+    setInputEpoch(ms);
+    convertEpochToDate(ms);
+  };
 
-      if (isNaN(date.getTime())) {
-        setOutputEpoch({ error: 'Geçersiz tarih değerleri.' });
-        return;
-      }
+  const convertToDate = () => {
+    convertEpochToDate(inputEpoch);
+  };
 
-      const secondsVal = Math.floor(date.getTime() / 1000);
-      const millisVal = date.getTime();
+  const convertEpochToDate = (epochStr: string) => {
+    if (!epochStr) return;
+    let val = parseInt(epochStr, 10);
+    
+    // Auto detect: 13 digits = ms, 10 digits = seconds
+    let date = val > 9999999999 ? new Date(val) : new Date(val * 1000);
+    
+    if (isNaN(date.getTime())) {
+      setResultDate('Geçersiz Epoch!');
+      setResultRelative('');
+      return;
+    }
 
-      setOutputEpoch({
-        seconds: secondsVal,
-        millis: millisVal,
-      });
-    } catch {
-      setOutputEpoch({ error: 'Dönüştürme hatası.' });
+    setResultDate(date.toLocaleString('tr-TR', { 
+        year: 'numeric', month: 'long', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        timeZoneName: 'short'
+    }));
+
+    const now = new Date();
+    const diffMs = date.getTime() - now.getTime();
+    const absDiff = Math.abs(diffMs);
+    const suffix = diffMs < 0 ? 'önce' : 'sonra';
+
+    if (absDiff < 60000) {
+      setResultRelative(Math.floor(absDiff / 1000) + ' saniye ' + suffix);
+    } else if (absDiff < 3600000) {
+      setResultRelative(Math.floor(absDiff / 60000) + ' dakika ' + suffix);
+    } else if (absDiff < 86400000) {
+      setResultRelative(Math.floor(absDiff / 3600000) + ' saat ' + suffix);
+    } else if (absDiff < 2592000000) {
+      setResultRelative(Math.floor(absDiff / 86400000) + ' gün ' + suffix);
+    } else {
+      setResultRelative(Math.floor(absDiff / 2592000000) + ' ay ' + suffix);
     }
   };
 
   return (
     <PageTransition>
-      <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 space-y-8">
-        <header className="text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-50 text-violet-650 dark:bg-violet-950/30 dark:text-violet-400">
-            Unix Zaman Damgası Dönüştürücü
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            Epoch <span className="bg-gradient-to-r from-violet-600 to-brand-dark bg-clip-text text-transparent">Converter</span>
-          </h1>
-          <p className="mt-4 text-zinc-500 dark:text-zinc-400">
-            Zaman damgası ile insan tarafından okunabilir tarih formatı arasında hızlı dönüşüm yapın.
-          </p>
-        </header>
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-zinc-950 font-['Plus_Jakarta_Sans',sans-serif] py-12 px-4">
+        <style dangerouslySetInnerHTML={{__html: `
+          .ep-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(99,102,241,0.08); color: #6366f1; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 0.5rem 1.25rem; border-radius: 100px; margin-bottom: 1.25rem; }
+          .ep-ticker { background: #0f172a; border-radius: 20px; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+          .ep-ticker::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #6366f1, #10b981); }
+          .ep-ticker-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; font-family: 'Outfit', sans-serif; }
+          .ep-ticker-btn:hover { background: rgba(255,255,255,0.2); }
+          .ep-ticker-btn.copied { background: #10b981; border-color: #10b981; }
+          .ep-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2rem; position: relative; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04); }
+          .dark .ep-card { background: #09090b; border-color: #27272a; }
+          .ep-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; pointer-events: none; }
+          .ep-card.encode::before { background: #6366f1; }
+          .ep-card.decode::before { background: #10b981; }
+          .ep-input { width: 100%; padding: 0.85rem 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 600; color: #0f172a; background: #f1f5f9; border: 2px solid transparent; border-radius: 14px; outline: none; transition: all 0.25s; }
+          .dark .ep-input { background: #18181b; color: #f8fafc; }
+          .ep-input:focus { border-color: #6366f1; background: #fff; box-shadow: 0 0 0 4px rgba(99,102,241,0.08); }
+          .dark .ep-input:focus { background: #000; box-shadow: 0 0 0 4px rgba(99,102,241,0.15); }
+          .ep-input.green:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.08); }
+          .dark .ep-input.green:focus { box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+          .ep-now-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #0f172a; color: #fff; border: none; border-radius: 10px; padding: 0.5rem 0.9rem; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+          .dark .ep-now-btn { background: #3f3f46; }
+          .ep-now-btn:hover { background: #6366f1; }
+          .ep-btn { width: 100%; padding: 0.9rem; border-radius: 14px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.92rem; border: none; cursor: pointer; color: #fff; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem; }
+          .ep-btn:active { transform: scale(0.97); }
+          .ep-btn.primary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 15px rgba(99,102,241,0.3); }
+          .ep-btn.primary:hover { box-shadow: 0 8px 25px rgba(99,102,241,0.4); transform: translateY(-2px); }
+          .ep-btn.green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16,185,129,0.3); }
+          .ep-btn.green:hover { box-shadow: 0 8px 25px rgba(16,185,129,0.4); transform: translateY(-2px); }
+          .ep-result-row { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; transition: all 0.2s; }
+          .dark .ep-result-row { background: #18181b; border-color: #27272a; }
+          .ep-result-row:hover { border-color: #6366f1; }
+          .ep-copy-sm { background: none; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.35rem 0.65rem; font-size: 0.7rem; color: #64748b; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem; font-weight: 700; }
+          .dark .ep-copy-sm { border-color: #27272a; color: #a1a1aa; }
+          .ep-copy-sm:hover { border-color: #6366f1; color: #6366f1; background: rgba(99,102,241,0.08); }
+          .ep-copy-sm.copied { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.08); }
+          .ep-date-result { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); border-radius: 16px; padding: 1.25rem; }
+          @media (max-width: 768px) { .ep-ticker { flex-direction: column; align-items: flex-start; } .ep-ticker-right { width: 100%; } .ep-ticker-btn { flex: 1; justify-content: center; } }
+        `}} />
 
-        {/* Live Ticker */}
-        <section className="bg-zinc-950 text-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-blue-500" />
-          <div className="flex flex-col gap-1 items-center md:items-start">
-            <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5 text-violet-450" /> Canlı Unix Zaman Damgası
-            </span>
-            <div className="text-3xl sm:text-4xl font-mono font-bold mt-2 tracking-wider">
-              {currentUnix}
+        <div className="max-w-[960px] mx-auto w-full">
+          {/* Header */}
+          <header className="text-center mb-10 mt-4">
+            <div className="ep-badge">
+              <Clock className="w-3.5 h-3.5" /> Zaman Damgası Aracı
+            </div>
+            <h1 className="font-['Outfit'] font-extrabold text-[clamp(2rem,5vw,3rem)] text-slate-900 dark:text-white mb-3 tracking-tight">
+              Epoch <span className="bg-gradient-to-br from-indigo-500 to-sky-500 bg-clip-text text-transparent">Converter</span>
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-[1.05rem] max-w-[520px] mx-auto">
+              Unix zaman damgasını tarihe veya tarihi epoch değerine dönüştürün. Milisaniye destekli.
+            </p>
+          </header>
+
+          {/* Live Ticker */}
+          <div className="ep-ticker">
+            <div className="flex flex-col gap-1">
+              <span className="text-[0.68rem] font-bold uppercase tracking-[0.15em] text-white/40">Şu Anki Epoch (Milisaniye)</span>
+              <span className="font-['JetBrains_Mono'] text-[clamp(1.2rem,3vw,1.8rem)] font-bold text-white leading-none">
+                {currentEpochMs || Date.now()}
+              </span>
+            </div>
+            <div className="flex gap-2 ep-ticker-right">
+              <button 
+                className={`ep-ticker-btn ${copiedSec ? 'copied' : ''}`}
+                onClick={() => copyVal(String(currentEpochSec), 'sec')}
+              >
+                {copiedSec ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedSec ? 'OK!' : 'Saniye'}</span>
+              </button>
+              <button 
+                className={`ep-ticker-btn ${copiedMs ? 'copied' : ''}`}
+                onClick={() => copyVal(String(currentEpochMs), 'ms')}
+              >
+                {copiedMs ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedMs ? 'OK!' : 'Milisaniye'}</span>
+              </button>
             </div>
           </div>
-          <button
-            onClick={() => setCurrentUnix(Math.floor(Date.now() / 1000))}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-zinc-850 hover:bg-zinc-800 text-sm font-bold border border-zinc-800 transition-colors"
-          >
-            <RefreshCw className="h-4 w-4" /> Güncelle
-          </button>
-        </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Epoch -> Date */}
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <ArrowRightLeft className="h-5 w-5 text-violet-500" /> Epoch to Tarih
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-450 uppercase mb-2">Unix Zaman Damgası (Saniye veya Milisaniye)</label>
-                <div className="flex gap-3">
-                  <input
-                    type="number"
-                    value={inputEpoch}
-                    onChange={(e) => setInputEpoch(e.target.value)}
-                    placeholder="örn: 1700000000"
-                    className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 py-3 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:outline-none"
-                  />
-                  <button
-                    onClick={handleEpochToDate}
-                    className="px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-sm font-bold shrink-0 transition-colors"
-                  >
-                    Dönüştür
-                  </button>
-                </div>
+          {/* Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            
+            {/* ENCODE */}
+            <div className="ep-card encode">
+              <div className="font-['Outfit'] text-[1.15rem] font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2.5">
+                <CalendarDays className="w-5 h-5 text-indigo-500" /> Tarih → Epoch
               </div>
+              
+              <label className="block text-[0.7rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-2">Tarih & Saat Seçin</label>
+              <input 
+                type="datetime-local" 
+                className="ep-input mb-4" 
+                value={inputDate}
+                onChange={(e) => setInputDate(e.target.value)}
+              />
 
-              {outputDate && (
-                <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 p-5 rounded-2xl space-y-3">
-                  {outputDate.error ? (
-                    <p className="text-sm text-red-500 font-medium">{outputDate.error}</p>
-                  ) : (
-                    <>
-                      <div className="text-xs text-zinc-450">Tepsi Tipi: {outputDate.isMillis ? 'Milisaniye' : 'Saniye'}</div>
-                      <div>
-                        <span className="block text-xs font-semibold text-zinc-400">Yerel Saat (Gereken Dil):</span>
-                        <span className="font-mono text-sm font-bold text-zinc-900 dark:text-white">{outputDate.local}</span>
-                      </div>
-                      <div>
-                        <span className="block text-xs font-semibold text-zinc-400">GMT / UTC Saat:</span>
-                        <span className="font-mono text-sm font-bold text-zinc-900 dark:text-white">{outputDate.gmt}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* Date -> Epoch */}
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-brand-blue" /> Tarih to Epoch
-            </h2>
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Yıl</label>
-                  <input
-                    type="number"
-                    value={inputDate.year}
-                    onChange={(e) => setInputDate({ ...inputDate, year: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Ay</label>
-                  <input
-                    type="number"
-                    value={inputDate.month}
-                    onChange={(e) => setInputDate({ ...inputDate, month: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Gün</label>
-                  <input
-                    type="number"
-                    value={inputDate.day}
-                    onChange={(e) => setInputDate({ ...inputDate, day: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Saat</label>
-                  <input
-                    type="number"
-                    value={inputDate.hours}
-                    onChange={(e) => setInputDate({ ...inputDate, hours: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Dakika</label>
-                  <input
-                    type="number"
-                    value={inputDate.minutes}
-                    onChange={(e) => setInputDate({ ...inputDate, minutes: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Saniye</label>
-                  <input
-                    type="number"
-                    value={inputDate.seconds}
-                    onChange={(e) => setInputDate({ ...inputDate, seconds: Number(e.target.value) })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Saat Dilimi</label>
-                  <select
-                    value={inputDate.tz}
-                    onChange={(e) => setInputDate({ ...inputDate, tz: e.target.value })}
-                    className="block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-2 py-2 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white text-center text-xs focus:outline-none"
-                  >
-                    <option value="local">Yerel</option>
-                    <option value="gmt">GMT/UTC</option>
-                  </select>
-                </div>
-              </div>
-
-              <button
-                onClick={handleDateToEpoch}
-                className="w-full py-3 rounded-xl bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-sm font-bold transition-colors"
-              >
-                Epoch Değerine Dönüştür
+              <button className="ep-btn primary" onClick={convertToEpoch}>
+                <ArrowRightLeft className="w-4 h-4" /> Dönüştür
               </button>
 
-              {outputEpoch && (
-                <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 p-5 rounded-2xl space-y-3">
-                  {outputEpoch.error ? (
-                    <p className="text-sm text-red-500 font-medium">{outputEpoch.error}</p>
-                  ) : (
-                    <>
-                      <div>
-                        <span className="block text-xs font-semibold text-zinc-400">Epoch (Saniye):</span>
-                        <span className="font-mono text-sm font-bold text-zinc-900 dark:text-white">{outputEpoch.seconds}</span>
-                      </div>
-                      <div>
-                        <span className="block text-xs font-semibold text-zinc-400">Epoch (Milisaniye):</span>
-                        <span className="font-mono text-sm font-bold text-zinc-900 dark:text-white">{outputEpoch.millis}</span>
-                      </div>
-                    </>
+              {resultEpoch !== null && (
+                <div className="animate-in fade-in zoom-in-95 duration-200 mt-2">
+                  <div className="ep-result-row">
+                    <div>
+                      <div className="text-[0.65rem] font-extrabold uppercase tracking-[0.1em] text-slate-500 mb-0.5">Saniye (Unix)</div>
+                      <div className="font-['JetBrains_Mono'] font-bold text-[1rem] text-slate-900 dark:text-white">{resultEpoch}</div>
+                    </div>
+                    <button className={`ep-copy-sm ${copiedResults['encodeSec'] ? 'copied' : ''}`} onClick={() => copyVal(String(resultEpoch), 'encodeSec')}>
+                      {copiedResults['encodeSec'] ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
+                  <div className="ep-result-row">
+                    <div>
+                      <div className="text-[0.65rem] font-extrabold uppercase tracking-[0.1em] text-slate-500 mb-0.5">Milisaniye</div>
+                      <div className="font-['JetBrains_Mono'] font-bold text-[1rem] text-slate-900 dark:text-white">{resultEpochMs}</div>
+                    </div>
+                    <button className={`ep-copy-sm ${copiedResults['encodeMs'] ? 'copied' : ''}`} onClick={() => copyVal(String(resultEpochMs), 'encodeMs')}>
+                      {copiedResults['encodeMs'] ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* DECODE */}
+            <div className="ep-card decode">
+              <div className="font-['Outfit'] text-[1.15rem] font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2.5">
+                <History className="w-5 h-5 text-emerald-500" /> Epoch → Tarih
+              </div>
+              
+              <label className="block text-[0.7rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-2">Epoch Değeri (saniye veya milisaniye)</label>
+              <div className="relative mb-4">
+                <input 
+                  type="number" 
+                  className="ep-input green" 
+                  placeholder="Örn: 1709071200000"
+                  value={inputEpoch}
+                  onChange={(e) => setInputEpoch(e.target.value)}
+                />
+                <button className="ep-now-btn" onClick={setNow}>Şu An</button>
+              </div>
+
+              <button className="ep-btn green" onClick={convertToDate}>
+                <ArrowRightLeft className="w-4 h-4" /> Dönüştür
+              </button>
+
+              {resultDate && (
+                <div className="ep-date-result animate-in fade-in zoom-in-95 duration-200 mt-2">
+                  <div className="text-[0.65rem] font-extrabold uppercase tracking-[0.1em] text-emerald-700 dark:text-emerald-500 mb-2">OKUNABILIR TARİH</div>
+                  <div className="font-['Outfit'] text-[1.2rem] font-extrabold text-slate-900 dark:text-white mb-2">{resultDate}</div>
+                  {resultRelative && (
+                    <div className="inline-flex items-center gap-1.5 text-[0.78rem] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">
+                      <Clock className="w-3.5 h-3.5" />
+                      {resultRelative}
+                    </div>
                   )}
                 </div>
               )}
             </div>
-          </section>
+
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="flex items-start gap-4 p-5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-indigo-500 hover:-translate-y-1 transition-all">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-['Outfit'] font-bold text-sm text-slate-900 dark:text-white mb-1">2038 Uyumlu</h4>
+                <p className="text-[0.73rem] text-slate-500 dark:text-slate-400 leading-relaxed">64-bit destekli, Y2038 hatasından etkilenmez.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-emerald-500 hover:-translate-y-1 transition-all">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                <Globe className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-['Outfit'] font-bold text-sm text-slate-900 dark:text-white mb-1">UTC Standart</h4>
+                <p className="text-[0.73rem] text-slate-500 dark:text-slate-400 leading-relaxed">Epoch UTC bazlıdır, yerel saat otomatik ayarlanır.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-sky-500 hover:-translate-y-1 transition-all">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0">
+                <Shield className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-['Outfit'] font-bold text-sm text-slate-900 dark:text-white mb-1">İstemci Taraflı</h4>
+                <p className="text-[0.73rem] text-slate-500 dark:text-slate-400 leading-relaxed">Veriler sunucuya gönderilmez, tamamen güvenli.</p>
+              </div>
+            </div>
+          </div>
+
+          <OtherTools />
+
         </div>
 
-        <OtherTools />
+        {/* Toast */}
+        {showToast && (
+          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 font-bold text-[0.88rem] z-[100] animate-in slide-in-from-bottom-5">
+            <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+            Panoya kopyalandı!
+          </div>
+        )}
       </div>
     </PageTransition>
   );

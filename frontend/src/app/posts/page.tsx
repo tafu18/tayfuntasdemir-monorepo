@@ -87,13 +87,13 @@ function PostsContent() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {data.data.map((post: any) => (
-                <article key={post.id} className="flex flex-col items-start justify-between border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 hover:shadow-md transition-shadow dark:bg-zinc-900 bg-white">
-                  <div className="w-full">
+                <article key={post.id} className="flex flex-col items-start justify-between border border-zinc-200 dark:border-zinc-800 rounded-xl hover:shadow-md transition-all hover:border-brand-blue/50 dark:hover:border-brand-blue/50 dark:bg-zinc-900 bg-white group cursor-pointer">
+                  <Link href={`/post/${post.slug}`} className="w-full p-5 block h-full">
                     <div className="aspect-[16/9] w-full rounded-lg bg-zinc-100 dark:bg-zinc-800 overflow-hidden mb-4 relative">
                       <img
                         src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/uploads/${post.image}`}
                         alt={post.title}
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop';
                         }}
@@ -109,13 +109,13 @@ function PostsContent() {
                         {post.views} okuma
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white hover:text-blue-650 dark:hover:text-brand-blue">
-                      <Link href={`/post/${post.slug}`}>{post.title}</Link>
+                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-brand-blue transition-colors">
+                      {post.title}
                     </h3>
                     <p className="mt-3 line-clamp-3 text-sm text-zinc-500 dark:text-zinc-400">
                       {post.content.replace(/<[^>]*>/g, '')}
                     </p>
-                  </div>
+                  </Link>
                 </article>
               ))}
             </div>

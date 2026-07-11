@@ -16,7 +16,7 @@ export default function Header() {
     { name: 'Projelerim', path: '/projects' },
     { name: 'Gönderiler', path: '/posts' },
     { name: 'Uygulamalar', path: '/applications' },
-    { name: 'Namaz Vakitleri', path: '/applications?tab=prayer' },
+    { name: 'Namaz Vakitleri', path: '/namaz-vakitleri' },
     { name: 'İletişim', path: '/contact' },
   ];
 

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0
-    container_name: vaktihuzur-db
+    container_name: db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -19,7 +19,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: vaktihuzur-backend
+    container_name: backend
     restart: always
     ports:
       - "4000:4000"
@@ -43,7 +43,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: vaktihuzur-frontend
+    container_name: frontend
     restart: always
     ports:
       - "3000:3000"

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import PageTransition from '@/components/PageTransition';
-import { AlignLeft, Link2, Trash, Check, Copy } from 'lucide-react';
+import { Lock, Unlock, Copy, Link as LinkIcon } from 'lucide-react';
+import OtherTools from '@/components/OtherTools';
 
 export default function UrlCodec() {
   const [inputText, setInputText] = useState('');
@@ -10,114 +11,177 @@ export default function UrlCodec() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const encodeUrl = () => {
+  const handleCodec = (action: 'encode' | 'decode') => {
     setError('');
+    setOutputText('');
+    if (!inputText) return;
+
     try {
-      setOutputText(encodeURIComponent(inputText));
-    } catch {
-      setError('URL kodlanırken hata oluştu.');
+      if (action === 'encode') {
+        setOutputText(encodeURIComponent(inputText));
+      } else {
+        setOutputText(decodeURIComponent(inputText));
+      }
+    } catch (e: any) {
+      setError('Çözümleme Hatası: Geçersiz URL formatı veya düzgün kodlanmamış veri. (' + e.message + ')');
     }
   };
 
-  const decodeUrl = () => {
+  const clearText = () => {
+    setInputText('');
+    setOutputText('');
     setError('');
-    try {
-      setOutputText(decodeURIComponent(inputText));
-    } catch {
-      setError('Geçersiz URL formatı veya çözme hatası.');
-    }
   };
 
-  const copyToClipboard = () => {
+  const copyOutput = () => {
     if (!outputText) return;
-    navigator.clipboard.writeText(outputText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(outputText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   return (
     <PageTransition>
-      <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8 space-y-8">
-        <header className="text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-brand-blue">
-            URL Codec
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            URL <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent">Codec</span>
-          </h1>
-          <p className="mt-4 text-zinc-500 dark:text-zinc-400">
-            URL karakterlerinizi güvenli bir şekilde kodlayın veya kodları çözün.
-          </p>
-        </header>
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-zinc-950 font-['Plus_Jakarta_Sans',sans-serif] py-12 px-4">
+        <style dangerouslySetInnerHTML={{__html: `
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Input Panel */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Link2 className="h-5 w-5 text-brand-blue" /> Giriş Metni / URL
-              </h2>
-              <button
-                onClick={() => setInputText('')}
-                className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
-              >
-                Temizle
-              </button>
+          .url-card {
+              background: #ffffff;
+              border: 1px solid #e2e8f0;
+              border-radius: 28px;
+              overflow: hidden;
+              box-shadow: 0 20px 50px -15px rgba(0,0,0,0.06);
+              position: relative;
+          }
+          .dark .url-card {
+              background: #09090b;
+              border-color: #27272a;
+          }
+          .url-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0;
+              height: 3px;
+              background: linear-gradient(90deg, #0ea5e9, #6366f1);
+          }
+          .url-toolbar {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 1rem 2rem;
+              background: #f1f5f9;
+              border-bottom: 1px solid #e2e8f0;
+          }
+          .dark .url-toolbar {
+              background: #18181b;
+              border-color: #27272a;
+          }
+          .url-dots {
+              display: flex;
+              gap: 6px;
+          }
+          .url-dots span {
+              width: 10px; height: 10px;
+              border-radius: 50%;
+          }
+          .url-dots span:nth-child(1) { background: #ef4444; }
+          .url-dots span:nth-child(2) { background: #f59e0b; }
+          .url-dots span:nth-child(3) { background: #22c55e; }
+        `}} />
+
+        <div className="max-w-[820px] mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-[#0ea5e9]/10 text-[#0ea5e9] font-bold text-xs uppercase tracking-widest px-5 py-2 rounded-full mb-5">
+              <LinkIcon className="w-3.5 h-3.5" />
+              <span>Geliştirici Araçları</span>
             </div>
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Kodlamak veya çözmek istediğiniz URL metnini buraya yapıştırın..."
-              className="w-full h-80 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-4 font-mono text-sm focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
-            />
+            <h1 className="font-['Outfit',sans-serif] text-[clamp(2rem,5vw,3.2rem)] font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
+              <span className="bg-gradient-to-br from-[#0ea5e9] to-[#6366f1] text-transparent bg-clip-text">URL Encoder</span> & Decoder
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-lg max-w-[520px] mx-auto">
+              Linklerinizi ve özel karakterlerinizi standart URL yapısına dönüştürün veya çözün.
+            </p>
           </div>
 
-          {/* Output Panel */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                Sonuç
-              </h2>
-              {outputText && (
-                <button
-                  onClick={copyToClipboard}
-                  className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 flex items-center gap-1"
+          {/* Main Card */}
+          <div className="url-card">
+            <div className="url-toolbar">
+              <div className="url-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div className="text-xs font-semibold text-slate-500 select-none">URL Codec Utility</div>
+            </div>
+
+            <div className="p-8 space-y-6">
+              {/* Giriş Metni */}
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Giriş Metni (Input String)</label>
+                <textarea 
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  rows={5} 
+                  className="py-3 px-4 w-full border border-slate-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white rounded-xl font-['JetBrains_Mono',monospace] text-sm focus:ring-2 focus:ring-[#0ea5e9] focus:outline-none" 
+                  placeholder="Kodlamak veya kodunu çözmek istediğiniz URL/Metni girin..."
+                />
+              </div>
+
+              {/* Butonlar */}
+              <div className="flex flex-wrap gap-4">
+                <button 
+                  onClick={() => handleCodec('encode')} 
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0ea5e9] hover:bg-[#0284c7] text-white text-sm font-bold rounded-xl transition-colors"
                 >
-                  {copied ? <Check className="h-3.5 w-3.5 text-brand-blue" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? 'Kopyalandı' : 'Kopyala'}
+                  <Lock className="w-4 h-4" /> URL Encode (Kodla)
                 </button>
+                <button 
+                  onClick={() => handleCodec('decode')} 
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-sm font-bold rounded-xl transition-colors"
+                >
+                  <Unlock className="w-4 h-4" /> URL Decode (Çöz)
+                </button>
+                <button 
+                  onClick={clearText} 
+                  className="px-5 py-2.5 bg-[#ef4444] hover:bg-[#dc2626] text-white text-sm font-bold rounded-xl transition-colors"
+                >
+                  Temizle
+                </button>
+              </div>
+
+              {/* Hata Alanı */}
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 text-red-600 dark:bg-red-950/30 dark:border-red-900/50 rounded-xl text-xs font-['JetBrains_Mono',monospace]">
+                  {error}
+                </div>
               )}
+
+              {/* Çıktı Metni */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Sonuç (Output Result)</label>
+                  <button onClick={copyOutput} className="text-xs text-[#0ea5e9] hover:text-[#0284c7] font-semibold flex items-center gap-1.5">
+                    <Copy className="w-3.5 h-3.5" /> {copied ? 'Kopyalandı!' : 'Sonucu Kopyala'}
+                  </button>
+                </div>
+                <textarea 
+                  value={outputText}
+                  readOnly 
+                  rows={5} 
+                  className="py-3 px-4 w-full border border-slate-100 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white rounded-xl font-['JetBrains_Mono',monospace] text-sm focus:outline-none" 
+                  placeholder="Sonuç burada görüntülenecektir..."
+                />
+              </div>
             </div>
-            <textarea
-              readOnly
-              value={outputText}
-              placeholder="Sonuç burada görüntülenecektir..."
-              className="w-full h-80 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 font-mono text-sm focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-white cursor-text"
-            />
+          </div>
+          
+          <div className="mt-12">
+            <OtherTools />
           </div>
         </div>
-
-        {/* Action Controls */}
-        <div className="flex flex-wrap justify-center gap-4 bg-zinc-50 dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200/50 dark:border-zinc-800">
-          <button
-            onClick={encodeUrl}
-            className="px-6 py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-sm font-bold transition-colors"
-          >
-            URL Kodla (Encode)
-          </button>
-          <button
-            onClick={decodeUrl}
-            className="px-6 py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-sm font-bold transition-colors"
-          >
-            URL Çöz (Decode)
-          </button>
-        </div>
-
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-650 dark:bg-red-950/20 dark:border-red-900 dark:text-red-400 rounded-2xl text-sm font-semibold">
-            {error}
-          </div>
-        )}
       </div>
     </PageTransition>
   );
