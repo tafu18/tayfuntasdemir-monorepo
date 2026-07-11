@@ -28,8 +28,8 @@ services:
       - PORT=4000
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USERNAME=dbuser
-      - DB_PASSWORD=dbpassword
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
       - DB_DATABASE=vaktihuzur
       - JWT_SECRET=supersecretjwtkey123!
     depends_on:
