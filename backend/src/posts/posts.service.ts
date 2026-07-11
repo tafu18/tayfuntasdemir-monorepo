@@ -175,7 +175,7 @@ export class PostsService {
 
     return {
       lastThreePosts,
-      mostReadPosts,
+      mostRead: mostReadPosts,
       mostReadPostsToday,
     };
   }

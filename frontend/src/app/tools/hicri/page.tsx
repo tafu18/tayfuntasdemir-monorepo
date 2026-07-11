@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { Calendar, Moon } from 'lucide-react';
+import OtherTools from '@/components/OtherTools';
 
 export default function HicriConverter() {
   const [gregDate, setGregDate] = useState({
@@ -101,6 +102,8 @@ export default function HicriConverter() {
             </div>
           )}
         </div>
+
+        <OtherTools />
       </div>
     </PageTransition>
   );

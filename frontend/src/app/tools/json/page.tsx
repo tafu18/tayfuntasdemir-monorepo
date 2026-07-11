@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { AlignLeft, Check, Code, Copy, RefreshCw, Trash } from 'lucide-react';
+import OtherTools from '@/components/OtherTools';
 
 export default function JsonFormatter() {
   const [inputJson, setInputJson] = useState('');

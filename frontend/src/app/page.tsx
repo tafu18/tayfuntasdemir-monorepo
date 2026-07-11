@@ -55,7 +55,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-6xl font-black tracking-tight"
           >
-            Tayfun Taşdemir123
+            Tayfun Taşdemir
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}

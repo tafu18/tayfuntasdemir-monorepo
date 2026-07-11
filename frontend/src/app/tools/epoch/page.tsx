@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { Clock, RefreshCw, Calendar, ArrowRightLeft } from 'lucide-react';
+import OtherTools from '@/components/OtherTools';
 
 export default function EpochConverter() {
   // Live Ticker
@@ -269,6 +270,8 @@ export default function EpochConverter() {
             </div>
           </section>
         </div>
+
+        <OtherTools />
       </div>
     </PageTransition>
   );
