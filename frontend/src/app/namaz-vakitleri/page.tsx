@@ -11,8 +11,8 @@ export default function NamazVakitleri() {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [currentRegion, setCurrentRegion] = useState('İstanbul');
   const [currentCity, setCurrentCity] = useState('İstanbul');
-  const [regions, setRegions] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [regions, setRegions] = useState<any[]>([]);
+  const [cities, setCities] = useState<any[]>([]);
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
@@ -57,16 +57,19 @@ export default function NamazVakitleri() {
       const res = await api.get('/prayer/regions');
       setRegions(res.data);
       if (currentRegion) {
-        fetchCities(currentRegion);
+        const found = res.data.find((r: any) => r.name === currentRegion || r === currentRegion);
+        if (found) {
+          fetchCities(found.id || found);
+        }
       }
     } catch (e) {
       console.error('Bölgeler çekilemedi:', e);
     }
   };
 
-  const fetchCities = async (regionName: string) => {
+  const fetchCities = async (regionId: string) => {
     try {
-      const res = await api.get(`/prayer/cities?region=${encodeURIComponent(regionName)}`);
+      const res = await api.get(`/prayer/cities?region_id=${encodeURIComponent(regionId)}`);
       setCities(res.data);
     } catch (e) {
       console.error('İlçeler çekilemedi:', e);
@@ -123,7 +126,7 @@ export default function NamazVakitleri() {
           {/* Ayah & Hadith Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-6 shadow-inner border border-zinc-200/50 dark:border-zinc-800 space-y-4">
-              <span className="text-xs uppercase font-extrabold text-indigo-500 tracking-wider flex items-center gap-1.5">
+              <span className="text-xs uppercase font-extrabold text-blue-500 tracking-wider flex items-center gap-1.5">
                 <BookOpen className="h-4 w-4" /> Günün Ayeti
               </span>
               <p className="text-base italic leading-relaxed text-zinc-800 dark:text-zinc-200 font-serif">
@@ -198,13 +201,16 @@ export default function NamazVakitleri() {
                       value={selectedRegion}
                       onChange={(e) => {
                         setSelectedRegion(e.target.value);
-                        fetchCities(e.target.value);
+                        const found = regions.find((r: any) => r.name === e.target.value || r === e.target.value);
+                        if (found) {
+                          fetchCities(found.id || found);
+                        }
                       }}
                       className="w-full border border-zinc-200 dark:border-zinc-800 rounded-xl py-3 px-4 bg-zinc-55/30 dark:bg-zinc-950 dark:text-white focus:outline-none text-sm"
                     >
                       <option value="">İl Seçin</option>
                       {regions.map((reg) => (
-                        <option key={reg} value={reg}>{reg}</option>
+                        <option key={reg.id || reg.name || reg} value={reg.name || reg}>{reg.name || reg}</option>
                       ))}
                     </select>
                   </div>
@@ -217,7 +223,7 @@ export default function NamazVakitleri() {
                     >
                       <option value="">İlçe Seçin</option>
                       {cities.map((ct) => (
-                        <option key={ct} value={ct}>{ct}</option>
+                        <option key={ct.id || ct.name || ct} value={ct.name || ct}>{ct.name || ct}</option>
                       ))}
                     </select>
                   </div>

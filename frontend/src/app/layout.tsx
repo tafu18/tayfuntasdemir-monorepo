@@ -71,13 +71,15 @@ export default function RootLayout({
           strategy="afterInteractive" 
         />
 
-        {/* Google AdSense Script */}
-        <Script 
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5754237680544740" 
-          crossOrigin="anonymous" 
-          strategy="afterInteractive" 
-        />
+        {/* Google AdSense Script - sadece production'da yükle */}
+        {process.env.NODE_ENV === 'production' && (
+          <Script 
+            async 
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5754237680544740" 
+            crossOrigin="anonymous" 
+            strategy="afterInteractive" 
+          />
+        )}
 
         {/* Chatbase Chatbot Script */}
         <Script id="chatbase-embed-script" strategy="afterInteractive">

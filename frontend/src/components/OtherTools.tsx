@@ -58,7 +58,7 @@ export default function OtherTools() {
               href={tool.path}
               className={`flex items-center gap-3 p-4 bg-white dark:bg-zinc-900 border rounded-2xl transition-all duration-200 group ${
                 isCurrent
-                  ? 'border-indigo-500 bg-indigo-500/5 pointer-events-none'
+                  ? 'border-blue-500 bg-blue-500/5 pointer-events-none'
                   : 'border-zinc-200 dark:border-zinc-800 hover:-translate-y-0.5 hover:shadow-md'
               }`}
               style={{
@@ -72,7 +72,7 @@ export default function OtherTools() {
                 <Icon className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-indigo-500 dark:group-hover:text-indigo-400">
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-blue-500 dark:group-hover:text-blue-400">
                   {tool.name} {isCurrent && '✓'}
                 </h4>
                 <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate mt-0.5">

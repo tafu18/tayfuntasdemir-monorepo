@@ -12,7 +12,7 @@ export default function GameHub() {
       description: 'Klasik yılan oyunu. Yemi ye, yılanı büyüt ve yüksek skora ulaşmaya çalış!',
       path: '/game/snake',
       icon: <Gamepad2 className="h-6 w-6" />,
-      color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20',
+      color: 'text-blue-500 bg-blue-50 dark:bg-blue-950/20',
     },
     {
       name: 'Adam Asmaca (Hangman)',
@@ -33,7 +33,7 @@ export default function GameHub() {
       description: 'Kartları çevir, çiftleri bul ve en az hamle ile hafıza testini tamamla.',
       path: '/game/memory',
       icon: <Layers className="h-6 w-6" />,
-      color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/20',
+      color: 'text-blue-500 bg-blue-50 dark:bg-blue-950/20',
     },
   ];
 
@@ -65,7 +65,7 @@ export default function GameHub() {
                 <div className="pt-3">
                   <Link
                     href={game.path}
-                    className="inline-flex items-center text-sm font-semibold text-indigo-650 hover:underline dark:text-indigo-400"
+                    className="inline-flex items-center text-sm font-semibold text-blue-650 hover:underline dark:text-blue-400"
                   >
                     Hemen Oyna &rarr;
                   </Link>

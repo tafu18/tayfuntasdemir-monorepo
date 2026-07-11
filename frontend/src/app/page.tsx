@@ -116,7 +116,7 @@ export default function Home() {
                       
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold text-sm text-zinc-900 dark:text-white truncate group-hover:text-indigo-650 dark:group-hover:text-indigo-400">{post.title}</h3>
+                      <h3 className="font-bold text-sm text-zinc-900 dark:text-white truncate group-hover:text-blue-650 dark:group-hover:text-blue-400">{post.title}</h3>
                       <p className="text-xs text-zinc-500 mt-1">{post.today_views_count} kez okundu</p>
                     </div>
                   </Link>
@@ -136,56 +136,56 @@ export default function Home() {
           {/* Mobil Uygulamalarım */}
           <div>
             <h2 className="text-3xl font-black text-zinc-900 dark:text-white mb-8 flex items-center gap-3">
-              <span className="w-2 h-8 bg-emerald-500 rounded-full"></span> Mobil Uygulamalarım
+              <span className="w-2 h-8 bg-blue-500 rounded-full"></span> Mobil Uygulamalarım
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Vakt-i Huzur */}
               <div className="group relative bg-zinc-50 dark:bg-zinc-900 rounded-[2.5rem] p-8 border border-zinc-200/50 dark:border-zinc-800/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-500">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-start justify-between mb-6">
                     <div className="w-20 h-20 bg-white dark:bg-zinc-950 rounded-2xl shadow-lg flex items-center justify-center p-3 transform group-hover:rotate-3 transition-transform duration-500">
                       <img src="/hilal.png" alt="Vakt-i Huzur" className="w-full h-full object-contain" />
                     </div>
-                    <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
                   </div>
                   <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">Vakt-i Huzur</h3>
                   <p className="text-zinc-650 dark:text-zinc-400 text-sm leading-relaxed mb-8 flex-grow">
                     Namaz vakitleri, kıble bulucu, zikirmatik ve günlük dini içeriklerle ibadetlerinizde yardımcınız olan modern bir uygulama.
                   </p>
                   <div className="flex flex-wrap gap-3 mt-auto">
-                    <a href="https://vaktihuzur.com.tr/indir" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-5 py-3 bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white text-sm font-bold rounded-xl transition-all">
+                    <Link href="/vakti-huzur" className="inline-flex items-center justify-center px-5 py-3 bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white text-sm font-bold rounded-xl transition-all">
                       İndir
-                    </a>
-                    <a href="https://vaktihuzur.com.tr" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-5 py-3 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-850 transition-all">
+                    </Link>
+                    <Link href="/vakti-huzur" className="inline-flex items-center justify-center px-5 py-3 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-850 transition-all">
                       Detaylı Bilgi
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
 
               {/* Tek Tıkla */}
               <div className="group relative bg-zinc-50 dark:bg-zinc-900 rounded-[2.5rem] p-8 border border-zinc-200/50 dark:border-zinc-800/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-500">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-start justify-between mb-6">
                     <div className="w-20 h-20 bg-white dark:bg-zinc-950 rounded-2xl shadow-lg flex items-center justify-center p-4 transform group-hover:-rotate-3 transition-transform duration-500">
                       <img src="/tektiklaLogo.png" alt="Tek Tıkla" className="w-full h-full object-contain" />
                     </div>
-                    <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
                   </div>
                   <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">Tek Tıkla</h3>
                   <p className="text-zinc-650 dark:text-zinc-400 text-sm leading-relaxed mb-8 flex-grow">
                     Sık kullandığınız web sitelerini kaydedin, organize edin ve tek bir tıkla anında erişin. Hızlı ve güvenli web deneyimi.
                   </p>
                   <div className="flex flex-wrap gap-3 mt-auto">
-                    <a href="/projects" className="inline-flex items-center justify-center px-5 py-3 bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white text-sm font-bold rounded-xl transition-all">
+                    <Link href="/tek-tikla" className="inline-flex items-center justify-center px-5 py-3 bg-zinc-950 hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white text-sm font-bold rounded-xl transition-all">
                       İndir
-                    </a>
-                    <a href="/projects" className="inline-flex items-center justify-center px-5 py-3 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-850 transition-all">
+                    </Link>
+                    <Link href="/tek-tikla" className="inline-flex items-center justify-center px-5 py-3 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-850 transition-all">
                       Detaylı Bilgi
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -203,25 +203,25 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                   <Globe className="h-6 w-6 text-blue-500" />
                 </div>
-                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-indigo-600">IP Adresim</h4>
+                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-blue-600">IP Adresim</h4>
               </Link>
               <Link href="/tools/base64" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                   <Shield className="h-6 w-6 text-amber-500" />
                 </div>
-                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-indigo-600">Base64 Atölyesi</h4>
+                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-blue-600">Base64 Atölyesi</h4>
               </Link>
               <Link href="/tools/json" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                   <Code className="h-6 w-6 text-purple-500" />
                 </div>
-                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-indigo-600">JSON Formatter</h4>
+                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-blue-600">JSON Formatter</h4>
               </Link>
               <Link href="/password-generator" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
-                  <Key className="h-6 w-6 text-indigo-500" />
+                  <Key className="h-6 w-6 text-blue-500" />
                 </div>
-                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-indigo-600">Şifre Oluşturucu</h4>
+                <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-blue-600">Şifre Oluşturucu</h4>
               </Link>
             </div>
 
@@ -270,7 +270,7 @@ export default function Home() {
                           {new Date(post.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
                         </span>
                         <Link href={`/post/${post.slug}`}>
-                          <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-indigo-600 transition-colors leading-snug">
+                          <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 transition-colors leading-snug">
                             {post.title}
                           </h3>
                         </Link>
@@ -319,7 +319,7 @@ export default function Home() {
                           />
                         </div>
                         <div className="space-y-1">
-                          <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-indigo-600 transition-colors line-clamp-2 leading-tight">
+                          <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                             {post.title}
                           </h4>
                           <span className="text-[11px] text-zinc-500 block">{post.views} kez okundu</span>

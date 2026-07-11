@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ContactMessage } from '../database/entities/ContactMessage.entity';
+import { ContactMessage } from './entities/ContactMessage.entity';
 
 @Injectable()
 export class ContactService {
   constructor(
     @InjectRepository(ContactMessage)
     private readonly contactRepository: Repository<ContactMessage>,
-  ) {}
+  ) { }
 
   async create(data: any): Promise<ContactMessage> {
     const msg = this.contactRepository.create(data) as any;

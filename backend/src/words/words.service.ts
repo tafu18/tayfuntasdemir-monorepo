@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import { Category } from '../database/entities/Category.entity';
-import { Word } from '../database/entities/Word.entity';
+import { Category } from './entities/Category.entity';
+import { Word } from './entities/Word.entity';
 
 @Injectable()
 export class WordsService {
@@ -11,7 +11,7 @@ export class WordsService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Word)
     private readonly wordRepository: Repository<Word>,
-  ) {}
+  ) { }
 
   async getCategories(): Promise<Category[]> {
     return this.categoryRepository.find({ order: { name: 'ASC' } });

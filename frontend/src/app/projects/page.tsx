@@ -192,7 +192,7 @@ export default function Projects() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm font-semibold text-[#154667] hover:text-[#0c2f47] dark:text-indigo-400 dark:hover:text-indigo-350 pt-2"
+                    className="inline-flex items-center text-sm font-semibold text-[#154667] hover:text-[#0c2f47] dark:text-blue-400 dark:hover:text-blue-350 pt-2"
                   >
                     Detayları İncele &rarr;
                   </a>

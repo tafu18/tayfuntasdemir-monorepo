@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Post } from '../database/entities/Post.entity';
-import { PostView } from '../database/entities/PostView.entity';
+import { Post } from './entities/Post.entity';
+import { PostView } from './entities/PostView.entity';
 
 @Injectable()
 export class PostsService {
@@ -11,7 +11,7 @@ export class PostsService {
     private postRepository: Repository<Post>,
     @InjectRepository(PostView)
     private postViewRepository: Repository<PostView>,
-  ) {}
+  ) { }
 
   async findAll(page = 1, limit = 9, status?: 'draft' | 'published'): Promise<{ data: Post[]; total: number; page: number; lastPage: number }> {
     const query = this.postRepository.createQueryBuilder('post')
@@ -77,7 +77,7 @@ export class PostsService {
     const slug = data.title.toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '');
-    
+
     const post = this.postRepository.create({
       ...data,
       slug,
@@ -122,11 +122,11 @@ export class PostsService {
     const totalPosts = await this.postRepository.count();
     const publishedPosts = await this.postRepository.count({ where: { status: 'published' } });
     const draftPosts = await this.postRepository.count({ where: { status: 'draft' } });
-    
+
     const totalViewsResult = await this.postRepository.createQueryBuilder('post')
       .select('SUM(post.views)', 'sum')
       .getRawOne();
-    
+
     const totalViews = parseInt(totalViewsResult?.sum || '0', 10);
 
     return {

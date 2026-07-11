@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './database/entities/User.entity';
-import { Post } from './database/entities/Post.entity';
-import { PostView } from './database/entities/PostView.entity';
-import { Category } from './database/entities/Category.entity';
-import { Word } from './database/entities/Word.entity';
-import { MonthlyPayment } from './database/entities/MonthlyPayment.entity';
-import { Region } from './database/entities/Region.entity';
-import { City } from './database/entities/City.entity';
-import { PrayerTime } from './database/entities/PrayerTime.entity';
-import { ContactMessage } from './database/entities/ContactMessage.entity';
+import { User } from './auth/entities/User.entity';
+import { Post } from './posts/entities/Post.entity';
+import { PostView } from './posts/entities/PostView.entity';
+import { Category } from './words/entities/Category.entity';
+import { Word } from './words/entities/Word.entity';
+import { Region } from './prayer/entities/Region.entity';
+import { City } from './prayer/entities/City.entity';
+import { PrayerTime } from './prayer/entities/PrayerTime.entity';
+import { ContactMessage } from './contact/entities/ContactMessage.entity';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { ContactModule } from './contact/contact.module';
-import { LoansModule } from './loans/loans.module';
 import { PrayerModule } from './prayer/prayer.module';
 import { WordsModule } from './words/words.module';
 import { GamesModule } from './games/games.module';
@@ -41,7 +39,6 @@ import { GamesModule } from './games/games.module';
           PostView,
           Category,
           Word,
-          MonthlyPayment,
           Region,
           City,
           PrayerTime,
@@ -53,10 +50,9 @@ import { GamesModule } from './games/games.module';
     AuthModule,
     PostsModule,
     ContactModule,
-    LoansModule,
     PrayerModule,
     WordsModule,
     GamesModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

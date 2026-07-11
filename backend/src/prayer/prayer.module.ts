@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Region } from '../database/entities/Region.entity';
-import { City } from '../database/entities/City.entity';
-import { PrayerTime } from '../database/entities/PrayerTime.entity';
+import { Region } from './entities/Region.entity';
+import { City } from './entities/City.entity';
+import { PrayerTime } from './entities/PrayerTime.entity';
 import { PrayerService } from './prayer.service';
 import { PrayerController } from './prayer.controller';
 
@@ -12,4 +12,4 @@ import { PrayerController } from './prayer.controller';
   controllers: [PrayerController],
   exports: [PrayerService],
 })
-export class PrayerModule {}
+export class PrayerModule { }

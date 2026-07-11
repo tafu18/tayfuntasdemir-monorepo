@@ -59,13 +59,13 @@ public function index() {
                      line.includes('Post::where');
 
       const bgClass = isDiff 
-        ? (type === 'before' ? 'bg-red-500/15 border-red-500' : 'bg-emerald-500/15 border-emerald-500') 
+        ? (type === 'before' ? 'bg-red-500/15 border-red-500' : 'bg-blue-500/15 border-blue-500') 
         : 'border-transparent';
       const numColor = isDiff 
-        ? (type === 'before' ? 'text-red-400' : 'text-emerald-450') 
+        ? (type === 'before' ? 'text-red-400' : 'text-blue-450') 
         : 'text-zinc-500';
       const textColor = isDiff
-        ? (type === 'before' ? 'text-red-300' : 'text-emerald-200')
+        ? (type === 'before' ? 'text-red-300' : 'text-blue-200')
         : 'text-zinc-300';
 
       return (
@@ -172,19 +172,19 @@ public function index() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-zinc-150 dark:border-zinc-800 pt-10">
           <div className="bg-zinc-50 dark:bg-zinc-900/40 p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800 space-y-4">
             <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-indigo-500" /> Clean Code Prensipleri
+              <BookOpen className="h-5 w-5 text-blue-500" /> Clean Code Prensipleri
             </h3>
             <ul className="space-y-3 text-sm text-zinc-550 dark:text-zinc-400">
               <li className="flex gap-2">
-                <span className="text-indigo-500">✔</span>
+                <span className="text-blue-500">✔</span>
                 <strong>Anlamlı İsimlendirmeler:</strong> Değişken ve fonksiyon isimleri amacını doğrudan açıklamalıdır.
               </li>
               <li className="flex gap-2">
-                <span className="text-indigo-500">✔</span>
+                <span className="text-blue-500">✔</span>
                 <strong>Tek Bir İş (KISS):</strong> Her fonksiyon veya modül sadece tek bir amaca hizmet etmelidir.
               </li>
               <li className="flex gap-2">
-                <span className="text-indigo-500">✔</span>
+                <span className="text-blue-500">✔</span>
                 <strong>Kendini Tekrar Etme (DRY):</strong> Aynı kod bloklarını kopyalamak yerine fonksiyonlaştırın veya soyutlayın.
               </li>
             </ul>
@@ -203,7 +203,7 @@ public function index() {
                 <span className="font-black block text-sm">O</span>
                 <span>Open-Closed</span>
               </div>
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-650 rounded-xl">
+              <div className="p-2 bg-blue-50 dark:bg-blue-950/20 text-blue-650 rounded-xl">
                 <span className="font-black block text-sm">L</span>
                 <span>Liskov</span>
               </div>

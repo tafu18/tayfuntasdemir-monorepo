@@ -43,7 +43,7 @@ export default function UrlCodec() {
             URL Codec
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            URL <span className="bg-gradient-to-r from-blue-600 to-indigo-650 bg-clip-text text-transparent">Codec</span>
+            URL <span className="bg-gradient-to-r from-blue-600 to-blue-650 bg-clip-text text-transparent">Codec</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             URL karakterlerinizi güvenli bir şekilde kodlayın veya kodları çözün.
@@ -83,7 +83,7 @@ export default function UrlCodec() {
                   onClick={copyToClipboard}
                   className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 flex items-center gap-1"
                 >
-                  {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? <Check className="h-3.5 w-3.5 text-blue-500" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied ? 'Kopyalandı' : 'Kopyala'}
                 </button>
               )}

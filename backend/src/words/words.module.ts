@@ -1,7 +1,7 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Category } from '../database/entities/Category.entity';
-import { Word } from '../database/entities/Word.entity';
+import { Category } from './entities/Category.entity';
+import { Word } from './entities/Word.entity';
 import { WordsService } from './words.service';
 import { WordsController } from './words.controller';
 
@@ -12,7 +12,7 @@ import { WordsController } from './words.controller';
   exports: [WordsService],
 })
 export class WordsModule implements OnModuleInit {
-  constructor(private readonly wordsService: WordsService) {}
+  constructor(private readonly wordsService: WordsService) { }
 
   async onModuleInit() {
     await this.wordsService.seedDemoWords();

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ContactMessage } from '../database/entities/ContactMessage.entity';
+import { ContactMessage } from './entities/ContactMessage.entity';
 import { ContactService } from './contact.service';
 import { ContactController } from './contact.controller';
 
@@ -10,4 +10,4 @@ import { ContactController } from './contact.controller';
   controllers: [ContactController],
   exports: [ContactService],
 })
-export class ContactModule {}
+export class ContactModule { }

@@ -216,7 +216,7 @@ export default function MinesweeperGame() {
             </div>
           )}
           {gameWon && (
-            <div className="p-3 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400 rounded-xl text-center font-bold w-full">
+            <div className="p-3 bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400 rounded-xl text-center font-bold w-full">
               Tebrikler, tüm mayınları temizlediniz! 🏆
             </div>
           )}

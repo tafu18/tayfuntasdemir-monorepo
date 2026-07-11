@@ -79,11 +79,11 @@ export default function IpAddressTool() {
     <PageTransition>
       <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-650 dark:bg-indigo-950/30 dark:text-indigo-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-blue-400">
             IP Sorgulama Aracı
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            IP Adresim <span className="text-indigo-600 dark:text-indigo-400">Nedir?</span>
+            IP Adresim <span className="text-blue-600 dark:text-blue-400">Nedir?</span>
           </h1>
           <p className="mt-4 text-zinc-550 dark:text-zinc-400">
             Cihazınızın IPv4 ve IPv6 adreslerini anında tespit edin, tek tıkla kopyalayın.
@@ -95,7 +95,7 @@ export default function IpAddressTool() {
           <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-4 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
                 <span className="font-bold text-xs uppercase tracking-wider">IPv4 Adresiniz</span>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function IpAddressTool() {
                   onClick={() => copyToClipboard(ipv4, 'ipv4')}
                   className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     copied4
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-zinc-950 text-white hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100'
                   }`}
                 >
@@ -124,7 +124,7 @@ export default function IpAddressTool() {
           <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-4 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                <span className="h-2.5 w-2.5 rounded-full bg-indigo-500 animate-pulse" />
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
                 <span className="font-bold text-xs uppercase tracking-wider">IPv6 Adresiniz</span>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function IpAddressTool() {
                   onClick={() => copyToClipboard(ipv6, 'ipv6')}
                   className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     copied6
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-zinc-950 text-white hover:bg-zinc-850 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100'
                   }`}
                 >
@@ -152,7 +152,7 @@ export default function IpAddressTool() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-zinc-150 dark:border-zinc-800 pt-8 mt-8">
           <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <Shield className="h-4 w-4 text-indigo-500" />
+            <Shield className="h-4 w-4 text-blue-500" />
             %100 Güvenli
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -160,7 +160,7 @@ export default function IpAddressTool() {
             Çift Protokol (v4/v6)
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <EyeOff className="h-4 w-4 text-emerald-500" />
+            <EyeOff className="h-4 w-4 text-blue-500" />
             Gizlilik Odaklı
           </div>
         </div>

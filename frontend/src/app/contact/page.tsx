@@ -110,7 +110,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-12"
                 >
-                  <CheckCircle2 className="h-16 w-16 text-emerald-500 mx-auto mb-4" />
+                  <CheckCircle2 className="h-16 w-16 text-blue-500 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Mesajınız İletildi!</h3>
                   <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                     En kısa sürede e-posta adresiniz üzerinden geri dönüş sağlayacağım. Teşekkürler.

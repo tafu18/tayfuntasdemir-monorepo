@@ -56,7 +56,7 @@ export default function JsonFormatter() {
             JSON Formatter & Validator
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            JSON <span className="bg-gradient-to-r from-purple-600 to-indigo-650 bg-clip-text text-transparent">Formatter</span>
+            JSON <span className="bg-gradient-to-r from-purple-600 to-blue-650 bg-clip-text text-transparent">Formatter</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             JSON verilerinizi güzelleştirin, minify edin ve hataları bulun.
@@ -89,14 +89,14 @@ export default function JsonFormatter() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Code className="h-5 w-5 text-indigo-500" /> Çıkış JSON
+                <Code className="h-5 w-5 text-blue-500" /> Çıkış JSON
               </h2>
               {outputJson && (
                 <button
                   onClick={copyToClipboard}
                   className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 flex items-center gap-1"
                 >
-                  {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? <Check className="h-3.5 w-3.5 text-blue-500" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied ? 'Kopyalandı' : 'Kopyala'}
                 </button>
               )}

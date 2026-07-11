@@ -91,7 +91,7 @@ export default function EpochConverter() {
             Unix Zaman Damgası Dönüştürücü
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            Epoch <span className="bg-gradient-to-r from-violet-600 to-indigo-650 bg-clip-text text-transparent">Converter</span>
+            Epoch <span className="bg-gradient-to-r from-violet-600 to-blue-650 bg-clip-text text-transparent">Converter</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             Zaman damgası ile insan tarafından okunabilir tarih formatı arasında hızlı dönüşüm yapın.
@@ -100,7 +100,7 @@ export default function EpochConverter() {
 
         {/* Live Ticker */}
         <section className="bg-zinc-950 text-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-emerald-500" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-blue-500" />
           <div className="flex flex-col gap-1 items-center md:items-start">
             <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5 text-violet-450" /> Canlı Unix Zaman Damgası
@@ -168,7 +168,7 @@ export default function EpochConverter() {
           {/* Date -> Epoch */}
           <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
             <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-emerald-500" /> Tarih to Epoch
+              <Calendar className="h-5 w-5 text-blue-500" /> Tarih to Epoch
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">

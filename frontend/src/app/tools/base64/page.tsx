@@ -172,11 +172,11 @@ export default function Base64Converter() {
     <PageTransition>
       <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 space-y-8">
         <header className="text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-650 dark:bg-indigo-950/30 dark:text-indigo-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-blue-400">
             Base64 Atölyesi
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            Base64 <span className="bg-gradient-to-r from-indigo-600 to-sky-655 bg-clip-text text-transparent">Atölyesi</span>
+            Base64 <span className="bg-gradient-to-r from-blue-600 to-sky-655 bg-clip-text text-transparent">Atölyesi</span>
           </h1>
           <p className="mt-4 text-zinc-550 dark:text-zinc-400">
             Metinlerinizi ve dosyalarınızı Base64 formatına dönüştürün veya Base64 kodlarını çözün.
@@ -189,7 +189,7 @@ export default function Base64Converter() {
             onClick={() => { setTab('text'); clear(); }}
             className={`flex-1 py-3 text-sm font-bold border-b-2 transition-all ${
               tab === 'text'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
             }`}
           >
@@ -199,7 +199,7 @@ export default function Base64Converter() {
             onClick={() => { setTab('file'); clear(); }}
             className={`flex-1 py-3 text-sm font-bold border-b-2 transition-all ${
               tab === 'file'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
             }`}
           >
@@ -225,7 +225,7 @@ export default function Base64Converter() {
               <div className="flex gap-4">
                 <button
                   onClick={encodeText}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-all"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all"
                 >
                   Base64 Encode
                 </button>
@@ -244,7 +244,7 @@ export default function Base64Converter() {
                 {outputText && !isError && (
                   <div className="flex gap-2">
                     <button onClick={copyOutput} className="text-xs text-zinc-500 hover:text-zinc-850 dark:hover:text-zinc-300 flex items-center gap-1">
-                      {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copied ? <Check className="h-3.5 w-3.5 text-blue-500" /> : <Copy className="h-3.5 w-3.5" />}
                       Kopyala
                     </button>
                     <button onClick={downloadOutputAsTxt} className="text-xs text-zinc-500 hover:text-zinc-850 dark:hover:text-zinc-300 flex items-center gap-1">
@@ -277,19 +277,19 @@ export default function Base64Converter() {
             <div className="space-y-6">
               <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 space-y-4">
                 <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                  <FileUp className="h-5 w-5 text-indigo-500" /> Dosya → Base64
+                  <FileUp className="h-5 w-5 text-blue-500" /> Dosya → Base64
                 </h3>
                 <p className="text-xs text-zinc-500">Seçeceğiniz herhangi bir dosya (resim, PDF, zip vb.) tarayıcınızda Base64 koduna çevrilecektir.</p>
                 <input
                   type="file"
                   onChange={encodeFile}
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-650 hover:file:bg-indigo-100 dark:file:bg-indigo-950/30 dark:file:text-indigo-400"
+                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-650 hover:file:bg-blue-100 dark:file:bg-blue-950/30 dark:file:text-blue-400"
                 />
               </div>
 
               <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 space-y-4">
                 <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-indigo-500" /> Base64 → Dosya
+                  <FileText className="h-5 w-5 text-blue-500" /> Base64 → Dosya
                 </h3>
                 <textarea
                   value={fileInputText}
@@ -318,7 +318,7 @@ export default function Base64Converter() {
                 <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Base64 Çıktısı / Hatalar</label>
                 {outputText && !isError && (
                   <button onClick={copyOutput} className="text-xs text-zinc-500 hover:text-zinc-850 dark:hover:text-zinc-300 flex items-center gap-1">
-                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copied ? <Check className="h-3.5 w-3.5 text-blue-500" /> : <Copy className="h-3.5 w-3.5" />}
                     Kopyala
                   </button>
                 )}
@@ -341,7 +341,7 @@ export default function Base64Converter() {
 
         {/* Global Toast */}
         {toastMessage && (
-          <div className="fixed bottom-4 right-4 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+          <div className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
             <Check className="h-4 w-4" />
             <span className="text-sm font-bold">{toastMessage}</span>
           </div>

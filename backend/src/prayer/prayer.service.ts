@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Region } from '../database/entities/Region.entity';
-import { City } from '../database/entities/City.entity';
-import { PrayerTime } from '../database/entities/PrayerTime.entity';
+import { Region } from './entities/Region.entity';
+import { City } from './entities/City.entity';
+import { PrayerTime } from './entities/PrayerTime.entity';
 
 @Injectable()
 export class PrayerService {
@@ -16,7 +16,7 @@ export class PrayerService {
     private readonly cityRepository: Repository<City>,
     @InjectRepository(PrayerTime)
     private readonly prayerTimeRepository: Repository<PrayerTime>,
-  ) {}
+  ) { }
 
   async getRegions(): Promise<Region[]> {
     return this.regionRepository.find({ order: { name: 'ASC' } });
@@ -115,24 +115,24 @@ export class PrayerService {
 
   async getLivePrayerTimes(region: string, city: string): Promise<any> {
     const today = new Date().toISOString().split('T')[0];
-    
+
     // We can fetch from vaktiapp API directly
     const url = `https://vaktiapp.com/api/timesFromPlace?country=Turkey&region=${encodeURIComponent(region)}&city=${encodeURIComponent(city)}&date=${today}&days=1&timezoneOffset=180&calculationMethod=Turkey`;
-    
+
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`External API status: ${response.status}`);
       }
       const data = await response.json();
-      
+
       if (!data?.times?.[today]) {
         throw new Error('Times not found in API response');
       }
 
       const prayerTimes = data.times[today]; // Array of times [imsak, gunes, ogle, ikindi, aksam, yatsi]
       const prayers = ['İmsak', 'Güneş', 'Öğle', 'İkindi', 'Akşam', 'Yatsı'];
-      
+
       const allTimesFormatted = {};
       prayers.forEach((name, idx) => {
         allTimesFormatted[name] = prayerTimes[idx];
@@ -151,7 +151,7 @@ export class PrayerService {
       for (let i = 0; i < prayers.length; i++) {
         const [h, m] = prayerTimes[i].split(':').map(Number);
         const prayerInSeconds = h * 3600 + m * 60;
-        
+
         if (nowInSeconds < prayerInSeconds) {
           nextPrayerName = prayers[i];
           remainingTime = prayerInSeconds - nowInSeconds;
