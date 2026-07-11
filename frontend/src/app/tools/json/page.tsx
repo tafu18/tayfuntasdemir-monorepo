@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import {
-  Code, MagicWand, Maximize2, Minimize2, Trash, Check, Copy, Download,
+  Code, Wand2, Maximize2, Minimize2, Trash, Check, Copy, Download,
   AlertTriangle, Edit3, Network, FlaskConical, Maximize, Minimize
 } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
@@ -285,7 +285,7 @@ export default function JsonFormatter() {
           <div className="jf-toolbar">
             <div className="flex items-center gap-2 flex-wrap">
               <button className="jf-tb-btn" onClick={beautify}>
-                <MagicWand className="w-3.5 h-3.5" /> Beautify
+                <Wand2 className="w-3.5 h-3.5" /> Beautify
               </button>
               <button className="jf-tb-btn" onClick={minify}>
                 <Minimize2 className="w-3.5 h-3.5" /> Minify

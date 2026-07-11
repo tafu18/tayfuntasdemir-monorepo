@@ -215,7 +215,7 @@ export default function CodeDiff() {
                     className="diff-layer layer-before" 
                     ref={layerBeforeRef}
                     onScroll={syncScrollBefore}
-                    style={{ width: \`\${sliderPosition}%\`, display: sliderPosition <= 0.5 ? 'none' : 'block' }}
+                    style={{ width: `${sliderPosition}%`, display: sliderPosition <= 0.5 ? 'none' : 'block' }}
                     dangerouslySetInnerHTML={{ __html: renderCodeWithDiff(beforeCode, 'before') }}
                   />
                   
@@ -228,7 +228,7 @@ export default function CodeDiff() {
                   
                   <div 
                     className="slider-handle" 
-                    style={{ left: \`\${sliderPosition}%\` }}
+                    style={{ left: `${sliderPosition}%` }}
                     onMouseDown={(e) => { setIsDragging(true); e.preventDefault(); }}
                     onTouchStart={() => setIsDragging(true)}
                   >

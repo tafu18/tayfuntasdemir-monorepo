@@ -48,44 +48,67 @@ export default function HicriConverter() {
   
   const [specialDay, setSpecialDay] = useState('');
 
-  // ── JDN Algoritmaları (Diyanet Kalibreli) ──
-  const gregorianToJdn = (year: number, month: number, day: number) => {
-    if (month <= 2) { year -= 1; month += 12; }
-    const a = Math.floor(year / 100);
-    const b = 2 - a + Math.floor(a / 4);
-    return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524;
-  };
-
-  const jdnToGregorian = (jd: number) => {
-    let b;
-    if (jd > 2299160) {
-      const a = Math.floor((jd - 1867216.25) / 36524.25);
-      b = jd + 1 + a - Math.floor(a / 4);
-    } else { b = jd; }
-    const c = b + 1524;
-    const d = Math.floor((c - 122.1) / 365.25);
-    const e = Math.floor(365.25 * d);
-    const f = Math.floor((c - e) / 30.6001);
-    const day = c - e - Math.floor(30.6001 * f);
-    const month = f - (f > 13 ? 13 : 1);
-    const year = d - (month > 2 ? 4716 : 4715);
-    return { year, month, day };
-  };
-
-  const islamicToJdn = (year: number, month: number, day: number) => {
-    return Math.floor((11 * year + 3) / 30) + 354 * year + 30 * month - Math.floor((month - 1) / 2) + day + 1948440 - 384;
-  };
-
-  const jdnToIslamic = (jd: number) => {
-    const year = Math.floor((30 * (jd - 1948441) + 10646) / 10631);
-    const month = Math.min(12, Math.ceil((jd - 29 - islamicToJdn(year, 1, 1)) / 29.5) + 1);
-    const day = jd - islamicToJdn(year, month, 1) + 1;
-    return { year, month, day };
-  };
-
+  // ── Diyanet/Umm Al-Qura Uyumlu Doğru Hesaplama (Intl tabanlı) ──
   const getHijriFromDate = (date: Date) => {
-    const jd = gregorianToJdn(date.getFullYear(), date.getMonth() + 1, date.getDate());
-    return jdnToIslamic(jd);
+    const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const parts = formatter.format(utcDate).split('/');
+    return {
+      month: parseInt(parts[0], 10),
+      day: parseInt(parts[1], 10),
+      year: parseInt(parts[2], 10)
+    };
+  };
+
+  const getGregorianFromHijri = (hy: number, hm: number, hd: number): Date | null => {
+    let gy = Math.floor(hy * 0.97) + 621;
+    let start = Date.UTC(gy, 0, 1);
+    let end = Date.UTC(gy + 2, 11, 31);
+    
+    let low = start;
+    let high = end;
+    
+    const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+    
+    const getHijri = (time: number) => {
+      const parts = formatter.format(new Date(time)).split('/');
+      return {
+        month: parseInt(parts[0], 10),
+        day: parseInt(parts[1], 10),
+        year: parseInt(parts[2], 10)
+      };
+    };
+    
+    while (low <= high) {
+      let mid = low + Math.floor((high - low) / (2 * 86400000)) * 86400000;
+      let h = getHijri(mid);
+      
+      let diffYear = h.year - hy;
+      let diffMonth = h.month - hm;
+      let diffDay = h.day - hd;
+      
+      if (diffYear === 0 && diffMonth === 0 && diffDay === 0) {
+        const utcDate = new Date(mid);
+        return new Date(utcDate.getUTCFullYear(), utcDate.getUTCMonth(), utcDate.getUTCDate());
+      }
+      
+      if (diffYear < 0 || (diffYear === 0 && diffMonth < 0) || (diffYear === 0 && diffMonth === 0 && diffDay < 0)) {
+        low = mid + 86400000;
+      } else {
+        high = mid - 86400000;
+      }
+    }
+    return null;
   };
 
   useEffect(() => {
@@ -95,7 +118,7 @@ export default function HicriConverter() {
     setMInput(localIso);
 
     const hijriParts = getHijriFromDate(today);
-    setTodayHijri(\`\${hijriParts.day} \${hijriMonths[hijriParts.month - 1]} \${hijriParts.year}\`);
+    setTodayHijri(`${hijriParts.day} ${hijriMonths[hijriParts.month - 1]} ${hijriParts.year}`);
     setTodayMiladi(today.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }));
     setTodayDayName(today.toLocaleDateString('tr-TR', { weekday: 'long' }));
 
@@ -114,10 +137,10 @@ export default function HicriConverter() {
     if (isNaN(date.getTime())) return;
 
     const hijri = getHijriFromDate(date);
-    setHResult(\`\${hijri.day} \${hijriMonths[hijri.month - 1]} \${hijri.year}\`);
+    setHResult(`${hijri.day} ${hijriMonths[hijri.month - 1]} ${hijri.year}`);
     setMDayName(date.toLocaleDateString('tr-TR', { weekday: 'long' }));
 
-    const key = \`\${hijri.day}-\${hijri.month}\`;
+    const key = `${hijri.day}-${hijri.month}`;
     setSpecialDay(specialDays[key] || '');
   }, [mInput]);
 
@@ -127,11 +150,8 @@ export default function HicriConverter() {
     let y = parseInt(hYear.toString());
     if (!d || !m || !y || d < 1 || d > 30 || m < 1 || m > 12) return;
 
-    const jd = islamicToJdn(y, m, d);
-    const greg = jdnToGregorian(jd);
-    const resDate = new Date(greg.year, greg.month - 1, greg.day);
-
-    if (isNaN(resDate.getTime())) return;
+    const resDate = getGregorianFromHijri(y, m, d);
+    if (!resDate || isNaN(resDate.getTime())) return;
 
     setMResult(resDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }));
     setHDayName(resDate.toLocaleDateString('tr-TR', { weekday: 'long' }));

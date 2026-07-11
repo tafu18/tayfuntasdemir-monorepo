@@ -59,7 +59,7 @@ export default function RegexTester() {
           const endIndex = startIndex + matchText.length;
 
           hlText += escapeHtml(text.substring(lastIndex, startIndex));
-          hlText += \`<span class="match-highlight">\${escapeHtml(matchText)}</span>\`;
+          hlText += `<span class="match-highlight">${escapeHtml(matchText)}</span>`;
           lastIndex = endIndex;
         });
 

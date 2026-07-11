@@ -1,20 +1,20 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { useRouter } from 'next/navigation';
 import OtherTools from '@/components/OtherTools';
 
 const appsList = [
-  {name: 'IP Adresim', route: '/tools/ip', desc: 'IP Sorgu Ekranı'},
-  {name: 'Epoch Converter', route: '/tools/epoch', desc: 'Zaman Damgası Dönüştürücü'},
-  {name: 'JSON Formatter', route: '/tools/json', desc: 'JSON Düzenleyici'},
-  {name: 'Regex Tester', route: '/tools/regex', desc: 'Regex Test ve Eşleşme Analizi'},
-  {name: 'JWT Decoder', route: '/tools/jwt', desc: 'JSON Web Token Kod Çözücü'},
-  {name: 'URL Codec', route: '/tools/url', desc: 'URL Kodlama ve Çözme'},
-  {name: 'Code Diff Slider', route: '/tools/code-diff', desc: 'Görsel Kod Karşılaştırma Sürgüsü'},
-  {name: 'Base64 Encode/Decode', route: '/tools/base64', desc: 'Base64 İşlemleri'},
-  {name: 'Hicri Çevirici', route: '/tools/hicri', desc: 'Hicri/Miladi Çevirici'}
+  { name: 'IP Adresim', route: '/tools/ip', desc: 'IP Sorgu Ekranı' },
+  { name: 'Epoch Converter', route: '/tools/epoch', desc: 'Zaman Damgası Dönüştürücü' },
+  { name: 'JSON Formatter', route: '/tools/json', desc: 'JSON Düzenleyici' },
+  { name: 'Regex Tester', route: '/tools/regex', desc: 'Regex Test ve Eşleşme Analizi' },
+  { name: 'JWT Decoder', route: '/tools/jwt', desc: 'JSON Web Token Kod Çözücü' },
+  { name: 'URL Codec', route: '/tools/url', desc: 'URL Kodlama ve Çözme' },
+  { name: 'Code Diff Slider', route: '/tools/code-diff', desc: 'Görsel Kod Karşılaştırma Sürgüsü' },
+  { name: 'Base64 Encode/Decode', route: '/tools/base64', desc: 'Base64 İşlemleri' },
+  { name: 'Hicri Çevirici', route: '/tools/hicri', desc: 'Hicri/Miladi Çevirici' }
 ];
 
 const quotesList = [
@@ -28,13 +28,13 @@ const quotesList = [
 export default function TerminalCli() {
   const router = useRouter();
   const [theme, setTheme] = useState('matrix');
-  const [history, setHistory] = useState<JSX.Element[]>([]);
+  const [history, setHistory] = useState<React.ReactNode[]>([]);
   const [inputVal, setInputVal] = useState('');
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [ip, setIp] = useState('Yükleniyor...');
-  const [posts, setPosts] = useState<{title: string, slug: string}[]>([]);
-  
+  const [posts, setPosts] = useState<{ title: string, slug: string }[]>([]);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -47,11 +47,11 @@ export default function TerminalCli() {
     fetch('/api/posts')
       .then(res => res.json())
       .then(data => {
-        if(data && data.data) {
-          setPosts(data.data.slice(0, 5).map((p: any) => ({title: p.title, slug: p.slug})));
+        if (data && data.data) {
+          setPosts(data.data.slice(0, 5).map((p: any) => ({ title: p.title, slug: p.slug })));
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const scrollToBottom = () => {
@@ -77,9 +77,9 @@ export default function TerminalCli() {
       </div>
     );
 
-    let responseContent: JSX.Element | null = null;
+    let responseContent: React.ReactNode = null;
 
-    switch(cmd) {
+    switch (cmd) {
       case 'help':
       case 'yardim':
         responseContent = (
@@ -183,7 +183,7 @@ export default function TerminalCli() {
         break;
       case 'theme':
         const allowedThemes = ['matrix', 'classic', 'ubuntu', 'dark', 'light'];
-        if(allowedThemes.includes(arg)) {
+        if (allowedThemes.includes(arg)) {
           setTheme(arg);
           responseContent = <div className="mt-1 mb-3"><p>Tema başarıyla değiştirildi: <span className="font-bold term-accent">{arg}</span></p></div>;
         } else {
@@ -209,7 +209,7 @@ export default function TerminalCli() {
     if (responseContent) {
       newHistory.push(<div key={Date.now() + Math.random() + 1}>{responseContent}</div>);
     }
-    
+
     setHistory(newHistory);
   };
 
@@ -248,8 +248,9 @@ export default function TerminalCli() {
   return (
     <PageTransition>
       <div className={`terminal-container theme-${theme} min-h-[85vh] py-12 px-4 transition-colors duration-300`} style={{ backgroundColor: 'var(--bg-color)' }} onClick={() => inputRef.current?.focus()}>
-        
-        <style dangerouslySetInnerHTML={{__html: `
+
+        <style dangerouslySetInnerHTML={{
+          __html: `
           .terminal-container { font-family: 'Fira Code', 'Courier New', Courier, monospace; transition: all 0.3s ease; }
           .theme-matrix { --bg-color: #030712; --terminal-bg: #0b0f19; --text-color: #10b981; --prompt-color: #34d399; --accent-color: #059669; --border-color: #10b98150; --header-bg: #111827; --header-text: #9ca3af; }
           .theme-classic { --bg-color: #0c0a09; --terminal-bg: #1c1917; --text-color: #f59e0b; --prompt-color: #fbbf24; --accent-color: #d97706; --border-color: #f59e0b40; --header-bg: #292524; --header-text: #d6d3d1; }
@@ -286,11 +287,11 @@ export default function TerminalCli() {
 
             {/* Body */}
             <div ref={bodyRef} className="term-body h-[380px] md:h-[550px] overflow-y-auto p-4 md:p-6 text-sm leading-relaxed" onClick={() => inputRef.current?.focus()}>
-              
+
               {/* Welcome Msg */}
               <div className="mb-4">
                 <pre className="hidden sm:block font-bold text-xs sm:text-sm md:text-base leading-tight mb-4 select-none">
-{`████████╗ █████╗ ██╗   ██╗███████╗██╗   ██╗███╗   ██╗
+                  {`████████╗ █████╗ ██╗   ██╗███████╗██╗   ██╗███╗   ██╗
 ╚══██╔══╝██╔══██╗╚██╗ ██╔╝██╔════╝██║   ██║████╗  ██║
    ██║   ███████║ ╚████╔╝ █████╗  ██║   ██║██╔██╗ ██║
    ██║   ██╔══██║  ╚██╔╝  ██╔══╝  ██║   ██║██║╚██╗██║
@@ -312,14 +313,14 @@ export default function TerminalCli() {
                 <div className="flex-grow relative flex items-center min-h-[20px]">
                   <span className="whitespace-pre-wrap break-all mr-1">{inputVal}</span>
                   <span className="w-2 h-4 inline-block blinking-cursor select-none">&nbsp;</span>
-                  <input 
+                  <input
                     ref={inputRef}
-                    type="text" 
+                    type="text"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-default focus:outline-none text-transparent"
-                    autoFocus 
-                    autoComplete="off" 
-                    autoCapitalize="none" 
-                    autoCorrect="off" 
+                    autoFocus
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     spellCheck="false"
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
@@ -338,10 +339,6 @@ export default function TerminalCli() {
             <button onClick={(e) => { e.stopPropagation(); setTheme('ubuntu'); }} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-[#e95420] rounded border border-gray-700">Ubuntu</button>
             <button onClick={(e) => { e.stopPropagation(); setTheme('dark'); }} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded border border-gray-700">Dark</button>
             <button onClick={(e) => { e.stopPropagation(); setTheme('light'); }} className="px-2 py-1 bg-white hover:bg-gray-100 text-slate-800 rounded border border-gray-300">Light</button>
-          </div>
-
-          <div className="mt-12">
-            <OtherTools />
           </div>
         </div>
       </div>

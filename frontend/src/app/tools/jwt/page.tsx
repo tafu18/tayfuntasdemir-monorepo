@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { Key, Copy, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
@@ -15,7 +15,7 @@ export default function JwtDecoder() {
   const [secret, setSecret] = useState(defaultSecret);
   
   const [errorMsg, setErrorMsg] = useState('');
-  const [statusHtml, setStatusHtml] = useState<JSX.Element | null>(null);
+  const [statusHtml, setStatusHtml] = useState<React.ReactNode>(null);
   const [timestamps, setTimestamps] = useState<{key: string, val: number, dateStr: string}[]>([]);
   
   const [isUpdating, setIsUpdating] = useState(false);
@@ -34,7 +34,7 @@ export default function JwtDecoder() {
       }
       base64 = btoa(binary);
     }
-    return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\\//g, '_');
+    return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
   };
 
   const base64UrlDecode = (str: string) => {
@@ -181,7 +181,7 @@ export default function JwtDecoder() {
       const payloadB64 = base64UrlEncode(JSON.stringify(payloadObj));
       const signatureB64 = await generateSignature(headerB64, payloadB64, s);
 
-      setToken(\`\${headerB64}.\${payloadB64}.\${signatureB64}\`);
+      setToken(`${headerB64}.${payloadB64}.${signatureB64}`);
       
       updateTimestampDetails(payloadObj);
 

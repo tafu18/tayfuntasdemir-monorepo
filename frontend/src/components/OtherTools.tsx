@@ -29,7 +29,7 @@ export default function OtherTools() {
 
   const tools: ToolItem[] = [
     { name: 'IP Adresim', path: '/tools/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
-    { name: 'Epoch Converter', path: '/tools/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: 'brand-emerald' },
+    { name: 'Epoch Converter', path: '/tools/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color:  '#f59e0b' },
     { name: 'JSON Formatter', path: '/tools/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
     { name: 'Base64 Atölyesi', path: '/tools/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
     { name: 'Hicri Dönüştürücü', path: '/tools/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },

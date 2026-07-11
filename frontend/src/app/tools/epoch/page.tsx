@@ -6,8 +6,8 @@ import { Clock, Check, Copy, CalendarDays, History, Cpu, Globe, Shield, ArrowRig
 import OtherTools from '@/components/OtherTools';
 
 export default function EpochConverter() {
-  const [currentEpochMs, setCurrentEpochMs] = useState<number>(0);
-  const [currentEpochSec, setCurrentEpochSec] = useState<number>(0);
+  const [currentEpochMs, setCurrentEpochMs] = useState<number | null>(null);
+  const [currentEpochSec, setCurrentEpochSec] = useState<number | null>(null);
 
   const [inputDate, setInputDate] = useState('');
   const [resultEpoch, setResultEpoch] = useState<number | null>(null);
@@ -40,7 +40,8 @@ export default function EpochConverter() {
     return () => clearInterval(interval);
   }, []);
 
-  const copyVal = (val: string, type: string) => {
+  const copyVal = (val: string | null, type: string) => {
+    if (!val) return;
     navigator.clipboard.writeText(val).then(() => {
       setShowToast(true);
       setTimeout(() => setShowToast(false), 2000);
@@ -172,20 +173,20 @@ export default function EpochConverter() {
             <div className="flex flex-col gap-1">
               <span className="text-[0.68rem] font-bold uppercase tracking-[0.15em] text-white/40">Şu Anki Epoch (Milisaniye)</span>
               <span className="font-['JetBrains_Mono'] text-[clamp(1.2rem,3vw,1.8rem)] font-bold text-white leading-none">
-                {currentEpochMs || Date.now()}
+                {currentEpochMs || 'Yükleniyor...'}
               </span>
             </div>
             <div className="flex gap-2 ep-ticker-right">
               <button 
                 className={`ep-ticker-btn ${copiedSec ? 'copied' : ''}`}
-                onClick={() => copyVal(String(currentEpochSec), 'sec')}
+                onClick={() => copyVal(currentEpochSec ? String(currentEpochSec) : null, 'sec')}
               >
                 {copiedSec ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedSec ? 'OK!' : 'Saniye'}</span>
               </button>
               <button 
                 className={`ep-ticker-btn ${copiedMs ? 'copied' : ''}`}
-                onClick={() => copyVal(String(currentEpochMs), 'ms')}
+                onClick={() => copyVal(currentEpochMs ? String(currentEpochMs) : null, 'ms')}
               >
                 {copiedMs ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedMs ? 'OK!' : 'Milisaniye'}</span>

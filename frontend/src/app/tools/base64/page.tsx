@@ -7,10 +7,10 @@ import OtherTools from '@/components/OtherTools';
 
 export default function Base64() {
   const [tab, setTab] = useState<'text' | 'file'>('text');
-  
+
   // Text Mode State
   const [inputText, setInputText] = useState('');
-  
+
   // File Mode State
   const [fileInputText, setFileInputText] = useState('');
   const [fileName, setFileName] = useState('');
@@ -87,7 +87,7 @@ export default function Base64() {
       setIsError(true);
     };
     reader.readAsDataURL(file);
-    
+
     // reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -114,11 +114,11 @@ export default function Base64() {
         uint8Array[i] = binaryStr.charCodeAt(i);
       }
       const blob = new Blob([uint8Array], { type: mimeType });
-      
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      
+
       let fName = fileName.trim();
       if (!fName) {
         let ext = 'bin';
@@ -126,7 +126,16 @@ export default function Base64() {
         else if (mimeType.includes('image/jpeg')) ext = 'jpg';
         else if (mimeType.includes('application/pdf')) ext = 'pdf';
         else if (mimeType.includes('text/plain')) ext = 'txt';
-        fName = 'decoded_file.' + ext;
+
+        const now = new Date();
+        const timestamp = now.getFullYear() +
+          '-' + String(now.getMonth() + 1).padStart(2, '0') +
+          '-' + String(now.getDate()).padStart(2, '0') +
+          '_' + String(now.getHours()).padStart(2, '0') +
+          '-' + String(now.getMinutes()).padStart(2, '0') +
+          '-' + String(now.getSeconds()).padStart(2, '0');
+
+        fName = 'tayfuntasdemircomtr_base64_output_' + timestamp + '.' + ext;
       }
 
       a.download = fName;
@@ -156,7 +165,16 @@ export default function Base64() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'base64_output.txt';
+
+    const now = new Date();
+    const timestamp = now.getFullYear() +
+      '-' + String(now.getMonth() + 1).padStart(2, '0') +
+      '-' + String(now.getDate()).padStart(2, '0') +
+      '_' + String(now.getHours()).padStart(2, '0') +
+      '-' + String(now.getMinutes()).padStart(2, '0') +
+      '-' + String(now.getSeconds()).padStart(2, '0');
+
+    a.download = `tayfuntasdemircomtr_base64_output_${timestamp}.txt`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -166,7 +184,8 @@ export default function Base64() {
   return (
     <PageTransition>
       <div className="b64-page min-h-screen bg-[#f8fafc] dark:bg-zinc-950 font-['Plus_Jakarta_Sans',sans-serif] py-12 px-4">
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           .b64-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(99,102,241,0.08); color: #6366f1; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 0.5rem 1.25rem; border-radius: 100px; margin-bottom: 1.25rem; }
           .b64-header h1 { font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
           .b64-header h1 span { background: linear-gradient(135deg, #6366f1, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -214,7 +233,7 @@ export default function Base64() {
 
         <div className="max-w-[820px] mx-auto w-full">
 
-          <header className="text-center mb-12 mt-4">
+          <header className="text-center mb-12 mt-4 b64-header">
             <div className="b64-badge">
               <Shield className="w-3.5 h-3.5" />
               %100 İstemci Taraflı İşlem
@@ -226,7 +245,7 @@ export default function Base64() {
           </header>
 
           <div className="b64-card">
-            
+
             <div className="b64-toolbar">
               <div className="b64-dots">
                 <span></span><span></span><span></span>
@@ -248,12 +267,12 @@ export default function Base64() {
             </div>
 
             <div className="p-8">
-              
+
               {tab === 'text' && (
                 <div className="animate-in fade-in duration-200">
                   <label className="block text-[0.72rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-2.5">Giriş Metni</label>
-                  <textarea 
-                    className="b64-textarea min-h-[180px] resize-y" 
+                  <textarea
+                    className="b64-textarea min-h-[180px] resize-y"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     placeholder="Metni veya Base64 kodunu buraya yapıştırın..."
@@ -272,7 +291,7 @@ export default function Base64() {
 
               {tab === 'file' && (
                 <div className="animate-in fade-in duration-200">
-                  
+
                   <div className="mb-8">
                     <label className="block text-[0.72rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-2.5">Dosyayı Base64'e Çevir (Encode)</label>
                     <div className="file-dropzone group">
@@ -285,20 +304,20 @@ export default function Base64() {
 
                   <div>
                     <label className="block text-[0.72rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-2.5">Base64'ü Dosyaya Çevir (Decode)</label>
-                    <textarea 
-                      className="b64-textarea min-h-[120px]" 
+                    <textarea
+                      className="b64-textarea min-h-[120px]"
                       value={fileInputText}
                       onChange={(e) => setFileInputText(e.target.value)}
                       placeholder="Base64 kodunu (data:image/png;base64,... formatında veya düz) buraya yapıştırın..."
                     />
-                    
+
                     <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={fileName}
                         onChange={(e) => setFileName(e.target.value)}
-                        className="b64-input flex-1 font-['Plus_Jakarta_Sans']" 
-                        placeholder="dosya_adi.txt (Opsiyonel)" 
+                        className="b64-input flex-1 font-['Plus_Jakarta_Sans']"
+                        placeholder="dosya_adi.txt (Opsiyonel)"
                       />
                       <button className="b64-btn b64-btn-decode flex-1" onClick={decodeFile}>
                         <Download className="w-4 h-4" /> Dosya Olarak İndir
@@ -317,7 +336,7 @@ export default function Base64() {
                       <button className="b64-copy-btn" onClick={downloadOutputAsTxt} title="Base64 kodunu .txt olarak indir">
                         <Download className="w-3.5 h-3.5" /> İndir (.txt)
                       </button>
-                      
+
                       <button className={`b64-copy-btn ${copied ? 'copied' : ''}`} onClick={copyOutput}>
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copied ? 'Kopyalandı!' : 'Kopyala'}</span>
