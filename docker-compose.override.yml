@@ -1,0 +1,37 @@
+# Local development overrides
+# Bu dosya otomatik olarak docker-compose.yml ile birleştirilir
+# Kullanım: docker compose up
+
+version: '3.8'
+
+services:
+  db:
+    ports:
+      - "3306:3306"   # local'de DB'ye direkt bağlanabilmek için
+
+  backend:
+    command: npm run start:dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "4000:4000"   # local'de direkt erişim
+
+  frontend:
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"   # local'de direkt erişim
+
+networks:
+  global_proxy:
+    external: false   # local'de global_proxy yoktur, bridge yeterli
+    driver: bridge
+    name: local_proxy
