@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use, useRef } from 'react';
 import Link from 'next/link';
-import { api } from '@/lib/api';
+import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
 import { Calendar, Eye, ArrowLeft, BookOpen, Clock } from 'lucide-react';
 
@@ -161,7 +161,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                   <figure className="mb-8">
                     <img 
                       className="w-full h-auto rounded-xl shadow-lg" 
-                      src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/uploads/${post.image}`} 
+                      src={getImageUrl(post.image)} 
                       alt={post.title}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop';
@@ -228,7 +228,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                     {mostRead.map((mostReadPost: any) => (
                       <Link key={mostReadPost.id} href={`/post/${mostReadPost.slug}`} className="flex items-center gap-4 group">
                         <img 
-                          src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/uploads/${mostReadPost.image}`} 
+                          src={getImageUrl(mostReadPost.image)} 
                           alt={mostReadPost.title} 
                           className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                           onError={(e) => {

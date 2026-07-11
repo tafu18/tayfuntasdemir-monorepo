@@ -57,6 +57,14 @@ export class PostsService {
     return { post, related, mostRead };
   }
 
+  async findOne(id: number): Promise<Post> {
+    const post = await this.postRepository.findOne({ where: { id }, relations: { postViews: true } });
+    if (!post) {
+      throw new NotFoundException('Yazı bulunamadı.');
+    }
+    return post;
+  }
+
   async getTrackingList(): Promise<{ posts: Post[]; totalViews: number }> {
     const posts = await this.postRepository.find({
       where: { status: 'published' },

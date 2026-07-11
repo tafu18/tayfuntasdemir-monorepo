@@ -54,16 +54,24 @@ export class AuthService {
   }
 
   async seedAdmin(): Promise<void> {
-    const count = await this.userRepository.count();
-    if (count === 0) {
+    const adminEmail = 'admin@tayfuntasdemir.com.tr';
+    const existing = await this.userRepository.findOne({ where: { email: adminEmail } });
+    if (!existing) {
       // Varsayılan admin kullanıcısı oluştur
       await this.register({
         name: 'Tayfun Taşdemir',
-        email: 'tayfun@vaktihuzur.com',
-        password: 'adminpassword123',
+        email: adminEmail,
+        password: '243818Tt.',
         type: 'admin',
       });
-      console.log('Seed: Varsayılan admin kullanıcısı oluşturuldu (tayfun@vaktihuzur.com / adminpassword123)');
+      console.log(`Seed: Varsayılan admin kullanıcısı oluşturuldu (${adminEmail})`);
+    } else {
+      // Şifreyi ve türü güncelle
+      const hashedPassword = await bcrypt.hash('243818Tt.', 10);
+      existing.password = hashedPassword;
+      existing.type = 'admin';
+      await this.userRepository.save(existing);
+      console.log(`Seed: Mevcut admin kullanıcısının şifresi güncellendi (${adminEmail})`);
     }
   }
 }

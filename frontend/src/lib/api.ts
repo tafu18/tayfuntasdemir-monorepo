@@ -21,3 +21,22 @@ api.interceptors.request.use((config) => {
 }, (error) => {
   return Promise.reject(error);
 });
+
+export const getImageUrl = (url?: string) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  
+  let path = url;
+  if (!path.startsWith('/')) {
+    path = '/' + path;
+  }
+  
+  if (!path.startsWith('/uploads/')) {
+    path = '/uploads' + path;
+  }
+  
+  return `${cleanBase}${path}`;
+};

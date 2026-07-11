@@ -20,22 +20,89 @@ export default function NamazVakitleri() {
   const [hadith, setHadith] = useState({ text: '', source: '' });
 
   const ayahs = [
-    { text: "Namazı kılın, zekâtı verin. Rükû edenlerle birlikte siz de rükû edin.", source: "Bakara Suresi, 43. Ayet" },
-    { text: "Sabrederek ve namaz kılarak Allah’tan yardım dileyin. Şüphesiz namaz, Allah’a derinden saygı duyanlardan başkasına ağır gelir.", source: "Bakara Suresi, 45. Ayet" },
-    { text: "Şüphesiz iman edip salih ameller işleyen, namazı dosdoğru kılan ve zekâtı verenlerin mükâfatları Rableri katındadır.", source: "Bakara Suresi, 277. Ayet" },
-    { text: "Namaz, mü’minler üzerine vakitleri belirlenmiş bir farzdır.", source: "Nisâ Suresi, 103. Ayet" },
-    { text: "Onlar, namazlarını dosdoğru kılan ve kendilerine rızık olarak verdiklerimizden Allah yolunda harcayan kimselerdir.", source: "Enfâl Suresi, 3. Ayet" },
-    { text: "Gündüzün iki tarafında ve gecenin gündüze yakın vakitlerinde namaz kıl. Çünkü iyilikler kötülükleri (günahları) giderir.", source: "Hûd Suresi, 114. Ayet" },
-    { text: "Beni anmak için namaz kıl.", source: "Tâhâ Suresi, 14. Ayet" }
+    {
+      text: "Namazı kılın, zekâtı verin. Rükû edenlerle birlikte siz de rükû edin.",
+      source: "Bakara Suresi, 43. Ayet"
+    },
+    {
+      text: "Sabrederek ve namaz kılarak Allah’tan yardım dileyin. Şüphesiz namaz, Allah’a derinden saygı duyanlardan başkasına ağır gelir.",
+      source: "Bakara Suresi, 45. Ayet"
+    },
+    {
+      text: "Şüphesiz iman edip salih ameller işleyen, namazı dosdoğru kılan ve zekâtı verenlerin mükâfatları Rableri katındadır.",
+      source: "Bakara Suresi, 277. Ayet"
+    },
+    {
+      text: "Namaz, mü’minler üzerine vakitleri belirlenmiş bir farzdır.",
+      source: "Nisâ Suresi, 103. Ayet"
+    },
+    {
+      text: "Onlar, namazlarını dosdoğru kılan ve kendilerine rızık olarak verdiklerimizden Allah yolunda harcayan kimselerdir.",
+      source: "Enfâl Suresi, 3. Ayet"
+    },
+    {
+      text: "Gündüzün iki tarafında ve gecenin gündüze yakın vakitlerinde namaz kıl. Çünkü iyilikler kötülükleri (günahları) giderir.",
+      source: "Hûd Suresi, 114. Ayet"
+    },
+    {
+      text: "Beni anmak için namaz kıl.",
+      source: "Tâhâ Suresi, 14. Ayet"
+    },
+    {
+      text: "Ailene namazı emret; kendin de ona sabırla devam et.",
+      source: "Tâhâ Suresi, 132. Ayet"
+    },
+    {
+      text: "Gerçekten müminler kurtuluşa ermiştir; Onlar ki, namazlarında huşû içindedirler.",
+      source: "Mü'minûn Suresi, 1-2. Ayetler"
+    },
+    {
+      text: "Sana vahyedilen kitabı oku ve namazı kıl. Muhakkak ki namaz, hayâsızlıktan ve kötülükten alıkoyar.",
+      source: "Ankebût Suresi, 45. Ayet"
+    }
   ];
 
   const hadiths = [
-    { text: "Namaz, dinin direğidir.", source: "Tirmizî, Îmân, 8" },
-    { text: "Kıyamet gününde kulun ilk hesaba çekileceği şey namazdır.", source: "Tirmizî, Salât, 188" },
-    { text: "Benim nasıl namaz kıldığımı görüyorsanız, siz de öyle namaz kılın.", source: "Buhârî, Ezan, 18" },
-    { text: "Cennetin anahtarı namazdır.", source: "Tirmizî, Tahâret, 1" },
-    { text: "Kişi ile şirk ve küfür arasında namazı terk etmek vardır.", source: "Müslim, Îmân, 134" },
-    { text: "Kim sabah namazını kılarsa, o Allah'ın himayesindedir.", source: "Müslim, Mesâcid, 262" }
+    {
+      text: "Namaz, dinin direğidir.",
+      source: "Tirmizî, Îmân, 8"
+    },
+    {
+      text: "Kıyamet gününde kulun ilk hesaba çekileceği şey namazdır.",
+      source: "Tirmizî, Salât, 188"
+    },
+    {
+      text: "Benim nasıl namaz kıldığımı görüyorsanız, siz de öyle namaz kılın.",
+      source: "Buhârî, Ezan, 18"
+    },
+    {
+      text: "Cennetin anahtarı namazdır.",
+      source: "Tirmizî, Tahâret, 1"
+    },
+    {
+      text: "Kişi ile şirk ve küfür arasında namazı terk etmek vardır.",
+      source: "Müslim, Îmân, 134"
+    },
+    {
+      text: "Münafıklara en ağır gelen namaz; yatsı ve sabah namazlarıdır.",
+      source: "Buhârî, Mevâkît, 20"
+    },
+    {
+      text: "Kim sabah namazını kılarsa, o Allah'ın himayesindedir.",
+      source: "Müslim, Mesâcid, 262"
+    },
+    {
+      text: "Yeryüzü bana mescit ve temizleyici kılındı. Öyleyse ümmetimden kim bir namaz vaktine erişirse, hemen namazını kılsın.",
+      source: "Buhârî, Salât, 56"
+    },
+    {
+      text: "Allah'ın en sevdiği amel, vaktinde kılınan namazdır.",
+      source: "Buhârî, Mevâkîtü's-Salât, 5"
+    },
+    {
+      text: "İkindi namazını kaçıran kimse, sanki ailesini ve malını yitirmiş gibidir.",
+      source: "Buhârî, Mevâkît, 15"
+    }
   ];
 
   useEffect(() => {

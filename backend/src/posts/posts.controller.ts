@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, ParseIntPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('posts')
 export class PostsController {
@@ -65,6 +68,38 @@ export class PostsController {
   @Get('admin/stats')
   async getStats() {
     return this.postsService.getStats();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/:id')
+  async getAdminPost(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          return cb(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  async uploadFile(@UploadedFile() file: any) {
+    if (!file) {
+      return { success: false, message: 'Görsel yüklenemedi.' };
+    }
+    return {
+      success: true,
+      url: `/uploads/${file.filename}`,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
