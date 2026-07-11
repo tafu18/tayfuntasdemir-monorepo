@@ -6,10 +6,10 @@ services:
     container_name: db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: vaktihuzur
-      MYSQL_USER: dbuser
-      MYSQL_PASSWORD: dbpassword
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -32,10 +32,16 @@ services:
       - PORT=4000
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_PASSWORD=rootpassword
-      - DB_DATABASE=vaktihuzur
-      - JWT_SECRET=supersecretjwtkey123!
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - JWT_SECRET=${JWT_SECRET}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_FROM=${MAIL_FROM}
+      - MAIL_REPORT_TO=${MAIL_REPORT_TO}
     depends_on:
       - db
 

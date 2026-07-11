@@ -16,6 +16,7 @@ import { ContactModule } from './contact/contact.module';
 import { PrayerModule } from './prayer/prayer.module';
 import { WordsModule } from './words/words.module';
 import { GamesModule } from './games/games.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { GamesModule } from './games/games.module';
     PrayerModule,
     WordsModule,
     GamesModule,
+    ReportModule,
   ],
 })
 export class AppModule { }

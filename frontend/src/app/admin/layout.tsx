@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, FileText, Mail, LogOut, Menu, X, ChevronRight, User } from 'lucide-react';
+import { LayoutDashboard, FileText, Mail, LogOut, Menu, X, ChevronRight, User, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [adminUser, setAdminUser] = useState<{ name: string; email: string } | null>(null);
+  const [reportStatus, setReportStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     // Check if we are on the login page
@@ -46,6 +47,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setIsAuthenticated(false);
     router.push('/admin/login');
     router.refresh();
+  };
+
+  const handleSendReport = async () => {
+    if (reportStatus === 'loading') return;
+    setReportStatus('loading');
+    try {
+      const token = localStorage.getItem('token');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${apiUrl}/api/report/send-daily`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Sunucu hatası');
+      setReportStatus('success');
+    } catch {
+      setReportStatus('error');
+    } finally {
+      setTimeout(() => setReportStatus('idle'), 4000);
+    }
   };
 
   const menuItems = [
@@ -120,6 +140,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               );
             })}
           </nav>
+
+          {/* Send Report Button */}
+          <div className="pt-2">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-zinc-500 px-1 mb-2">Araçlar</p>
+            <button
+              id="send-daily-report-btn"
+              onClick={handleSendReport}
+              disabled={reportStatus === 'loading'}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${
+                reportStatus === 'success'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400'
+                  : reportStatus === 'error'
+                  ? 'bg-red-50 dark:bg-red-950/20 text-red-500'
+                  : 'text-slate-500 dark:text-zinc-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 hover:text-amber-600 dark:hover:text-amber-400'
+              }`}
+            >
+              {reportStatus === 'loading' ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : reportStatus === 'success' ? (
+                <CheckCircle className="w-5 h-5" />
+              ) : reportStatus === 'error' ? (
+                <AlertCircle className="w-5 h-5" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+              <span>
+                {reportStatus === 'loading' ? 'Gönderiliyor...' : reportStatus === 'success' ? 'Rapor Gönderildi!' : reportStatus === 'error' ? 'Gönderilemedi!' : 'Günlük Rapor Gönder'}
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Logout */}
@@ -209,6 +259,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       );
                     })}
                   </nav>
+
+                  {/* Send Report - Mobile */}
+                  <div className="pt-2">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-zinc-500 px-1 mb-2">Araçlar</p>
+                    <button
+                      onClick={() => { handleSendReport(); setIsSidebarOpen(false); }}
+                      disabled={reportStatus === 'loading'}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${
+                        reportStatus === 'success'
+                          ? 'bg-emerald-50 text-emerald-600'
+                          : reportStatus === 'error'
+                          ? 'bg-red-50 text-red-500'
+                          : 'text-slate-500 hover:bg-amber-50 hover:text-amber-600'
+                      }`}
+                    >
+                      {reportStatus === 'loading' ? <Loader2 className="w-5 h-5 animate-spin" /> : reportStatus === 'success' ? <CheckCircle className="w-5 h-5" /> : reportStatus === 'error' ? <AlertCircle className="w-5 h-5" /> : <Send className="w-5 h-5" />}
+                      <span>{reportStatus === 'loading' ? 'Gönderiliyor...' : reportStatus === 'success' ? 'Gönderildi!' : reportStatus === 'error' ? 'Gönderilemedi!' : 'Günlük Rapor Gönder'}</span>
+                    </button>
+                  </div>
                 </div>
                 <div className="p-4 border-t border-slate-200 dark:border-zinc-800">
                   <button
