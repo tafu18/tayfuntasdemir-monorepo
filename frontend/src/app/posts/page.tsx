@@ -109,7 +109,7 @@ function PostsContent() {
                         {post.views} okuma
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white hover:text-blue-650 dark:hover:text-blue-400">
+                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white hover:text-blue-650 dark:hover:text-brand-blue">
                       <Link href={`/post/${post.slug}`}>{post.title}</Link>
                     </h3>
                     <p className="mt-3 line-clamp-3 text-sm text-zinc-500 dark:text-zinc-400">

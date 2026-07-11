@@ -121,7 +121,7 @@ export default function MemoryGame() {
 
           {/* Win Dialog */}
           {status === 'won' && (
-            <div className="p-3 bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400 rounded-xl text-center font-bold w-full space-y-2">
+            <div className="p-3 bg-blue-50 text-brand-dark dark:bg-blue-950/20 dark:text-brand-blue rounded-xl text-center font-bold w-full space-y-2">
               <div>Tebrikler, oyunu kazandınız! 🏆</div>
               <div className="text-xs font-normal">Oyunu {moves} hamlede tamamladınız.</div>
             </div>

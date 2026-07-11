@@ -11,7 +11,7 @@ export default function Footer() {
             href="https://www.linkedin.com/in/tayfunTasdemir/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-[#002c49] dark:hover:text-white transition-colors"
+            className="text-zinc-400 hover:text-brand-dark dark:hover:text-white transition-colors"
           >
             <span className="sr-only">LinkedIn</span>
             <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -22,7 +22,7 @@ export default function Footer() {
             href="https://github.com/tafu18"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-[#002c49] dark:hover:text-white transition-colors"
+            className="text-zinc-400 hover:text-brand-dark dark:hover:text-white transition-colors"
           >
             <span className="sr-only">GitHub</span>
             <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -33,7 +33,7 @@ export default function Footer() {
             href="https://medium.com/@tayfuntasdemircomtr"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-[#002c49] dark:hover:text-white transition-colors"
+            className="text-zinc-400 hover:text-brand-dark dark:hover:text-white transition-colors"
           >
             <span className="sr-only">Medium</span>
             <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

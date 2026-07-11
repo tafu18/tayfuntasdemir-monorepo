@@ -139,7 +139,7 @@ export default function SnakeGame() {
 
     // Draw snake
     snake.forEach((cell, idx) => {
-      ctx.fillStyle = idx === 0 ? '#10b981' : '#34d399'; // Green head / tail
+      ctx.fillStyle = idx === 0 ? 'brand-emerald' : '#34d399'; // Green head / tail
       ctx.fillRect(cell.x * cellSize + 1, cell.y * cellSize + 1, cellSize - 2, cellSize - 2);
     });
   }, [snake, food]);
@@ -191,7 +191,7 @@ export default function SnakeGame() {
         <div className="grid grid-cols-2 gap-4 w-full max-w-lg mb-6">
           <div className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl text-center bg-white dark:bg-zinc-900 flex justify-between items-center">
             <span className="text-sm text-zinc-500 font-semibold">Skor</span>
-            <span className="text-xl font-bold font-mono text-blue-500">{score}</span>
+            <span className="text-xl font-bold font-mono text-brand-blue">{score}</span>
           </div>
           <div className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl text-center bg-white dark:bg-zinc-900 flex justify-between items-center">
             <span className="text-sm text-zinc-500 font-semibold flex items-center">
@@ -209,12 +209,12 @@ export default function SnakeGame() {
           {/* Start Overlay */}
           {!gameStarted && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 text-white space-y-4">
-              <Gamepad2 className="h-16 w-16 text-blue-500 animate-bounce" />
+              <Gamepad2 className="h-16 w-16 text-brand-blue animate-bounce" />
               <h2 className="text-2xl font-bold">Hazır mısın?</h2>
               <p className="text-sm text-zinc-400 text-center px-6">Yön tuşlarını kullanarak yılanı kontrol et, engellere çarpmadan elmalarını topla.</p>
               <button
                 onClick={() => setGameStarted(true)}
-                className="inline-flex items-center px-6 py-2.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-lg transition-colors"
+                className="inline-flex items-center px-6 py-2.5 bg-brand-dark hover:bg-brand-blue font-bold rounded-lg transition-colors"
               >
                 <Play className="h-5 w-5 mr-2" />
                 Başla
@@ -226,7 +226,7 @@ export default function SnakeGame() {
           {gameOver && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 text-white space-y-4">
               <h2 className="text-3xl font-extrabold text-red-500 tracking-wider">OYUN BİTTİ</h2>
-              <p className="text-lg">Skorunuz: <span className="font-bold text-blue-400">{score}</span></p>
+              <p className="text-lg">Skorunuz: <span className="font-bold text-brand-blue">{score}</span></p>
               <button
                 onClick={resetGame}
                 className="inline-flex items-center px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 font-bold rounded-lg border border-zinc-700 transition-colors"

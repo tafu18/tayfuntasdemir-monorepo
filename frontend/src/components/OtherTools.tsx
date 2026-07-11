@@ -29,7 +29,7 @@ export default function OtherTools() {
 
   const tools: ToolItem[] = [
     { name: 'IP Adresim', path: '/tools/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
-    { name: 'Epoch Converter', path: '/tools/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: '#10b981' },
+    { name: 'Epoch Converter', path: '/tools/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: 'brand-emerald' },
     { name: 'JSON Formatter', path: '/tools/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
     { name: 'Base64 Atölyesi', path: '/tools/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
     { name: 'Hicri Dönüştürücü', path: '/tools/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },
@@ -58,7 +58,7 @@ export default function OtherTools() {
               href={tool.path}
               className={`flex items-center gap-3 p-4 bg-white dark:bg-zinc-900 border rounded-2xl transition-all duration-200 group ${
                 isCurrent
-                  ? 'border-blue-500 bg-blue-500/5 pointer-events-none'
+                  ? 'border-brand-blue bg-brand-blue/5 pointer-events-none'
                   : 'border-zinc-200 dark:border-zinc-800 hover:-translate-y-0.5 hover:shadow-md'
               }`}
               style={{
@@ -72,7 +72,7 @@ export default function OtherTools() {
                 <Icon className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-blue-500 dark:group-hover:text-blue-400">
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-brand-blue dark:group-hover:text-brand-blue">
                   {tool.name} {isCurrent && '✓'}
                 </h4>
                 <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate mt-0.5">

@@ -39,11 +39,11 @@ export default function UrlCodec() {
     <PageTransition>
       <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8 space-y-8">
         <header className="text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-blue-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-brand-blue">
             URL Codec
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            URL <span className="bg-gradient-to-r from-blue-600 to-blue-650 bg-clip-text text-transparent">Codec</span>
+            URL <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent">Codec</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             URL karakterlerinizi güvenli bir şekilde kodlayın veya kodları çözün.
@@ -55,7 +55,7 @@ export default function UrlCodec() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Link2 className="h-5 w-5 text-blue-500" /> Giriş Metni / URL
+                <Link2 className="h-5 w-5 text-brand-blue" /> Giriş Metni / URL
               </h2>
               <button
                 onClick={() => setInputText('')}
@@ -83,7 +83,7 @@ export default function UrlCodec() {
                   onClick={copyToClipboard}
                   className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 flex items-center gap-1"
                 >
-                  {copied ? <Check className="h-3.5 w-3.5 text-blue-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? <Check className="h-3.5 w-3.5 text-brand-blue" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied ? 'Kopyalandı' : 'Kopyala'}
                 </button>
               )}

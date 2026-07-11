@@ -31,7 +31,7 @@ export default function TekTiklaPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.25 }}
-        className="text-xl font-semibold text-blue-500 mb-6"
+        className="text-xl font-semibold text-brand-blue mb-6"
       >
         Hızlı Web Erişimi
       </motion.h2>
@@ -57,7 +57,7 @@ export default function TekTiklaPage() {
           href="https://play.google.com/store/apps/details?id=com.tayfuntasdemir.tektikla"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
+          className="bg-brand-blue hover:bg-brand-blue text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
         >
           <i className="fab fa-google-play text-3xl" />
           <div className="text-left">
@@ -71,7 +71,7 @@ export default function TekTiklaPage() {
           href="https://apps.apple.com/us/app/tek-t%C4%B1kla-h%C4%B1zl%C4%B1-web-eri%C5%9Fimi/id6762490071"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
+          className="bg-brand-blue hover:bg-brand-blue text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
         >
           <i className="fab fa-apple text-3xl" />
           <div className="text-left">

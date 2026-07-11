@@ -186,13 +186,13 @@ export default function Projects() {
                 </a>
                 <div className="p-6 flex flex-col flex-grow space-y-3">
                   <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{project.name}</h3>
-                  <p className="text-sm font-semibold text-[#154667] dark:text-[#a0c4db]">{project.subtitle}</p>
+                  <p className="text-sm font-semibold text-brand-blue dark:text-[#a0c4db]">{project.subtitle}</p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed flex-grow">{project.description}</p>
                   <a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm font-semibold text-[#154667] hover:text-[#0c2f47] dark:text-blue-400 dark:hover:text-blue-350 pt-2"
+                    className="inline-flex items-center text-sm font-semibold text-brand-blue hover:text-[#0c2f47] dark:text-brand-blue dark:hover:text-blue-350 pt-2"
                   >
                     Detayları İncele &rarr;
                   </a>
@@ -204,7 +204,7 @@ export default function Projects() {
       </section>
 
       {/* Collaboration Call to Action */}
-      <section className="bg-[#154667] text-white py-20 text-center">
+      <section className="bg-brand-blue text-white py-20 text-center">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <h2 className="text-3xl font-bold">Yeni Projeler İçin İşbirliği Yapmak İstiyorum</h2>
           <p className="text-lg text-blue-100 leading-relaxed">
@@ -213,7 +213,7 @@ export default function Projects() {
           <div className="pt-4">
             <Link
               href="/contact"
-              className="inline-block bg-white text-[#154667] hover:text-[#0c2f47] font-semibold py-3 px-8 rounded-lg hover:bg-zinc-50 transition-transform transform hover:scale-105"
+              className="inline-block bg-white text-brand-blue hover:text-[#0c2f47] font-semibold py-3 px-8 rounded-lg hover:bg-zinc-50 transition-transform transform hover:scale-105"
             >
               İletişime Geçin
             </Link>

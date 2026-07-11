@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useRef } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
@@ -29,39 +29,43 @@ export default function PostDetail({ params }: PostDetailProps) {
       });
   }, [slug]);
 
+  const hasTracked = useRef(false);
+
   // Tracking API Call
   useEffect(() => {
-    if (data?.post) {
-      // Fetch user city/country from free geolocation API
-      fetch('https://ipapi.co/json/')
+    if (!data?.post || hasTracked.current) return;
+    
+    // Prevent double tracking in React Strict Mode
+    hasTracked.current = true;
+
+    const sendPing = (city: string, country: string) => {
+      const payload = {
+        post_title: data.post.title,
+        post_slug: data.post.slug,
+        city,
+        country
+      };
+      api.post('/posts/tracking', payload).catch(err => console.error("Tracking error:", err));
+    };
+
+    const cachedCity = sessionStorage.getItem('user_city');
+    const cachedCountry = sessionStorage.getItem('user_country');
+
+    if (cachedCity && cachedCountry) {
+      sendPing(cachedCity, cachedCountry);
+    } else {
+      fetch('https://ipwho.is/')
         .then(res => res.json())
         .then(geoData => {
-          const payload = {
-            post_title: data.post.title,
-            post_slug: data.post.slug,
-            city: geoData.city || 'Bilinmeyen Şehir',
-            country: geoData.country_name || 'Bilinmeyen Ülke'
-          };
-          
-          const sendPing = () => {
-            api.post('/posts/tracking', payload).catch(err => console.error("Tracking error:", err));
-          };
-
-          // Track immediately
-          sendPing();
-          
-          // Keep pinging every 40 seconds
-          const intervalId = setInterval(sendPing, 40000);
-          return () => clearInterval(intervalId);
+          const city = geoData.city || 'Bilinmeyen Şehir';
+          const country = geoData.country || 'Bilinmeyen Ülke';
+          sessionStorage.setItem('user_city', city);
+          sessionStorage.setItem('user_country', country);
+          sendPing(city, country);
         })
         .catch(err => {
-          const payload = {
-            post_title: data.post.title,
-            post_slug: data.post.slug,
-            city: 'Bilinmeyen Şehir',
-            country: 'Bilinmeyen Ülke'
-          };
-          api.post('/posts/tracking', payload).catch(e => console.error("Tracking fallback error:", e));
+          console.error("IP API Error:", err);
+          sendPing('Bilinmeyen Şehir', 'Bilinmeyen Ülke');
         });
     }
   }, [data?.post]);
@@ -111,7 +115,7 @@ export default function PostDetail({ params }: PostDetailProps) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-24 text-center">
         <h2 className="text-xl font-semibold">Yazı bulunamadı.</h2>
-        <Link href="/posts" className="mt-4 text-blue-600 inline-block">Bloga Geri Dön</Link>
+        <Link href="/posts" className="mt-4 text-brand-dark inline-block">Bloga Geri Dön</Link>
       </div>
     );
   }
@@ -129,9 +133,9 @@ export default function PostDetail({ params }: PostDetailProps) {
           {/* Breadcrumb */}
           <nav aria-label="breadcrumb" className="text-sm font-medium text-zinc-500 mb-6">
             <ol className="flex items-center space-x-2">
-              <li><Link href="/" className="hover:text-[#002c49] text-[#154667] dark:text-blue-400 dark:hover:text-blue-300">Ana Sayfa</Link></li>
+              <li><Link href="/" className="hover:text-brand-dark text-brand-blue dark:text-brand-blue dark:hover:text-blue-300">Ana Sayfa</Link></li>
               <li><span className="mx-2">/</span></li>
-              <li><Link href="/posts" className="hover:text-[#002c49] text-[#154667] dark:text-blue-400 dark:hover:text-blue-300">Gönderiler</Link></li>
+              <li><Link href="/posts" className="hover:text-brand-dark text-brand-blue dark:text-brand-blue dark:hover:text-blue-300">Gönderiler</Link></li>
               <li><span className="mx-2">/</span></li>
               <li className="text-zinc-700 dark:text-zinc-300" aria-current="page">{post.title}</li>
             </ol>
@@ -143,7 +147,7 @@ export default function PostDetail({ params }: PostDetailProps) {
             <div className="w-full lg:w-[65%] xl:w-[68%]">
               <article>
                 <header className="mb-6">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#154667] dark:text-blue-400 leading-tight mb-4 transition-colors">
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-brand-blue dark:text-brand-blue leading-tight mb-4 transition-colors">
                     {post.title}
                   </h1>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-600 dark:text-zinc-400">
@@ -167,7 +171,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                 )}
 
                 <section 
-                  className="prose prose-lg max-w-full prose-indigo dark:prose-invert prose-a:text-blue-600 hover:prose-a:text-blue-800 dark:prose-a:text-blue-400 dark:hover:prose-a:text-blue-300"
+                  className="prose prose-lg max-w-full prose-indigo dark:prose-invert prose-a:text-brand-dark hover:prose-a:text-blue-800 dark:prose-a:text-brand-blue dark:hover:prose-a:text-blue-300"
                   dangerouslySetInnerHTML={{ __html: post.content ? post.content.replace(/\n/g, '<br />') : '' }}
                 />
               </article>
@@ -179,7 +183,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                 
                 {/* Share Block */}
                 <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-lg shadow-sm border border-zinc-100 dark:border-zinc-800">
-                  <h3 className="text-lg font-bold text-[#154667] dark:text-blue-400 mb-4">Bu Yazıyı Paylaş</h3>
+                  <h3 className="text-lg font-bold text-brand-blue dark:text-brand-blue mb-4">Bu Yazıyı Paylaş</h3>
                   <div className="flex flex-col gap-4">
                     {/* Sosyal Medya İkonları */}
                     <div className="flex items-center gap-3">
@@ -208,9 +212,9 @@ export default function PostDetail({ params }: PostDetailProps) {
 
                 {/* Medium Block */}
                 {post.medium_link && (
-                  <div className="bg-[#154667] p-6 rounded-lg shadow-sm">
-                    <h3 className="text-lg font-bold text-white mb-4">Medium'da Oku</h3>
-                    <a href={post.medium_link} target="_blank" rel="noopener noreferrer" className="w-full bg-white text-[#002c49] hover:text-[#154667] font-semibold py-2 px-4 rounded-lg flex items-center justify-center hover:bg-zinc-200 transition-colors">
+                  <div className="bg-zinc-100 dark:bg-zinc-900 p-6 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800">
+                    <h3 className="text-lg font-bold text-brand-blue dark:text-brand-blue mb-4">Medium'da Oku</h3>
+                    <a href={post.medium_link} target="_blank" rel="noopener noreferrer" className="w-full bg-white dark:bg-zinc-950 text-black dark:text-white border border-zinc-300 dark:border-zinc-700 font-semibold py-2 px-4 rounded-lg flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors">
                       <i className="fab fa-medium mr-2 text-xl"></i>
                       <span>Yazıyı Medium'da Görüntüle</span>
                     </a>
@@ -232,7 +236,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                           }}
                         />
                         <div className="flex-grow">
-                          <h4 className="font-semibold text-[#154667] dark:text-blue-400 group-hover:text-[#002c49] dark:group-hover:text-blue-300 transition-colors text-sm leading-tight">
+                          <h4 className="font-semibold text-brand-blue dark:text-brand-blue group-hover:text-brand-dark dark:group-hover:text-blue-300 transition-colors text-sm leading-tight">
                             {mostReadPost.title}
                           </h4>
                           <small className="text-zinc-500">{mostReadPost.views} kez okundu</small>
@@ -249,7 +253,7 @@ export default function PostDetail({ params }: PostDetailProps) {
                     <ul className="space-y-2">
                       {related.map((relatedPost: any) => (
                         <li key={relatedPost.id}>
-                          <Link href={`/post/${relatedPost.slug}`} className="font-medium text-[#154667] dark:text-blue-400 hover:text-[#002c49] dark:hover:text-blue-300 transition-colors flex items-start">
+                          <Link href={`/post/${relatedPost.slug}`} className="font-medium text-brand-blue dark:text-brand-blue hover:text-brand-dark dark:hover:text-blue-300 transition-colors flex items-start">
                             <span className="mr-2">&rarr;</span>
                             <span>{relatedPost.title}</span>
                           </Link>

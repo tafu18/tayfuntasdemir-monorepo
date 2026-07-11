@@ -60,11 +60,11 @@ export default function RegexTester() {
     <PageTransition>
       <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8 space-y-8">
         <header className="text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-blue-400">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-650 dark:bg-blue-950/30 dark:text-brand-blue">
             Regex Tester & Matcher
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            Regex <span className="bg-gradient-to-r from-blue-600 to-sky-650 bg-clip-text text-transparent">Tester</span>
+            Regex <span className="bg-gradient-to-r from-brand-blue to-sky-650 bg-clip-text text-transparent">Tester</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             Düzenli ifadelerinizi (Regular Expressions) test edin, renklendirin ve hataları giderin.
@@ -76,7 +76,7 @@ export default function RegexTester() {
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-4">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Search className="h-5 w-5 text-blue-500" /> Regex İfadesi
+                <Search className="h-5 w-5 text-brand-blue" /> Regex İfadesi
               </h2>
               <div className="flex gap-4">
                 <div className="flex-1 relative">
@@ -126,13 +126,13 @@ export default function RegexTester() {
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm h-full flex flex-col">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2 mb-4 border-b border-zinc-100 dark:border-zinc-800 pb-2">
-                <List className="h-5 w-5 text-blue-500" /> Eşleşmeler ({matches.length})
+                <List className="h-5 w-5 text-brand-blue" /> Eşleşmeler ({matches.length})
               </h2>
               <div className="flex-1 overflow-y-auto space-y-3 max-h-[420px] pr-1">
                 {matches.length > 0 ? (
                   matches.map((m, idx) => (
                     <div key={idx} className="p-3 border border-zinc-150 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950 rounded-xl space-y-1">
-                      <div className="flex justify-between text-xs font-bold text-blue-650 dark:text-blue-400">
+                      <div className="flex justify-between text-xs font-bold text-blue-650 dark:text-brand-blue">
                         <span>Eşleşme #{idx + 1}</span>
                         <span className="text-zinc-400">İndeks: {m.index}-{m.index + m[0].length}</span>
                       </div>

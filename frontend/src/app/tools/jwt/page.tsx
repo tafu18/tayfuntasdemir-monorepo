@@ -49,7 +49,7 @@ export default function JwtDecoder() {
             JWT Decoder
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            JWT <span className="bg-gradient-to-r from-purple-600 to-blue-650 bg-clip-text text-transparent">Decoder</span>
+            JWT <span className="bg-gradient-to-r from-purple-600 to-brand-dark bg-clip-text text-transparent">Decoder</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             JSON Web Token (JWT) kodlarınızı anında çözün ve içeriğini inceleyin.
@@ -96,13 +96,13 @@ export default function JwtDecoder() {
           <div className="lg:col-span-7 space-y-6">
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-6">
               <div>
-                <h3 className="text-sm font-bold text-blue-650 dark:text-blue-400 uppercase mb-2">Header (Üstbilgi)</h3>
+                <h3 className="text-sm font-bold text-blue-650 dark:text-brand-blue uppercase mb-2">Header (Üstbilgi)</h3>
                 <pre className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-150 dark:border-zinc-800 rounded-xl font-mono text-xs overflow-x-auto text-zinc-800 dark:text-zinc-250 min-h-[80px]">
                   {decodedHeader || 'Header çözümlendiğinde burada görünecektir.'}
                 </pre>
               </div>
               <div>
-                <h3 className="text-sm font-bold text-blue-650 dark:text-blue-400 uppercase mb-2">Payload (Veri/İçerik)</h3>
+                <h3 className="text-sm font-bold text-blue-650 dark:text-brand-blue uppercase mb-2">Payload (Veri/İçerik)</h3>
                 <pre className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-150 dark:border-zinc-800 rounded-xl font-mono text-xs overflow-x-auto text-zinc-800 dark:text-zinc-250 min-h-[160px]">
                   {decodedPayload || 'Payload çözümlendiğinde burada görünecektir.'}
                 </pre>

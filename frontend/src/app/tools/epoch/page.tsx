@@ -91,7 +91,7 @@ export default function EpochConverter() {
             Unix Zaman Damgası Dönüştürücü
           </span>
           <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight text-zinc-900 dark:text-white">
-            Epoch <span className="bg-gradient-to-r from-violet-600 to-blue-650 bg-clip-text text-transparent">Converter</span>
+            Epoch <span className="bg-gradient-to-r from-violet-600 to-brand-dark bg-clip-text text-transparent">Converter</span>
           </h1>
           <p className="mt-4 text-zinc-500 dark:text-zinc-400">
             Zaman damgası ile insan tarafından okunabilir tarih formatı arasında hızlı dönüşüm yapın.
@@ -168,7 +168,7 @@ export default function EpochConverter() {
           {/* Date -> Epoch */}
           <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
             <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-blue-500" /> Tarih to Epoch
+              <Calendar className="h-5 w-5 text-brand-blue" /> Tarih to Epoch
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">

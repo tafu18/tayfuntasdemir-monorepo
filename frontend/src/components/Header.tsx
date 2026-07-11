@@ -40,7 +40,7 @@ export default function Header() {
                 href={item.path}
                 className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'text-[#154667] dark:text-white'
+                    ? 'text-brand-blue dark:text-white'
                     : 'text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white'
                 }`}
               >
@@ -61,7 +61,7 @@ export default function Header() {
             href="https://vaktihuzur.com.tr"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-4 py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-xs font-bold transition-all transform hover:scale-105 shadow-md flex items-center border border-blue-400/30"
+            className="ml-4 py-2 px-4 bg-brand-dark hover:bg-brand-blue text-white rounded-full text-xs font-bold transition-all transform hover:scale-105 shadow-md flex items-center border border-brand-blue/30"
           >
             <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-2 object-contain" />
             Vakt-i Huzur
@@ -108,7 +108,7 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center py-2.5 px-4 mt-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold border border-blue-500/50"
+              className="flex items-center justify-center py-2.5 px-4 mt-2 bg-brand-dark hover:bg-brand-blue text-white rounded-lg font-bold border border-brand-blue/50"
             >
               <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-3 object-contain" />
               Vakt-i Huzur'u İndir

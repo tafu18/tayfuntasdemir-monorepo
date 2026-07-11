@@ -126,7 +126,7 @@ export default function NamazVakitleri() {
           {/* Ayah & Hadith Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-6 shadow-inner border border-zinc-200/50 dark:border-zinc-800 space-y-4">
-              <span className="text-xs uppercase font-extrabold text-blue-500 tracking-wider flex items-center gap-1.5">
+              <span className="text-xs uppercase font-extrabold text-brand-blue tracking-wider flex items-center gap-1.5">
                 <BookOpen className="h-4 w-4" /> Günün Ayeti
               </span>
               <p className="text-base italic leading-relaxed text-zinc-800 dark:text-zinc-200 font-serif">

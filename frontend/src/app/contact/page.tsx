@@ -110,7 +110,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-12"
                 >
-                  <CheckCircle2 className="h-16 w-16 text-blue-500 mx-auto mb-4" />
+                  <CheckCircle2 className="h-16 w-16 text-brand-blue mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Mesajınız İletildi!</h3>
                   <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                     En kısa sürede e-posta adresiniz üzerinden geri dönüş sağlayacağım. Teşekkürler.
@@ -132,7 +132,7 @@ export default function Contact() {
                       required
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-[#154667] focus:outline-none"
+                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-brand-blue focus:outline-none"
                     />
                   </div>
                   <div>
@@ -143,7 +143,7 @@ export default function Contact() {
                       required
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-[#154667] focus:outline-none"
+                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-brand-blue focus:outline-none"
                     />
                   </div>
                   <div>
@@ -153,7 +153,7 @@ export default function Contact() {
                       id="phone"
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-[#154667] focus:outline-none"
+                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-brand-blue focus:outline-none"
                     />
                   </div>
                   <div>
@@ -164,14 +164,14 @@ export default function Contact() {
                       rows={5}
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-[#154667] focus:outline-none resize-none"
+                      className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white focus:border-brand-blue focus:outline-none resize-none"
                     />
                   </div>
                   {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full inline-flex items-center justify-center rounded-lg bg-[#154667] hover:bg-[#0c2f47] text-white px-4 py-3 text-sm font-semibold transition-colors disabled:opacity-50"
+                    className="w-full inline-flex items-center justify-center rounded-lg bg-brand-blue hover:bg-[#0c2f47] text-white px-4 py-3 text-sm font-semibold transition-colors disabled:opacity-50"
                   >
                     {loading ? 'Gönderiliyor...' : 'Mesajı Gönder'}
                     <Send className="ml-2 h-4 w-4" />
@@ -187,7 +187,7 @@ export default function Contact() {
                   <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">Diğer Bilgiler</h3>
                   <div className="space-y-5">
                     <div className="flex items-start gap-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-[#154667] dark:text-zinc-300">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-brand-blue dark:text-zinc-300">
                         <MapPin className="h-5 w-5" />
                       </div>
                       <div>
@@ -196,23 +196,23 @@ export default function Contact() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-[#154667] dark:text-zinc-300">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-brand-blue dark:text-zinc-300">
                         <Mail className="h-5 w-5" />
                       </div>
                       <div>
                         <strong className="block text-sm font-semibold text-zinc-900 dark:text-white">E-posta</strong>
-                        <a href="mailto:info@tayfuntasdemir.com.tr" className="text-sm text-[#154667] dark:text-[#a0c4db] hover:underline">
+                        <a href="mailto:info@tayfuntasdemir.com.tr" className="text-sm text-brand-blue dark:text-[#a0c4db] hover:underline">
                           info@tayfuntasdemir.com.tr
                         </a>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-[#154667] dark:text-zinc-300">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-800 text-brand-blue dark:text-zinc-300">
                         <Phone className="h-5 w-5" />
                       </div>
                       <div>
                         <strong className="block text-sm font-semibold text-zinc-900 dark:text-white">Telefon</strong>
-                        <a href="tel:+905385972318" className="text-sm text-[#154667] dark:text-[#a0c4db] hover:underline">
+                        <a href="tel:+905385972318" className="text-sm text-brand-blue dark:text-[#a0c4db] hover:underline">
                           +90 538 597 23 18
                         </a>
                       </div>
@@ -229,7 +229,7 @@ export default function Contact() {
                       href="https://medium.com/@tayfuntasdemircomtr"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-400 hover:text-[#154667] dark:hover:text-white transition-colors"
+                      className="text-zinc-400 hover:text-brand-blue dark:hover:text-white transition-colors"
                     >
                       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
@@ -239,7 +239,7 @@ export default function Contact() {
                       href="https://www.linkedin.com/in/tayfunTasdemir/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-400 hover:text-[#154667] dark:hover:text-white transition-colors"
+                      className="text-zinc-400 hover:text-brand-blue dark:hover:text-white transition-colors"
                     >
                       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -249,7 +249,7 @@ export default function Contact() {
                       href="https://github.com/tafu18"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-400 hover:text-[#154667] dark:hover:text-white transition-colors"
+                      className="text-zinc-400 hover:text-brand-blue dark:hover:text-white transition-colors"
                     >
                       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.577.688.479C19.138 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z" clipRule="evenodd" />

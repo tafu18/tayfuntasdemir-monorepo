@@ -19,6 +19,15 @@ export class PostsController {
     return this.postsService.getTrackingList();
   }
 
+  @Post('tracking')
+  async trackView(@Body() body: { post_slug: string; city: string; country: string }) {
+    if (body.post_slug) {
+      await this.postsService.trackView(body.post_slug, body.city, body.country);
+      return { success: true };
+    }
+    return { success: false };
+  }
+
   @Get('home')
   async getHomeData() {
     return this.postsService.getHomeData();

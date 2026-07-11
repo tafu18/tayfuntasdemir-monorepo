@@ -40,14 +40,7 @@ export class PostsService {
       throw new NotFoundException('Yazı bulunamadı.');
     }
 
-    // Increment views and log view if published
-    if (post.status === 'published') {
-      post.views += 1;
-      await this.postRepository.save(post);
-
-      const postView = this.postViewRepository.create({ post_id: post.id });
-      await this.postViewRepository.save(postView);
-    }
+    // Views are now tracked separately via trackView method
 
     const related = await this.postRepository.createQueryBuilder('post')
       .where('post.id != :id AND post.status = :status', { id: post.id, status: 'published' })
@@ -71,6 +64,20 @@ export class PostsService {
     });
     const totalViews = posts.reduce((sum, p) => sum + p.views, 0);
     return { posts, totalViews };
+  }
+
+  async trackView(slug: string, city: string, country: string): Promise<void> {
+    const post = await this.postRepository.findOne({ where: { slug } });
+    if (post && post.status === 'published') {
+      post.views += 1;
+      await this.postRepository.save(post);
+
+      const postView = this.postViewRepository.create({ 
+        post_id: post.id 
+        // If your PostView entity supports city/country, you can save them here.
+      });
+      await this.postViewRepository.save(postView);
+    }
   }
 
   async create(data: any): Promise<Post> {

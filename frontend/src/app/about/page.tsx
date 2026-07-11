@@ -137,7 +137,7 @@ export default function About() {
                   href={skill.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-[#154667] dark:text-zinc-300 hover:scale-105 transition-transform"
+                  className="flex-shrink-0 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-brand-blue dark:text-zinc-300 hover:scale-105 transition-transform"
                 >
                   <span className="font-bold text-sm tracking-wider">{skill.name.slice(0, 3).toUpperCase()}</span>
                 </a>
@@ -161,7 +161,7 @@ export default function About() {
           <div className="pt-4 flex justify-center gap-4">
             <Link
               href="/contact"
-              className="bg-[#154667] hover:bg-[#0c2f47] text-white font-semibold py-3 px-6 rounded-lg transition-transform transform hover:scale-105"
+              className="bg-brand-blue hover:bg-[#0c2f47] text-white font-semibold py-3 px-6 rounded-lg transition-transform transform hover:scale-105"
             >
               İletişime Geçin
             </Link>

@@ -31,7 +31,7 @@ export default function VaktiHuzurPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.25 }}
-        className="text-xl font-semibold text-blue-500 mb-6"
+        className="text-xl font-semibold text-brand-blue mb-6"
       >
         İbadetlerinizde Yardımcınız
       </motion.h2>
@@ -53,7 +53,7 @@ export default function VaktiHuzurPage() {
         className="flex flex-wrap justify-center gap-2 mb-10"
       >
         {['🕌 Namaz Vakitleri', '🧭 Kıble Bulucu', '📿 Zikirmatik', '📖 Günlük İçerikler', '🌙 Hicri Takvim'].map((f) => (
-          <span key={f} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 text-xs font-bold rounded-full border border-blue-200/60 dark:border-blue-900/50">
+          <span key={f} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-brand-blue text-xs font-bold rounded-full border border-blue-200/60 dark:border-blue-900/50">
             {f}
           </span>
         ))}
@@ -71,7 +71,7 @@ export default function VaktiHuzurPage() {
           href="https://play.google.com/store/apps/details?id=com.tayfuntasdemir.VaktiHuzurApp"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
+          className="bg-brand-blue hover:bg-brand-blue text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
         >
           <i className="fab fa-google-play text-3xl" />
           <div className="text-left">
@@ -85,7 +85,7 @@ export default function VaktiHuzurPage() {
           href="https://apps.apple.com/us/app/vakt-i-huzur-ezan-kuran/id6758310488"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
+          className="bg-brand-blue hover:bg-brand-blue text-white px-8 py-4 rounded-2xl flex items-center justify-center gap-4 shadow-[0_10px_15px_-3px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_15px_25px_-5px_rgba(52,211,153,0.35)] transition-all duration-300"
         >
           <i className="fab fa-apple text-3xl" />
           <div className="text-left">
@@ -106,7 +106,7 @@ export default function VaktiHuzurPage() {
           href="https://vaktihuzur.com.tr"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold underline underline-offset-4"
+          className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-brand-dark dark:hover:text-brand-blue transition-colors font-semibold underline underline-offset-4"
         >
           vaktihuzur.com.tr →
         </a>

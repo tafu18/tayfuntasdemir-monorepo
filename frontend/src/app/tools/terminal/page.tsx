@@ -105,7 +105,7 @@ export default function InteractiveTerminal() {
       case 'kimim':
         isHtml = true;
         output = `
-          <p><span class="font-bold text-blue-400">Tayfun Taşdemir</span></p>
+          <p><span class="font-bold text-brand-blue">Tayfun Taşdemir</span></p>
           <p class="mt-1">Bilgisayar Mühendisi & Backend Geliştirici.</p>
           <p class="mt-2 text-justify">Laravel, PHP, SQL, Javascript ve modern web teknolojileri üzerinde çalışıyorum. Temiz kod yazmak, performanslı API'ler tasarlamak ve yeni teknolojiler keşfetmek tutkumdur.</p>
         `;
@@ -115,7 +115,7 @@ export default function InteractiveTerminal() {
       case 'yazilar':
         isHtml = true;
         if (posts.length > 0) {
-          let listStr = '<p class="font-bold text-blue-400 mb-1">En Son Blog Yazıları:</p><ul class="list-disc list-inside space-y-1">';
+          let listStr = '<p class="font-bold text-brand-blue mb-1">En Son Blog Yazıları:</p><ul class="list-disc list-inside space-y-1">';
           posts.forEach(p => {
             listStr += `<li><a href="/post/${p.slug}" class="underline" target="_blank">${p.title}</a></li>`;
           });
@@ -130,7 +130,7 @@ export default function InteractiveTerminal() {
       case 'araclar':
         isHtml = true;
         output = `
-          <p class="font-bold text-blue-400 mb-1">Sistemdeki Aktif Araçlar:</p>
+          <p class="font-bold text-brand-blue mb-1">Sistemdeki Aktif Araçlar:</p>
           <ul class="list-disc list-inside space-y-1">
             <li>IP Sorgulama (/tools/ip)</li>
             <li>Epoch Converter (/tools/epoch)</li>
@@ -146,7 +146,7 @@ export default function InteractiveTerminal() {
       case 'iletisim':
         isHtml = true;
         output = `
-          <p class="font-bold text-blue-400 mb-1">İletişim Bilgileri:</p>
+          <p class="font-bold text-brand-blue mb-1">İletişim Bilgileri:</p>
           <ul class="space-y-1">
             <li>E-Posta: <a href="mailto:info@tayfuntasdemir.com.tr" class="underline">info@tayfuntasdemir.com.tr</a></li>
             <li>GitHub: <a href="https://github.com/tafu18" target="_blank" class="underline">github.com/tafu18</a></li>
@@ -213,7 +213,7 @@ export default function InteractiveTerminal() {
   const getThemeClasses = () => {
     switch (theme) {
       case 'matrix':
-        return 'bg-zinc-950 text-blue-500 border-blue-500/20';
+        return 'bg-zinc-950 text-brand-blue border-brand-blue/20';
       case 'classic':
         return 'bg-stone-950 text-amber-500 border-amber-500/20';
       case 'ubuntu':
@@ -236,7 +236,7 @@ export default function InteractiveTerminal() {
       case 'dark':
         return 'text-sky-400';
       case 'light':
-        return 'text-blue-600';
+        return 'text-brand-dark';
     }
   };
 
