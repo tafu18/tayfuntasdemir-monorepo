@@ -10,10 +10,10 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - internal
 
   backend:
     build:
@@ -21,8 +21,6 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     restart: always
-    ports:
-      - "4000:4000"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -44,6 +42,9 @@ services:
       - MAIL_REPORT_TO=${MAIL_REPORT_TO}
     depends_on:
       - db
+    networks:
+      - internal
+      - global_proxy
 
   frontend:
     build:
@@ -51,17 +52,24 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     restart: always
-    ports:
-      - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     command: npm run dev
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:4000
+      - NEXT_PUBLIC_API_URL=https://api.tayfuntasdemir.com.tr
     depends_on:
       - backend
+    networks:
+      - internal
+      - global_proxy
 
 volumes:
   mysql-data:
+
+networks:
+  internal:
+    driver: bridge
+  global_proxy:
+    external: true
