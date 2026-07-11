@@ -44,6 +44,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.tayfuntasdemir.com.tr
     container_name: frontend
     restart: always
     environment:
