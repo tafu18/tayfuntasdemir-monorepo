@@ -1,0 +1,21 @@
+{
+  "name": "blog-portfolio-monorepo",
+  "version": "1.0.0",
+  "description": "NestJS and Next.js monorepo for blog and portfolio site",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "backend:dev": "npm run start:dev --workspace=backend",
+    "backend:build": "npm run build --workspace=backend",
+    "frontend:dev": "npm run dev --workspace=frontend",
+    "frontend:build": "npm run build --workspace=frontend",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "build": "npm run backend:build && npm run frontend:build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
