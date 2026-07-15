@@ -28,7 +28,7 @@ export default function CodeDiffLayout({ children }: { children: React.ReactNode
             "@type": "ListItem",
             "position": 3,
             "name": "Code Diff Karşılaştırıcı",
-            "item": "https://tayfuntasdemir.com.tr/tools/code-diff"
+            "item": "https://tayfuntasdemir.com.tr/code-diff"
           }
         ]
       }

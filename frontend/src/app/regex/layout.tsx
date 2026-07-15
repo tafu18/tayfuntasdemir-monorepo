@@ -28,7 +28,7 @@ export default function RegexLayout({ children }: { children: React.ReactNode })
             "@type": "ListItem",
             "position": 3,
             "name": "Regex Tester",
-            "item": "https://tayfuntasdemir.com.tr/tools/regex"
+            "item": "https://tayfuntasdemir.com.tr/regex"
           }
         ]
       }

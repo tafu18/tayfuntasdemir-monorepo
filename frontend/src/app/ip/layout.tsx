@@ -28,7 +28,7 @@ export default function IpLayout({ children }: { children: React.ReactNode }) {
             "@type": "ListItem",
             "position": 3,
             "name": "IP Adresim",
-            "item": "https://tayfuntasdemir.com.tr/tools/ip"
+            "item": "https://tayfuntasdemir.com.tr/ip"
           }
         ]
       }

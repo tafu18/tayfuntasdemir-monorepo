@@ -28,7 +28,7 @@ export default function EpochLayout({ children }: { children: React.ReactNode })
             "@type": "ListItem",
             "position": 3,
             "name": "Unix Epoch Dönüştürücü",
-            "item": "https://tayfuntasdemir.com.tr/tools/epoch"
+            "item": "https://tayfuntasdemir.com.tr/epoch"
           }
         ]
       }

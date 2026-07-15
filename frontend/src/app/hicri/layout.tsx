@@ -28,7 +28,7 @@ export default function HicriLayout({ children }: { children: React.ReactNode })
             "@type": "ListItem",
             "position": 3,
             "name": "Miladi - Hicri Dönüştürücü",
-            "item": "https://tayfuntasdemir.com.tr/tools/hicri"
+            "item": "https://tayfuntasdemir.com.tr/hicri"
           }
         ]
       }

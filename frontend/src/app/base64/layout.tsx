@@ -28,7 +28,7 @@ export default function Base64Layout({ children }: { children: React.ReactNode }
             "@type": "ListItem",
             "position": 3,
             "name": "Base64 Atölyesi",
-            "item": "https://tayfuntasdemir.com.tr/tools/base64"
+            "item": "https://tayfuntasdemir.com.tr/base64"
           }
         ]
       }

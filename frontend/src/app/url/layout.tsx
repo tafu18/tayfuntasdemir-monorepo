@@ -28,7 +28,7 @@ export default function UrlLayout({ children }: { children: React.ReactNode }) {
             "@type": "ListItem",
             "position": 3,
             "name": "URL Encoder Decoder",
-            "item": "https://tayfuntasdemir.com.tr/tools/url"
+            "item": "https://tayfuntasdemir.com.tr/url"
           }
         ]
       }

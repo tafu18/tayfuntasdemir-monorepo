@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation';
 import OtherTools from '@/components/OtherTools';
 
 const appsList = [
-  { name: 'IP Adresim', route: '/tools/ip', desc: 'IP Sorgu Ekranı' },
-  { name: 'Epoch Converter', route: '/tools/epoch', desc: 'Zaman Damgası Dönüştürücü' },
-  { name: 'JSON Formatter', route: '/tools/json', desc: 'JSON Düzenleyici' },
-  { name: 'Regex Tester', route: '/tools/regex', desc: 'Regex Test ve Eşleşme Analizi' },
-  { name: 'JWT Decoder', route: '/tools/jwt', desc: 'JSON Web Token Kod Çözücü' },
-  { name: 'URL Codec', route: '/tools/url', desc: 'URL Kodlama ve Çözme' },
-  { name: 'Code Diff Slider', route: '/tools/code-diff', desc: 'Görsel Kod Karşılaştırma Sürgüsü' },
-  { name: 'Base64 Encode/Decode', route: '/tools/base64', desc: 'Base64 İşlemleri' },
-  { name: 'Hicri Çevirici', route: '/tools/hicri', desc: 'Hicri/Miladi Çevirici' }
+  { name: 'IP Adresim', route: '/ip', desc: 'IP Sorgu Ekranı' },
+  { name: 'Epoch Converter', route: '/epoch', desc: 'Zaman Damgası Dönüştürücü' },
+  { name: 'JSON Formatter', route: '/json', desc: 'JSON Düzenleyici' },
+  { name: 'Regex Tester', route: '/regex', desc: 'Regex Test ve Eşleşme Analizi' },
+  { name: 'JWT Decoder', route: '/jwt', desc: 'JSON Web Token Kod Çözücü' },
+  { name: 'URL Codec', route: '/url', desc: 'URL Kodlama ve Çözme' },
+  { name: 'Code Diff Slider', route: '/code-diff', desc: 'Görsel Kod Karşılaştırma Sürgüsü' },
+  { name: 'Base64 Encode/Decode', route: '/base64', desc: 'Base64 İşlemleri' },
+  { name: 'Hicri Çevirici', route: '/hicri', desc: 'Hicri/Miladi Çevirici' }
 ];
 
 const quotesList = [

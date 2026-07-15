@@ -28,7 +28,7 @@ export default function JsonLayout({ children }: { children: React.ReactNode }) 
             "@type": "ListItem",
             "position": 3,
             "name": "JSON Formatter",
-            "item": "https://tayfuntasdemir.com.tr/tools/json"
+            "item": "https://tayfuntasdemir.com.tr/json"
           }
         ]
       }

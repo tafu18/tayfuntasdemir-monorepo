@@ -28,7 +28,7 @@ export default function TerminalLayout({ children }: { children: React.ReactNode
             "@type": "ListItem",
             "position": 3,
             "name": "Web Terminal",
-            "item": "https://tayfuntasdemir.com.tr/tools/terminal"
+            "item": "https://tayfuntasdemir.com.tr/terminal"
           }
         ]
       }

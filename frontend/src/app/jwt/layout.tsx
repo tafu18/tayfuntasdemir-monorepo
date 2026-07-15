@@ -28,7 +28,7 @@ export default function JwtLayout({ children }: { children: React.ReactNode }) {
             "@type": "ListItem",
             "position": 3,
             "name": "JWT Decoder",
-            "item": "https://tayfuntasdemir.com.tr/tools/jwt"
+            "item": "https://tayfuntasdemir.com.tr/jwt"
           }
         ]
       }
