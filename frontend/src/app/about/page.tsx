@@ -98,6 +98,7 @@ export default function About() {
                 src="/favicon.png"
                 alt="Tayfun - Profil Fotoğrafı"
                 className="w-full h-full object-cover"
+                loading="lazy"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop';
                 }}

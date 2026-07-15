@@ -202,19 +202,19 @@ export default function HomeClient() {
               </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                <Link href="/tools/ip" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
+                <Link href="/ip" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                     <Globe className="h-6 w-6 text-brand-blue" />
                   </div>
                   <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-brand-dark">IP Adresim</h4>
                 </Link>
-                <Link href="/tools/base64" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
+                <Link href="/base64" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                     <Shield className="h-6 w-6 text-amber-500" />
                   </div>
                   <h4 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 group-hover:text-brand-dark">Base64 Atölyesi</h4>
                 </Link>
-                <Link href="/tools/json" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
+                <Link href="/json" className="group bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white dark:bg-zinc-950 group-hover:scale-110 transition-transform duration-300">
                     <Code className="h-6 w-6 text-purple-500" />
                   </div>

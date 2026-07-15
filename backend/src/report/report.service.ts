@@ -23,9 +23,8 @@ export class ReportService {
 
   /**
    * Türkiye saati (UTC+3) 23:59'da çalışır.
-   * Cron UTC ile çalışır, TR = UTC+3 → 23:59 TR = 20:59 UTC
    */
-  @Cron('59 20 * * *', { timeZone: 'Europe/Istanbul' })
+  @Cron('59 23 * * *', { timeZone: 'Europe/Istanbul' })
   async sendDailyPostViewReport(): Promise<void> {
     this.logger.log('Günlük post görüntülenme raporu cron tetiklendi...');
 

@@ -4,6 +4,7 @@ import { useEffect, useState, use, useRef } from 'react';
 import Link from 'next/link';
 import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
+import LazyRender from '@/components/LazyRender';
 import { Calendar, Eye, ArrowLeft, BookOpen, Clock } from 'lucide-react';
 
 interface PostDetailProps {
@@ -201,10 +202,10 @@ export default function PostDetail({ params }: PostDetailProps) {
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Uygulamalarım:</span>
                       <Link href="/vakti-huzur" className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-zinc-950 shadow-sm border border-zinc-200 dark:border-zinc-800 hover:scale-110 transition-transform overflow-hidden p-1.5" title="Vakt-i Huzur">
-                        <img src="/hilal.png" alt="Vakt-i Huzur" className="w-full h-full object-contain" />
+                        <img src="/hilal.png" alt="Vakt-i Huzur" className="w-full h-full object-contain" loading="lazy" />
                       </Link>
                       <Link href="/tek-tikla" className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-zinc-950 shadow-sm border border-zinc-200 dark:border-zinc-800 hover:scale-110 transition-transform overflow-hidden p-1" title="Tek Tıkla">
-                        <img src="/tektiklaLogo.png" alt="Tek Tıkla" className="w-full h-full object-contain rounded-full" />
+                        <img src="/tektiklaLogo.png" alt="Tek Tıkla" className="w-full h-full object-contain rounded-full" loading="lazy" />
                       </Link>
                     </div>
                   </div>
@@ -221,47 +222,51 @@ export default function PostDetail({ params }: PostDetailProps) {
                   </div>
                 )}
 
-                {/* Most Read Block */}
-                <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-lg shadow-sm border border-zinc-100 dark:border-zinc-800">
-                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 mb-4">En Çok Okunanlar</h3>
-                  <div className="space-y-4">
-                    {mostRead.map((mostReadPost: any) => (
-                      <Link key={mostReadPost.id} href={`/post/${mostReadPost.slug}`} className="flex items-center gap-4 group">
-                        <img 
-                          src={getImageUrl(mostReadPost.image)} 
-                          alt={mostReadPost.title} 
-                          className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop';
-                          }}
-                        />
-                        <div className="flex-grow">
-                          <h4 className="font-semibold text-brand-blue dark:text-brand-blue group-hover:text-brand-dark dark:group-hover:text-blue-300 transition-colors text-sm leading-tight">
-                            {mostReadPost.title}
-                          </h4>
-                          <small className="text-zinc-500">{mostReadPost.views} kez okundu</small>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Related Posts Block */}
-                {related && related.length > 0 && (
+                {/* Most Read & Related (Lazy Load) */}
+                <LazyRender height={300}>
+                  {/* Most Read Block */}
                   <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-lg shadow-sm border border-zinc-100 dark:border-zinc-800">
-                    <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 mb-4">İlgili Yazılar</h3>
-                    <ul className="space-y-2">
-                      {related.map((relatedPost: any) => (
-                        <li key={relatedPost.id}>
-                          <Link href={`/post/${relatedPost.slug}`} className="font-medium text-brand-blue dark:text-brand-blue hover:text-brand-dark dark:hover:text-blue-300 transition-colors flex items-start">
-                            <span className="mr-2">&rarr;</span>
-                            <span>{relatedPost.title}</span>
-                          </Link>
-                        </li>
+                    <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 mb-4">En Çok Okunanlar</h3>
+                    <div className="space-y-4">
+                      {mostRead.map((mostReadPost: any) => (
+                        <Link key={mostReadPost.id} href={`/post/${mostReadPost.slug}`} className="flex items-center gap-4 group">
+                          <img 
+                            src={getImageUrl(mostReadPost.image)} 
+                            alt={mostReadPost.title} 
+                            className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                            loading="lazy"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop';
+                            }}
+                          />
+                          <div className="flex-grow">
+                            <h4 className="font-semibold text-brand-blue dark:text-brand-blue group-hover:text-brand-dark dark:group-hover:text-blue-300 transition-colors text-sm leading-tight">
+                              {mostReadPost.title}
+                            </h4>
+                            <small className="text-zinc-500">{mostReadPost.views} kez okundu</small>
+                          </div>
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   </div>
-                )}
+
+                  {/* Related Posts Block */}
+                  {related && related.length > 0 && (
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-lg shadow-sm border border-zinc-100 dark:border-zinc-800 mt-8">
+                      <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 mb-4">İlgili Yazılar</h3>
+                      <ul className="space-y-2">
+                        {related.map((relatedPost: any) => (
+                          <li key={relatedPost.id}>
+                            <Link href={`/post/${relatedPost.slug}`} className="font-medium text-brand-blue dark:text-brand-blue hover:text-brand-dark dark:hover:text-blue-300 transition-colors flex items-start">
+                              <span className="mr-2">&rarr;</span>
+                              <span>{relatedPost.title}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </LazyRender>
 
               </div>
             </aside>

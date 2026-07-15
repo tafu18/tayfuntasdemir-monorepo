@@ -28,16 +28,16 @@ export default function OtherTools() {
   const pathname = usePathname();
 
   const tools: ToolItem[] = [
-    { name: 'IP Adresim', path: '/tools/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
-    { name: 'Epoch Converter', path: '/tools/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color:  '#f59e0b' },
-    { name: 'JSON Formatter', path: '/tools/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
-    { name: 'Base64 Atölyesi', path: '/tools/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
-    { name: 'Hicri Dönüştürücü', path: '/tools/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },
-    { name: 'İnteraktif Terminal', path: '/tools/terminal', icon: TerminalIcon, desc: 'Komut satırı arayüzü', color: '#475569' },
-    { name: 'Regex Tester', path: '/tools/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },
-    { name: 'JWT Decoder', path: '/tools/jwt', icon: Key, desc: 'JSON Web Token çözücü', color: '#8b5cf6' },
-    { name: 'URL Codec', path: '/tools/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
-    { name: 'Code Diff Slider', path: '/tools/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' }
+    { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
+    { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color:  '#f59e0b' },
+    { name: 'JSON Formatter', path: '/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
+    { name: 'Base64 Atölyesi', path: '/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
+    { name: 'Hicri Dönüştürücü', path: '/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },
+    { name: 'İnteraktif Terminal', path: '/terminal', icon: TerminalIcon, desc: 'Komut satırı arayüzü', color: '#475569' },
+    { name: 'Regex Tester', path: '/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },
+    { name: 'JWT Decoder', path: '/jwt', icon: Key, desc: 'JSON Web Token çözücü', color: '#8b5cf6' },
+    { name: 'URL Codec', path: '/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
+    { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' }
   ];
 
   return (

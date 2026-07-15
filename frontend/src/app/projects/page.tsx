@@ -178,6 +178,7 @@ export default function Projects() {
                       src={project.image}
                       alt={`${project.name} Logo`}
                       className="max-h-20 object-contain filter dark:brightness-95"
+                      loading="lazy"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=300&auto=format&fit=crop';
                       }}
