@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/Category.entity';
 import { Word } from './entities/Word.entity';
@@ -11,10 +11,6 @@ import { WordsController } from './words.controller';
   controllers: [WordsController],
   exports: [WordsService],
 })
-export class WordsModule implements OnModuleInit {
+export class WordsModule {
   constructor(private readonly wordsService: WordsService) { }
-
-  async onModuleInit() {
-    await this.wordsService.seedDemoWords();
-  }
 }

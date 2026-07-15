@@ -11,8 +11,14 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ nullable: true })
+  email_verified_at: Date;
+
   @Column()
   password: string;
+
+  @Column({ nullable: true })
+  remember_token: string;
 
   @Column({ nullable: true })
   male_name: string;

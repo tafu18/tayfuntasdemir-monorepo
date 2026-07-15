@@ -33,7 +33,7 @@ import { ReportModule } from './report/report.module';
         port: configService.get<number>('DB_PORT', 3306),
         username: configService.get<string>('DB_USERNAME', 'root'),
         password: configService.get<string>('DB_PASSWORD', ''),
-        database: configService.get<string>('DB_DATABASE', 'vaktihuzur'),
+        database: configService.get<string>('DB_DATABASE', 'blog'),
         entities: [
           User,
           Post,
@@ -45,7 +45,7 @@ import { ReportModule } from './report/report.module';
           PrayerTime,
           ContactMessage,
         ],
-        synchronize: true, // Geliştirme ortamı için true. Canlı ortamda migration tercih edilir.
+        synchronize: false, // Geliştirme ortamı için true. Canlı ortamda migration tercih edilir.
       }),
     }),
     AuthModule,
