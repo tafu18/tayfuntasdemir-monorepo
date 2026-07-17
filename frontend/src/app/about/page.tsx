@@ -50,7 +50,7 @@ export default function About() {
     { name: 'Vue.js', desc: "Reaktif arayüzler için hafif ve esnek bir JavaScript framework'ü.", link: 'https://vuejs.org/' },
     { name: 'Git', desc: 'Kod sürüm kontrolü ve ekip işbirliği için dağıtık versiyon sistemi.', link: 'https://git-scm.com/' },
     { name: 'Docker', desc: 'Uygulamaları bağımsız konteynerler içinde çalıştırma platformu.', link: 'https://www.docker.com/' },
-    { name: 'JWT', desc: 'JSON Web Token ile kullanıcı doğrulama ve yetkilendirme işlemleri.', link: 'https://jwt.io/' },
+    { name: 'JWT', desc: 'JSON Web Token ile kullanıcı doğrulama ve yetkilendirme işlemleri.', link: 'https://tayfuntasdemir.com.tr/jwt/' },
     { name: 'HTML', desc: 'Web sayfalarının iskelet yapısını oluşturan temel işaretleme dili.', link: 'https://html.com/' },
     { name: 'CSS', desc: 'Web sayfalarının stilini ve görsel düzenini belirleyen stil dili.', link: 'https://www.w3.org/Style/CSS/' },
     { name: 'Tailwind CSS', desc: 'Hızlı arayüz geliştirmek için kullanılan modern bir CSS framework\'ü.', link: 'https://tailwindcss.com/' },
