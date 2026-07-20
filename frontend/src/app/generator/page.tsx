@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import PageTransition from '@/components/PageTransition';
-import { Shield, Trash, Car, Settings, Check, Copy, Download, Globe, LockKeyhole, Zap, Hash, Key, Fingerprint, MapPin } from 'lucide-react';
+import { Shield, Trash, Car, Settings, Check, Copy, Download, Globe, LockKeyhole, Zap, Hash, Fingerprint, MapPin, Network } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
 export default function DataGenerator() {
   const [tab, setTab] = useState<'system' | 'vehicle'>('system');
-  const [count, setCount] = useState<number>(5); // Kaç adet üretilecek
+  const [count, setCount] = useState<number>(5);
+  const [vinBrand, setVinBrand] = useState<string>('VSS'); // Default Seat
   
   // Output State
   const [outputText, setOutputText] = useState('');
@@ -35,41 +36,44 @@ export default function DataGenerator() {
     triggerToast();
   };
 
-  // 2. Güvenli Şifre Üretici
-  const generatePassword = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
+  // 2. MAC Adresi Üretici
+  const generateMacAddress = () => {
+    const hexDigits = '0123456789ABCDEF';
     let results = [];
     for (let i = 0; i < count; i++) {
-      let pwd = '';
-      for (let j = 0; j < 16; j++) {
-        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      let mac = '';
+      for (let j = 0; j < 6; j++) {
+        mac += hexDigits.charAt(Math.floor(Math.random() * 16)) + hexDigits.charAt(Math.floor(Math.random() * 16));
+        if (j !== 5) mac += ':';
       }
-      results.push(pwd);
+      results.push(mac);
     }
     setOutputText(results.join('\n'));
     triggerToast();
   };
 
-  // 3. Şasi Numarası (VIN) Üretici - Kurallı (I, O, Q hariç)
+  // 3. Şasi Numarası (VIN) Üretici - Marka Seçimli
   const generateVIN = () => {
+    // I, O, Q harfleri VIN standartlarında kullanılmaz
     const allowedChars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';
     const lettersOnly = 'ABCDEFGHJKLMNPRSTUVWXYZ';
     const numbersOnly = '0123456789';
     
     let results = [];
     for (let i = 0; i < count; i++) {
-      // WMI (Örn: NLF - Türkiye Toyota)
-      const wmi = 'N' + lettersOnly.charAt(Math.floor(Math.random() * lettersOnly.length)) + allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
-      // VDS (6 hane donanım vs)
+      // WMI (Marka Kodu formdan geliyor)
+      
+      // VDS (Araç özellikleri - 6 hane)
       let vds = '';
-      for(let j=0; j<6; j++) vds += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+      for(let j = 0; j < 6; j++) vds += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+      
       // VIS (Yıl + Fabrika + 6 hane sıra no)
       const year = lettersOnly.charAt(Math.floor(Math.random() * lettersOnly.length));
       const plant = allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
       let serial = '';
-      for(let j=0; j<6; j++) serial += numbersOnly.charAt(Math.floor(Math.random() * numbersOnly.length));
+      for(let j = 0; j < 6; j++) serial += numbersOnly.charAt(Math.floor(Math.random() * numbersOnly.length));
       
-      results.push(wmi + vds + year + plant + serial);
+      results.push(vinBrand + vds + year + plant + serial);
     }
     setOutputText(results.join('\n'));
     triggerToast();
@@ -77,23 +81,25 @@ export default function DataGenerator() {
 
   // 4. Türkiye Plaka Üretici
   const generatePlate = () => {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    // Türk plaka standartlarında kullanılan harfler (Q, W, X, Ç, Ş, vs. hariç)
+    const letters = 'ABCDEFGHIJKLMNOPRSTUVYZ';
     let results = [];
     for (let i = 0; i < count; i++) {
       const city = String(Math.floor(Math.random() * 81) + 1).padStart(2, '0');
       
       const charCount = Math.floor(Math.random() * 2) + 2; // 2 veya 3 harf
       let midStr = '';
-      for(let j=0; j<charCount; j++) {
+      for(let j = 0; j < charCount; j++) {
         midStr += letters.charAt(Math.floor(Math.random() * letters.length));
       }
 
-      const numCount = charCount === 2 ? (Math.floor(Math.random() * 2) + 3) : Math.floor(Math.random() * 2) + 2; // Harf uzunluğuna göre rakam uzunluğu dengesi
+      // Harf uzunluğuna göre rakam uzunluğu dengesi
+      const numCount = charCount === 2 ? (Math.floor(Math.random() * 2) + 3) : Math.floor(Math.random() * 2) + 2; 
       let endNum = '';
-      for(let j=0; j<numCount; j++) {
+      for(let j = 0; j < numCount; j++) {
         endNum += Math.floor(Math.random() * 10);
       }
-      // Sıfır ile başlamasın
+      // Rakam grubu sıfır ile başlamasın
       if (endNum.startsWith('0')) endNum = '1' + endNum.substring(1);
 
       results.push(`${city} ${midStr} ${endNum}`);
@@ -163,7 +169,7 @@ export default function DataGenerator() {
           .dark .gen-tab:hover { background: #18181b; }
           .gen-tab.active { color: #10b981; border-bottom-color: #10b981; background: rgba(16,185,129,0.05); }
           
-          .gen-btn { display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem; border-radius: 16px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; transition: all 0.2s ease; color: #fff; }
+          .gen-btn { display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem; border-radius: 16px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; transition: all 0.2s ease; color: #fff; width: 100%; }
           .gen-btn-primary { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16,185,129,0.3); }
           .gen-btn-primary:hover { box-shadow: 0 8px 25px rgba(16,185,129,0.4); transform: translateY(-2px); }
           .gen-btn-secondary { background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 4px 15px rgba(14,165,233,0.3); }
@@ -177,8 +183,12 @@ export default function DataGenerator() {
           .gen-output-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7; color: #0f172a; word-break: break-all; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
           .dark .gen-output-box { background: #18181b; border-color: #27272a; color: #f8fafc; }
           
-          .gen-select { width: 100%; max-width: 120px; padding: 0.5rem 1rem; font-family: 'Plus_Jakarta_Sans', sans-serif; font-weight: 600; font-size: 0.88rem; color: #0f172a; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; outline: none; }
-          .dark .gen-select { background: #09090b; color: #f8fafc; border-color: #27272a; }
+          .gen-select { width: 100%; padding: 0.75rem 1rem; font-family: 'Plus_Jakarta_Sans', sans-serif; font-weight: 600; font-size: 0.88rem; color: #0f172a; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; transition: border-color 0.2s; }
+          .gen-select:focus { border-color: #10b981; }
+          .dark .gen-select { background: #18181b; color: #f8fafc; border-color: #27272a; }
+          .dark .gen-select:focus { border-color: #10b981; }
+          .gen-select-small { max-width: 120px; padding: 0.5rem 1rem; border-radius: 10px; background: #fff; }
+          .dark .gen-select-small { background: #09090b; }
         `}} />
 
         <div className="max-w-[820px] mx-auto w-full">
@@ -204,11 +214,12 @@ export default function DataGenerator() {
                 <div className="flex items-center gap-2">
                   <label className="text-xs font-bold text-slate-500">Adet:</label>
                   <select 
-                    className="gen-select" 
+                    className="gen-select gen-select-small" 
                     value={count} 
                     onChange={(e) => setCount(Number(e.target.value))}
                   >
                     <option value={1}>1</option>
+                    <option value={3}>3</option>
                     <option value={5}>5</option>
                     <option value={10}>10</option>
                     <option value={50}>50</option>
@@ -239,8 +250,8 @@ export default function DataGenerator() {
                     <button className="gen-btn gen-btn-primary" onClick={generateUUID}>
                       <Fingerprint className="w-5 h-5" /> UUID v4 Üret
                     </button>
-                    <button className="gen-btn gen-btn-secondary" onClick={generatePassword}>
-                      <Key className="w-5 h-5" /> Güvenli Şifre Üret
+                    <button className="gen-btn gen-btn-secondary" onClick={generateMacAddress}>
+                      <Network className="w-5 h-5" /> MAC Adresi Üret
                     </button>
                   </div>
                   <p className="text-xs text-slate-400 mt-4 text-center">Tüm değerler cihazınızın belleğinde üretilir, sunucuya kaydedilmez.</p>
@@ -251,13 +262,35 @@ export default function DataGenerator() {
                 <div className="animate-in fade-in duration-200">
                   <label className="block text-[0.72rem] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-4">Otomotiv Formatları</label>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button className="gen-btn gen-btn-primary" onClick={generateVIN}>
-                      <Hash className="w-5 h-5" /> Şasi No (VIN) Üret
-                    </button>
-                    <button className="gen-btn gen-btn-secondary" onClick={generatePlate}>
-                      <MapPin className="w-5 h-5" /> TR Plaka Üret
-                    </button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* VIN Section */}
+                    <div className="bg-slate-50 dark:bg-zinc-900/50 p-5 rounded-2xl border border-slate-100 dark:border-zinc-800/50">
+                      <div className="mb-4">
+                        <label className="block text-xs font-bold text-slate-500 mb-2">Marka (WMI Kodu)</label>
+                        <select 
+                          className="gen-select" 
+                          value={vinBrand} 
+                          onChange={(e) => setVinBrand(e.target.value)}
+                        >
+                          <option value="VSS">Seat (VSS)</option>
+                          <option value="WVW">Volkswagen (WVW)</option>
+                          <option value="VF1">Renault (VF1)</option>
+                          <option value="NMT">Toyota (NMT)</option>
+                          <option value="ZFA">Fiat (ZFA)</option>
+                          <option value="WF0">Ford (WF0)</option>
+                        </select>
+                      </div>
+                      <button className="gen-btn gen-btn-primary" onClick={generateVIN}>
+                        <Hash className="w-5 h-5" /> Şasi No (VIN) Üret
+                      </button>
+                    </div>
+
+                    {/* Plate Section */}
+                    <div className="bg-slate-50 dark:bg-zinc-900/50 p-5 rounded-2xl border border-slate-100 dark:border-zinc-800/50 flex flex-col justify-end">
+                      <button className="gen-btn gen-btn-secondary mt-auto" onClick={generatePlate}>
+                        <MapPin className="w-5 h-5" /> TR Plaka Üret
+                      </button>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-400 mt-4 text-center">ISO 3779 ve Türkiye plaka standartlarına uygun rastgele veriler üretir.</p>
                 </div>
@@ -287,7 +320,6 @@ export default function DataGenerator() {
             </div>
           </div>
 
-          {/* Alt Bilgi Kartları (Aynı tasarıma sadık kalarak) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 mb-12">
             <div className="flex items-start gap-4 p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-3xl hover:border-emerald-500 hover:-translate-y-1 transition-all">
               <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -322,7 +354,6 @@ export default function DataGenerator() {
 
         </div>
 
-        {/* Toast */}
         {showToast && (
           <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 font-bold text-[0.88rem] z-[100] animate-in slide-in-from-bottom-5">
             <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
