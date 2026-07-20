@@ -13,7 +13,8 @@ import {
   Key, 
   Link as LinkIcon, 
   Columns,
-  Grid
+  Grid,
+  Settings
 } from 'lucide-react';
 
 interface ToolItem {
