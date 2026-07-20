@@ -27,7 +27,7 @@ interface ToolItem {
 export default function OtherTools() {
   const pathname = usePathname();
 
-  const tools: ToolItem[] = [
+const tools: ToolItem[] = [
     { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
     { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color:  '#f59e0b' },
     { name: 'JSON Formatter', path: '/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
@@ -38,12 +38,7 @@ export default function OtherTools() {
     { name: 'JWT Decoder', path: '/jwt', icon: Key, desc: 'JSON Web Token çözücü', color: '#8b5cf6' },
     { name: 'URL Codec', path: '/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
     { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' },
-    {
-  title: 'Veri Üretici',
-  description: 'Test verileri (UUID, Şasi No, Plaka, Şifre) oluşturun.',
-  href: '/generator',
-  icon: <Settings className="w-5 h-5 text-emerald-500" />
-}
+    { name: 'Veri Üretici', path: '/generator', icon: Settings, desc: 'Test verileri (UUID, Plaka vb.)', color: '#10b981' }
   ];
 
   return (
