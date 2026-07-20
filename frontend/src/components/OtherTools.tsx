@@ -37,7 +37,13 @@ export default function OtherTools() {
     { name: 'Regex Tester', path: '/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },
     { name: 'JWT Decoder', path: '/jwt', icon: Key, desc: 'JSON Web Token çözücü', color: '#8b5cf6' },
     { name: 'URL Codec', path: '/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
-    { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' }
+    { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' },
+    {
+  title: 'Veri Üretici',
+  description: 'Test verileri (UUID, Şasi No, Plaka, Şifre) oluşturun.',
+  href: '/generator',
+  icon: <Settings className="w-5 h-5 text-emerald-500" />
+}
   ];
 
   return (
