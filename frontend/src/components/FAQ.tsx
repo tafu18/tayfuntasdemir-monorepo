@@ -43,7 +43,7 @@ export default function FAQ({
   };
 
   return (
-    <section className={`py-12 my-8 rounded-2xl bg-gray-900/50 border border-gray-800 p-6 md:p-8 backdrop-blur-sm ${className}`}>
+    <section className={`py-12 my-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/60 p-6 md:p-10 shadow-sm ${className}`}>
       {/* Schema.org FAQ JSON-LD */}
       <script
         type="application/ld+json"
@@ -52,41 +52,41 @@ export default function FAQ({
 
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/10 dark:bg-blue-500/10 border border-brand-blue/20 dark:border-blue-500/20 text-brand-blue dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
             <HelpCircle className="w-4 h-4" />
             <span>S.S.S</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-gray-400 text-sm md:text-base mt-2 max-w-2xl mx-auto">
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base mt-2 max-w-2xl mx-auto font-medium">
               {subtitle}
             </p>
           )}
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           {items.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div
                 key={index}
-                className="border border-gray-800 rounded-xl bg-gray-950/60 overflow-hidden transition-colors hover:border-gray-700"
+                className="w-full border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl bg-white dark:bg-zinc-900 overflow-hidden transition-colors hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"
               >
                 <button
                   type="button"
                   onClick={() => toggleFAQ(index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue/40 dark:focus-visible:ring-blue-500/40 select-none"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-semibold text-gray-100 text-base md:text-lg">
+                  <span className="font-bold text-zinc-900 dark:text-zinc-100 text-base md:text-lg min-w-0 flex-1 break-words">
                     {item.question}
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="shrink-0 text-gray-400"
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="shrink-0 text-zinc-400 dark:text-zinc-500"
                   >
                     <ChevronDown className="w-5 h-5" />
                   </motion.div>
@@ -98,9 +98,10 @@ export default function FAQ({
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden w-full"
                     >
-                      <div className="px-6 pb-5 pt-1 text-gray-300 text-sm md:text-base leading-relaxed border-t border-gray-900">
+                      <div className="px-6 pb-5 pt-2 text-zinc-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed border-t border-zinc-100 dark:border-zinc-800/60 break-words">
                         {item.answer}
                       </div>
                     </motion.div>
