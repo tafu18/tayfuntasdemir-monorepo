@@ -25,27 +25,6 @@ export default function NamazVakitleriLayout({ children }: { children: React.Rea
             "item": "https://tayfuntasdemir.com.tr/namaz-vakitleri"
           }
         ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Namaz vakitleri verileri güncel ve güvenilir mi?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Evet, namaz vakitleri ezan saatleri verileri doğrudan Diyanet İşleri Başkanlığı ile %100 uyumlu olarak Vakt-i Huzur API altyapısından anlık çekilmektedir."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Vakt-i Huzur uygulaması nedir?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Vakt-i Huzur, namaz vakitlerini bildiren, ezan alarmı, kıble yönü bulucu, zikirmatik ve günlük dini ayet/hadis paylaşımları sunan modern bir mobil uygulamadır."
-            }
-          }
-        ]
       }
     ]
   };

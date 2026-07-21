@@ -11,11 +11,11 @@ export default function About() {
   const aboutFAQ = [
     {
       question: "Tayfun Taşdemir kaç yıllık deneyime sahiptir?",
-      answer: "4 yılı aşkın süredir profesyonel olarak backend (Node.js, Laravel, Express) ve mobil (Flutter, React Native) yazılım alanında çalışmaktayım."
+      answer: "4 yılı aşkın süredir profesyonel olarak backend (PHP, Laravel, NestJS, BullMQ, SQS) ve mobil (Expo, React Native) yazılım alanında çalışmaktayım."
     },
     {
       question: "Hangi dilleri ve teknolojileri aktif kullanıyorsunuz?",
-      answer: "JavaScript, TypeScript, Node.js, Laravel, NestJS, Express, Vue.js, Next.js, Flutter, Dart, PostgreSQL, MongoDB ve Redis."
+      answer: "PHP, Laravel, JavaScript, TypeScript, NestJS, Next.js, React Native, Expo, MySQL, PostgreSQL, BullMQ, SQS ve Redis."
     },
     {
       question: "Uzaktan (Remote) çalışma veya serbest (Freelance) iş birliklerine açık mısınız?",

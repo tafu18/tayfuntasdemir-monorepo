@@ -11,7 +11,7 @@ export default function Projects() {
   const projectsFAQ = [
     {
       question: "Projelerinizde hangi teknolojileri kullanıyorsunuz?",
-      answer: "Frontend tarafta React, Next.js, TypeScript ve TailwindCSS; backend tarafta Node.js, Express, PostgreSQL, MongoDB ve Redis tercih etmekteyim."
+      answer: "Frontend tarafta React, Next.js, TypeScript ve TailwindCSS; backend tarafta PHP, Laravel, NestJS, MySQL, PostgreSQL, BullMQ, SQS ve Redis tercih etmekteyim."
     },
     {
       question: "Özel projem için danışmanlık veya geliştirme hizmeti alabilir miyim?",
@@ -19,7 +19,7 @@ export default function Projects() {
     },
     {
       question: "Mobil uygulama projeleri de geliştiriyor musunuz?",
-      answer: "Evet, Flutter ve React Native teknolojileriyle cross-platform (iOS ve Android) mobil uygulamalar geliştiriyorum."
+      answer: "Evet, Expo ve React Native teknolojileriyle cross-platform (iOS ve Android) mobil uygulamalar geliştiriyorum."
     }
   ];
   const quotes = [

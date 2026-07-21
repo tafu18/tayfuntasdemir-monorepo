@@ -36,7 +36,7 @@ export default function Home() {
             "name": "Tayfun Taşdemir kimdir?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Tayfun Taşdemir, backend ve web geliştirme alanında uzmanlaşmış, PHP, Laravel, NestJS ve React/Next.js teknolojileriyle ölçeklenebilir yazılım çözümleri geliştiren bir bilgisayar mühendisidir."
+              "text": "Tayfun Taşdemir, backend ve web geliştirme alanında uzmanlaşmış; PHP, Laravel, NestJS, MySQL, PostgreSQL, BullMQ, SQS, Next.js ve Expo/React Native teknolojileriyle ölçeklenebilir yazılım çözümleri geliştiren bir bilgisayar mühendisidir."
             }
           },
           {

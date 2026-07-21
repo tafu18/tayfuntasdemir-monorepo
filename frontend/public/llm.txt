@@ -6,6 +6,7 @@
 - **Site Sahibi**: Tayfun Taşdemir
 - **Alan Adı**: https://tayfuntasdemir.com.tr
 - **Açıklama**: Yazılım geliştirme, web teknolojileri, mobil uygulamalar ve çevrimiçi yardımcı araçlar sunan kişisel portfolyo ve blog platformu.
+- **Teknoloji Yığını (Tech Stack)**: PHP, Laravel, NestJS, Next.js, React Native, Expo, MySQL, PostgreSQL, BullMQ, SQS, Redis, Docker, TailwindCSS.
 
 ## Ana Sayfalar & Projeler
 - [Ana Sayfa](https://tayfuntasdemir.com.tr): Genel bakış ve öne çıkan içerikler.

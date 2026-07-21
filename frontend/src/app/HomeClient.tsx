@@ -392,7 +392,7 @@ export default function HomeClient() {
             items={[
               {
                 question: "Tayfun Taşdemir kimdir ve bu sitede neler bulunmaktadır?",
-                answer: "Tayfun Taşdemir, mobil ve web teknolojileri geliştiren bir yazılım uzmanıdır. Bu platformda yazılım makaleleri, ücretsiz geliştirici araçları (JSON, JWT, Regex, Base64 vb.) ve mobil uygulamalar (Vakt-i Huzur, Tek Tıkla) yer almaktadır."
+                answer: "Tayfun Taşdemir; PHP, Laravel, NestJS, MySQL, PostgreSQL, BullMQ, SQS ve Expo/React Native teknolojilerinde uzmanlaşmış bir yazılım geliştiricidir. Bu platformda teknik yazılar, ücretsiz geliştirici araçları (JSON, JWT, Regex, Base64 vb.) ve mobil uygulamalar (Vakt-i Huzur, Tek Tıkla) yer almaktadır."
               },
               {
                 question: "Geliştirici araçlarını (JSON Formatter, JWT Decoder vb.) kullanmak ücretsiz mi?",
