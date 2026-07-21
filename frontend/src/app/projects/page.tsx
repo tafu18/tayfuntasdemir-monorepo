@@ -3,9 +3,25 @@
 import { useEffect, useState } from 'react';
 import PageTransition from '@/components/PageTransition';
 import Link from 'next/link';
+import Image from 'next/image';
+import FAQ from '@/components/FAQ';
 import { motion } from 'framer-motion';
 
 export default function Projects() {
+  const projectsFAQ = [
+    {
+      question: "Projelerinizde hangi teknolojileri kullanıyorsunuz?",
+      answer: "Frontend tarafta React, Next.js, TypeScript ve TailwindCSS; backend tarafta Node.js, Express, PostgreSQL, MongoDB ve Redis tercih etmekteyim."
+    },
+    {
+      question: "Özel projem için danışmanlık veya geliştirme hizmeti alabilir miyim?",
+      answer: "Evet, yeni projeleriniz veya mevcut sistemlerinizin bakımı/geliştirilmesi için iletişim kanalları üzerinden benimle iletişime geçebilirsiniz."
+    },
+    {
+      question: "Mobil uygulama projeleri de geliştiriyor musunuz?",
+      answer: "Evet, Flutter ve React Native teknolojileriyle cross-platform (iOS ve Android) mobil uygulamalar geliştiriyorum."
+    }
+  ];
   const quotes = [
     "Mevlana: “İki günü eşit olan zarardadır.”",
     "Azi Mahmud Hüdai: “Her şey gönlünde olduğu gibi olur.”",
@@ -174,14 +190,13 @@ export default function Projects() {
               >
                 <a href={project.link} target="_blank" rel="noopener noreferrer" className="block">
                   <div className={`flex items-center justify-center p-8 min-h-[160px] ${project.bgColor || 'bg-zinc-50 dark:bg-zinc-800/40'}`}>
-                    <img
+                    <Image
                       src={project.image}
                       alt={`${project.name} Logo`}
-                      className="max-h-20 object-contain filter dark:brightness-95"
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=300&auto=format&fit=crop';
-                      }}
+                      width={200}
+                      height={80}
+                      className="max-h-20 w-auto object-contain filter dark:brightness-95"
+                      unoptimized
                     />
                   </div>
                 </a>
@@ -203,6 +218,15 @@ export default function Projects() {
           </div>
         </div>
       </section>
+
+      {/* Sıkça Sorulan Sorular */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FAQ
+          title="Projeler Hakkında SSS"
+          subtitle="Geliştirme süreçleri ve projelerle ilgili merak edilenler"
+          items={projectsFAQ}
+        />
+      </div>
 
       {/* Collaboration Call to Action */}
       <section className="bg-brand-blue text-white py-20 text-center">

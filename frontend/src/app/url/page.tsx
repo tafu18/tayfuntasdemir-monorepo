@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Lock, Unlock, Copy, Link as LinkIcon } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -178,6 +179,17 @@ export default function UrlCodec() {
             </div>
           </div>
           
+          <div className="mt-12">
+            <FAQ
+              title="URL Encoder / Decoder SSS"
+              subtitle="URL kodlama ve karakter dönüşümleri hakkında merak edilenler"
+              items={[
+                { question: "URL Encoder nedir ve neden kullanılır?", answer: "URL Encoder, internet adreslerinde kullanılması sakıncalı veya özel karakterleri (boşluk, Türkçe harfler, & işareti vb.) %XX biçimindeki geçerli karakterlere dönüştürür." },
+                { question: "URL Decode işlemi ne yapar?", answer: "%20, %C3%A7 gibi kodlanmış URL karakterlerini normal okunabilir metne geri dönüştürür." }
+              ]}
+            />
+          </div>
+
           <div className="mt-12">
             <OtherTools />
           </div>

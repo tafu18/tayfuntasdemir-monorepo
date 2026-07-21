@@ -1,0 +1,39 @@
+# Tayfun Taşdemir - Kişisel Blog & Portfolyo
+
+> Tayfun Taşdemir'in kişisel web sitesi, yazılım projeleri, teknik blog yazıları ve ücretsiz çevrimiçi geliştirici/günlük yaşam araçları.
+
+## Hakkında
+- **Site Sahibi**: Tayfun Taşdemir
+- **Alan Adı**: https://tayfuntasdemir.com.tr
+- **Açıklama**: Yazılım geliştirme, web teknolojileri, mobil uygulamalar ve çevrimiçi yardımcı araçlar sunan kişisel portfolyo ve blog platformu.
+
+## Ana Sayfalar & Projeler
+- [Ana Sayfa](https://tayfuntasdemir.com.tr): Genel bakış ve öne çıkan içerikler.
+- [Hakkımda](https://tayfuntasdemir.com.tr/about): Tayfun Taşdemir hakkında biyografi, yetenekler ve deneyim.
+- [Projeler](https://tayfuntasdemir.com.tr/projects): Geliştirilen açık kaynak ve ticari projeler.
+- [Uygulamalar](https://tayfuntasdemir.com.tr/applications): Web ve mobil uygulamalar.
+- [Blog Yazıları](https://tayfuntasdemir.com.tr/posts): Yazılım, teknoloji ve rehber içerikleri.
+- [İletişim](https://tayfuntasdemir.com.tr/contact): İletişim formu ve sosyal medya bağlantıları.
+
+## Öne Çıkan Uygulamalar
+- [Vakti Huzur](https://tayfuntasdemir.com.tr/vakti-huzur): Ezan vakitleri, kıble yönü ve dini içerik uygulaması.
+- [Tek Tıkla](https://tayfuntasdemir.com.tr/tek-tikla): Hızlı erişim ve pratik araçlar platformu.
+- [Namaz Vakitleri](https://tayfuntasdemir.com.tr/namaz-vakitleri): Konuma göre günlük ve aylık namaz vakitleri.
+
+## Ücretsiz Geliştirici & Web Araçları
+- [Güvenli Şifre Oluşturucu](https://tayfuntasdemir.com.tr/password-generator): Kriptografik olarak güvenli rastgele şifre üretici.
+- [JSON Formatlayıcı](https://tayfuntasdemir.com.tr/json): JSON verilerini doğrulama, biçimlendirme ve düzeltme.
+- [Base64 Dönüştürücü](https://tayfuntasdemir.com.tr/base64): Metin ve dosyaları Base64 formatına çevirme/çözme.
+- [JWT Hata Ayıklayıcı](https://tayfuntasdemir.com.tr/jwt): JSON Web Token (JWT) çözümleme ve inceleme.
+- [Regex Test Aracı](https://tayfuntasdemir.com.tr/regex): Düzenli ifadeleri (Regular Expression) canlı test etme.
+- [Code Diff İnceleyici](https://tayfuntasdemir.com.tr/code-diff): İki kod bloğu arasındaki farkları karşılaştırma.
+- [Epoch / Timestamp Dönüştürücü](https://tayfuntasdemir.com.tr/epoch): Unix timestamp zaman dönüştürücü.
+- [Hicri Takvim Dönüştürücü](https://tayfuntasdemir.com.tr/hicri): Miladi ve Hicri takvim tarih dönüştürme.
+- [Döviz & Kripto Hesaplayıcı](https://tayfuntasdemir.com.tr/doviz): Canlı döviz kurları ve hesaplamalar.
+- [IP & Ağ Bilgisi](https://tayfuntasdemir.com.tr/ip): Kamu IP adresi, konum ve ağ ayrıntıları.
+- [URL Encoder / Decoder](https://tayfuntasdemir.com.tr/url): URL kodlama ve çözme aracı.
+- [Yazılım Sözlüğü](https://tayfuntasdemir.com.tr/sozluk): Teknoloji ve yazılım terimleri sözlüğü.
+
+## Ek Bilgiler
+- **Sitemap**: https://tayfuntasdemir.com.tr/sitemap.xml
+- **Robots**: https://tayfuntasdemir.com.tr/robots.txt

@@ -2,10 +2,27 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
+import FAQ from '@/components/FAQ';
 
 export default function TekTiklaPage() {
+  const faqItems = [
+    {
+      question: "Tek Tıkla uygulaması ne işe yarar?",
+      answer: "Sık ziyaret ettiğiniz web sitelerini kategorilere ayırarak kaydetmenizi ve dahili WebView penceresiyle hızlıca erişmenizi sağlar."
+    },
+    {
+      question: "Yer imlerim cihazlar arası senkronize edilir mi?",
+      answer: "Kayıtlı web siteleriniz cihazınızın yerel depolamasında güvenle tutulur, veri gizliliğiniz tamamen korunur."
+    },
+    {
+      question: "Uygulamayı hangi cihazlarda kullanabilirim?",
+      answer: "App Store (iOS) ve Google Play Store (Android) mağazalarından tüm akıllı telefonlarınıza indirebilirsiniz."
+    }
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-4rem)] py-20 px-4 bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-4rem)] py-12 px-4 bg-zinc-50 dark:bg-zinc-950">
       
       {/* Logo */}
       <motion.div
@@ -14,7 +31,7 @@ export default function TekTiklaPage() {
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
         className="w-32 h-32 bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl flex items-center justify-center mb-8 p-6 border border-zinc-200/60 dark:border-zinc-800 hover:rotate-3 transition-transform duration-500"
       >
-        <img src="/tektiklaLogo.png" alt="Tek Tıkla Logo" className="w-full h-full object-contain" />
+        <Image src="/tektiklaLogo.png" alt="Tek Tıkla Logo" width={100} height={100} className="w-full h-full object-contain" priority />
       </motion.div>
 
       {/* Title */}
@@ -50,7 +67,7 @@ export default function TekTiklaPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45 }}
-        className="flex flex-col sm:flex-row gap-4"
+        className="flex flex-col sm:flex-row gap-4 mb-12"
       >
         {/* Google Play */}
         <a
@@ -81,12 +98,21 @@ export default function TekTiklaPage() {
         </a>
       </motion.div>
 
+      {/* FAQ Section */}
+      <div className="w-full max-w-3xl text-left">
+        <FAQ
+          title="Tek Tıkla Hakkında SSS"
+          subtitle="Tek Tıkla uygulaması ile ilgili merak edilen sorular"
+          items={faqItems}
+        />
+      </div>
+
       {/* Back link */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="mt-12"
+        className="mt-8"
       >
         <Link
           href="/"

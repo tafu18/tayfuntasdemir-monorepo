@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Copy, Check, ShieldAlert, Zap, EyeOff, ChevronDown } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -172,30 +173,16 @@ export default function IpAddress() {
             </div>
           </section>
 
-          <section className="mb-12">
-            <h2 className="font-['Outfit'] font-extrabold text-[1.75rem] text-slate-900 dark:text-white text-center mb-10">Hakkında Sık Sorulan Sorular</h2>
-            
-            <div className="flex flex-col gap-4">
-              {[
-                { title: 'IP adresi nedir?', content: 'IP adresi (İnternet Protokolü Adresi), internet veya yerel ağ üzerindeki cihazlara atanan benzersiz bir sayısal etikettir. Tıpkı bir posta adresi gibi, veri paketlerinin doğru hedefe ulaşmasını sağlar. IPv4 (örn. 192.168.1.1) ve IPv6 (örn. 2001:db8::1) olmak üzere iki sürümü vardır.' },
-                { title: 'IPv4 ile IPv6 arasındaki fark nedir?', content: 'IPv4, 32 bitlik adreslerle yaklaşık 4,3 milyar benzersiz adres sunar. IPv6 ise 128 bitlik yapısıyla pratik olarak sınırsız sayıda adres sağlar. İnternet cihazlarının hızlı artışı nedeniyle IPv4 adresleri tükenmekte, dünya giderek IPv6\'ya geçmektedir.' },
-                { title: 'IP adresim neden sürekli değişiyor?', content: 'Çoğu internet servis sağlayıcısı (ISS) "dinamik IP" atar; yani modem yeniden başlatıldığında veya belirli süre geçtikten sonra IP adresiniz değişebilir. Sabit bir IP\'ye ihtiyaç duyuyorsanız ISS\'nizden "statik IP" talep edebilirsiniz.' },
-                { title: 'Bu araç verilerimi saklıyor mu?', content: 'Hayır, mahremiyetiniz bizim için önceliklidir. Bu araç sadece o anki bağlantınız üzerinden tespit edilen adresi size göstermek için çalışır. Hiçbir veri kaydedilmez, loglanmaz veya üçüncü taraflarla paylaşılmaz.' },
-              ].map((faq, idx) => (
-                <div key={idx} className={`faq-card ${activeFaq === idx ? 'active' : ''}`}>
-                  <button className="faq-trigger" onClick={() => toggleFaq(idx)}>
-                    {faq.title}
-                    <ChevronDown className="w-5 h-5 faq-icon" />
-                  </button>
-                  <div className="faq-content">
-                    <div className="faq-body">
-                      {faq.content}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <FAQ
+            title="IP Adresi SSS"
+            subtitle="IP adresleri, IPv4 vs IPv6 ve güvenlik hakkında merak edilenler"
+            items={[
+              { question: 'IP adresi nedir?', answer: 'IP adresi (İnternet Protokolü Adresi), internet veya yerel ağ üzerindeki cihazlara atanan benzersiz bir sayısal etikettir. Veri paketlerinin doğru hedefe ulaşmasını sağlar.' },
+              { question: 'IPv4 ile IPv6 arasındaki fark nedir?', answer: 'IPv4 32 bitlik adreslerle yaklaşık 4,3 milyar benzersiz adres sunarken, IPv6 128 bitlik yapısıyla pratik olarak sınırsız sayıda adres sağlar.' },
+              { question: 'IP adresim neden değişiyor?', answer: 'İnternet servis sağlayıcıları genellikle dinamik IP atar; modem yeniden başlatıldığında veya belirli aralıklarla IP adresiniz değişebilir.' },
+              { question: 'Bu araç IP verilerimi saklıyor mu?', answer: 'Hayır, araç tamamen anonimdir. Hiçbir IP verisi kaydedilmez, loglanmaz veya üçüncü taraflarla paylaşılmaz.' }
+            ]}
+          />
 
           <OtherTools />
 

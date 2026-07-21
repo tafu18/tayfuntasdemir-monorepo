@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Columns, MinusCircle, PlusCircle, ArrowLeftRight, GraduationCap, ArrowRightCircle } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -313,6 +314,15 @@ export default function CodeDiff() {
               </div>
             </div>
           </div>
+
+          <FAQ
+            title="Kod Karşılaştırma & Diff SSS"
+            subtitle="Kod farkları, satır bazlı karşılaştırma ve refactoring soruları"
+            items={[
+              { question: "Code Diff ne işe yarar?", answer: "İki metin veya kod bloğu arasındaki eklenen, çıkarılan veya değiştirilen satırları görsel olarak vurgulayarak incelemenizi sağlar." },
+              { question: "Karşılaştırılan kodlar sunucuya yükleniyor mu?", answer: "Hayır, tüm karşılaştırma algoritması istemci tarafında yerel JavaScript ile çalışır." }
+            ]}
+          />
 
           <OtherTools />
         </div>

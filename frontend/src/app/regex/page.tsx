@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Terminal, Search } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -216,6 +217,15 @@ export default function RegexTester() {
 
             </div>
           </div>
+
+          <FAQ
+            title="Regex Tester SSS"
+            subtitle="Düzenli ifadeler (Regular Expressions) hakkında sorular"
+            items={[
+              { question: "Regex (Regular Expression) nedir?", answer: "Regex, metinler içerisinde belirli kalıpları (örneğin e-posta, telefon numarası, tarih) aramak, doğrulamak ve değiştirmek için kullanılan güçlü bir ifade dilidir." },
+              { question: "Regex bayrakları (g, i, m) ne anlama gelir?", answer: "'g' global (tüm eşleşmeleri bul), 'i' case-insensitive (büyük/küçük harf duyarsız), 'm' multiline (çok satırlı arama) anlamına gelir." }
+            ]}
+          />
 
           <OtherTools />
 

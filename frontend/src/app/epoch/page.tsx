@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Clock, Check, Copy, CalendarDays, History, Cpu, Globe, Shield, ArrowRightLeft } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -307,6 +308,15 @@ export default function EpochConverter() {
               </div>
             </div>
           </div>
+
+          <FAQ
+            title="Unix Epoch Timestamp SSS"
+            subtitle="Unix zaman damgası, 1970 başlangıcı ve saniye/milisaniye farkı hakkında sorular"
+            items={[
+              { question: "Unix Epoch Time nedir?", answer: "Unix zaman damgası, 1 Ocak 1970 00:00:00 UTC tarihinden itibaren geçen saniye (veya milisaniye) sayısıdır." },
+              { question: "Saniye ile Milisaniye Epoch farkı nedir?", answer: "Saniye bazlı Unix timestamp 10 hanelidir (örn. 1700000000), milisaniye bazlı Unix timestamp ise 13 hanelidir (örn. 1700000000000)." }
+            ]}
+          />
 
           <OtherTools />
 

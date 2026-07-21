@@ -2,10 +2,31 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
+import FAQ from '@/components/FAQ';
 
 export default function VaktiHuzurPage() {
+  const faqItems = [
+    {
+      question: "Vakt-i Huzur uygulaması ücretsiz mi?",
+      answer: "Evet, Vakt-i Huzur uygulamasının tüm temel özellikleri (Namaz vakitleri, Kıble bulucu, Zikirmatik, Hicri takvim) tamamen ücretsizdir."
+    },
+    {
+      question: "Ezan vakitleri bildirimleri internet olmadan çalışır mı?",
+      answer: "Aylık namaz vakti verileri indirildikten sonra bildirim ve vakit takibi internet bağlantısı gerekmeden çalışmaya devam eder."
+    },
+    {
+      question: "Kıble pusulası nasıl doğru çalışır?",
+      answer: "Cihazınızın konum iznini onayladıktan ve pusulanızı 8 şeklinde hareket ettirip kalibre ettikten sonra doğru kıble açısını hesaplar."
+    },
+    {
+      question: "Hangi platformlarda kullanılabilir?",
+      answer: "Vakt-i Huzur hem iOS (App Store) hem de Android (Google Play Store) cihazlarda desteklenmektedir."
+    }
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-4rem)] py-20 px-4 bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-4rem)] py-12 px-4 bg-zinc-50 dark:bg-zinc-950">
 
       {/* Logo */}
       <motion.div
@@ -14,7 +35,7 @@ export default function VaktiHuzurPage() {
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
         className="w-32 h-32 bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl flex items-center justify-center mb-8 p-5 border border-zinc-200/60 dark:border-zinc-800 hover:rotate-3 transition-transform duration-500"
       >
-        <img src="/hilal.png" alt="Vakt-i Huzur Logo" className="w-full h-full object-contain" />
+        <Image src="/hilal.png" alt="Vakt-i Huzur Logo" width={100} height={100} className="w-full h-full object-contain" priority />
       </motion.div>
 
       {/* Title */}
@@ -64,7 +85,7 @@ export default function VaktiHuzurPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45 }}
-        className="flex flex-col sm:flex-row gap-4"
+        className="flex flex-col sm:flex-row gap-4 mb-12"
       >
         {/* Google Play */}
         <a
@@ -100,7 +121,7 @@ export default function VaktiHuzurPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.55 }}
-        className="mt-6"
+        className="mb-8"
       >
         <a
           href="https://vaktihuzur.com.tr"
@@ -111,6 +132,15 @@ export default function VaktiHuzurPage() {
           vaktihuzur.com.tr →
         </a>
       </motion.div>
+
+      {/* FAQ Section */}
+      <div className="w-full max-w-3xl text-left">
+        <FAQ
+          title="Vakt-i Huzur Hakkında SSS"
+          subtitle="Mobil uygulamamız ile ilgili merak edilen sorular"
+          items={faqItems}
+        />
+      </div>
 
       {/* Back link */}
       <motion.div

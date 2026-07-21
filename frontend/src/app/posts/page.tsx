@@ -2,9 +2,11 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
+import { api, getImageUrl } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { Calendar, Eye } from 'lucide-react';
 
@@ -216,6 +218,24 @@ function PostsContent() {
                 ))}
               </div>
             )}
+
+            {/* FAQ Section */}
+            <div className="mt-16">
+              <FAQ
+                title="Blog & Yazılar SSS"
+                subtitle="Yazılım makaleleri ve blog içerikleri hakkında sorular"
+                items={[
+                  {
+                    question: "Blog konuları hangi alanları kapsamaktadır?",
+                    answer: "Node.js, Express, React, Next.js, Flutter, veritabanı optimizasyonu ve güncel yazılım trendleri hakkında rehberler paylaşılmaktadır."
+                  },
+                  {
+                    question: "Yeni yazılardan nasıl haberdar olabilirim?",
+                    answer: "Sayfamızı düzenli ziyaret edebilir veya sosyal medya hesaplarımız üzerinden takip edebilirsiniz."
+                  }
+                ]}
+              />
+            </div>
           </>
         ) : (
           <div className="text-center py-12 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-500">

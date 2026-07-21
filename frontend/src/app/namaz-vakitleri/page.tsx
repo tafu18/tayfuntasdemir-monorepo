@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { api } from '@/lib/api';
 import { Moon, MapPin, Info, BookOpen, Clock, Heart, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -333,6 +334,27 @@ export default function NamazVakitleri() {
             </div>
           )}
         </AnimatePresence>
+        {/* FAQ Section */}
+        <div className="mt-12">
+          <FAQ
+            title="Namaz Vakitleri Hakkında SSS"
+            subtitle="Ezan saatleri ve Vakt-i Huzur servisimiz ile ilgili merak edilenler"
+            items={[
+              {
+                question: "Namaz vakitleri verileri güncel ve güvenilir mi?",
+                answer: "Evet, namaz vakitleri verileri Diyanet İşleri Başkanlığı ile %100 uyumlu olarak Vakt-i Huzur altyapısından anlık çekilmektedir."
+              },
+              {
+                question: "Farklı bir şehir veya ilçe için vakitleri nasıl görebilirim?",
+                answer: "Konum değiştir butonuna tıklayarak ülke, şehir ve ilçe seçiminizi kolayca yapabilirsiniz."
+              },
+              {
+                question: "Vakt-i Huzur mobil uygulamasının sunduğu ek avantajlar nelerdir?",
+                answer: "Mobil uygulamada sesli ezan alarmı, kıble bulucu pusula, zikirmatik ve internetsiz vakit takibi özellikleri mevcuttur."
+              }
+            ]}
+          />
+        </div>
       </div>
     </PageTransition>
   );

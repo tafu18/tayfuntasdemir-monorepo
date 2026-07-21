@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -16,8 +17,59 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tayfun Taşdemir | Kişisel Blog & Portfolyo",
-  description: "Tayfun Taşdemir'in kişisel blogu. Yazılım, teknoloji ve projeler.",
+  metadataBase: new URL('https://tayfuntasdemir.com.tr'),
+  title: {
+    default: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
+    template: "%s | Tayfun Taşdemir",
+  },
+  description: "Tayfun Taşdemir kişisel blogu, mobil ve web projeleri, geliştirici araçları (JSON, JWT, Regex, Base64, Vakt-i Huzur, Tek Tıkla).",
+  keywords: [
+    "Tayfun Taşdemir",
+    "Yazılım Uzmanı",
+    "Mobil Uygulama",
+    "React",
+    "Next.js",
+    "Vakt-i Huzur",
+    "Tek Tıkla",
+    "Namaz Vakitleri",
+    "Developer Tools",
+  ],
+  authors: [{ name: "Tayfun Taşdemir", url: "https://tayfuntasdemir.com.tr" }],
+  creator: "Tayfun Taşdemir",
+  publisher: "Tayfun Taşdemir",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    url: "https://tayfuntasdemir.com.tr",
+    siteName: "Tayfun Taşdemir",
+    title: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
+    description: "Tayfun Taşdemir kişisel blogu, yazılım ve geliştirici araçları.",
+    images: [
+      {
+        url: "/icon.png",
+        width: 512,
+        height: 512,
+        alt: "Tayfun Taşdemir Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
+    description: "Tayfun Taşdemir kişisel blogu, yazılım ve geliştirici araçları.",
+    images: ["/icon.png"],
+  },
   other: {
     "google-adsense-account": "ca-pub-7957415403888500",
   },
@@ -51,7 +103,7 @@ export default function RootLayout({
           title="Vakt-i Huzur"
           className="fixed bottom-[150px] right-[20px] z-[1000] bg-white w-[60px] h-[60px] flex items-center justify-center rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] transition-transform hover:scale-110 duration-300"
         >
-          <img src="/hilal.png" alt="Vakt-i Huzur" className="w-[50px] h-[50px] object-contain" />
+          <Image src="/hilal.png" alt="Vakt-i Huzur" width={50} height={50} className="w-[50px] h-[50px] object-contain" />
         </a>
 
         {/* WhatsApp Floating Button */}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import {
   Code, Wand2, Maximize2, Minimize2, Trash, Check, Copy, Download,
   AlertTriangle, Edit3, Network, FlaskConical, Maximize, Minimize
@@ -423,6 +424,18 @@ export default function JsonFormatter() {
                 </div>
               </div>
             </div>
+          )}
+
+          {!isFullscreen && (
+            <FAQ
+              title="JSON Formatter & Validator SSS"
+              subtitle="JSON veri yapısı, doğrulama ve dönüştürme hakkında merak edilenler"
+              items={[
+                { question: "JSON nedir?", answer: "JSON (JavaScript Object Notation), insan tarafından kolay okunup yazılabilen, makineler tarafından kolayca ayrıştırılabilen hafif bir veri değişim formatıdır." },
+                { question: "JSON verilerim sunucuya gönderiliyor mu?", answer: "Hayır, girdiğiniz veriler sadece kendi cihazınızın tarayıcısında işlenir. Hiçbir veri dış sunucuya gönderilmez." },
+                { question: "JSON Minify işlemi ne işe yarar?", answer: "Minify işlemi, JSON içerisindeki gereksiz boşlukları ve satır sonlarını kaldırarak veri boyutunu küçültür ve veri transferini hızlandırır." }
+              ]}
+            />
           )}
 
           {!isFullscreen && <OtherTools />}

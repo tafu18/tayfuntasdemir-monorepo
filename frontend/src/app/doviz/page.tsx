@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 
 type MarketData = {
   Alış: string;
@@ -155,7 +156,28 @@ export default function Doviz() {
             </div>
           </div>
 
-          <div className="mt-24 text-center">
+          <div className="mt-16 max-w-7xl mx-auto">
+            <FAQ
+              title="Döviz & Altın Kurları SSS"
+              subtitle="Canlı piyasa verileri ve piyasa saatleri hakkında sorular"
+              items={[
+                {
+                  question: "Döviz ve altın kurları ne sıklıkla güncellenmektedir?",
+                  answer: "Sayfadaki veriler piyasa açık olduğu sürece otomatik olarak canlı olarak yenilenir."
+                },
+                {
+                  question: "Buradaki fiyatlar serbest piyasa mı yoksa Merkez Bankası verisi mi?",
+                  answer: "Fiyatlar finansal veri sağlayıcılarından anlık alınan alış/satış kurlarıdır."
+                },
+                {
+                  question: "Buradaki veriler yatırım tavsiyesi niteliğinde midir?",
+                  answer: "Hayır, sunulan tüm döviz ve altın verileri yalnızca bilgilendirme amaçlıdır; yatırım tavsiyesi içermez."
+                }
+              ]}
+            />
+          </div>
+
+          <div className="mt-12 text-center">
             <div className="inline-flex items-center px-6 py-3 bg-gray-50 border border-gray-100 rounded-2xl">
               <i className="fas fa-info-circle text-blue-400 mr-3"></i>
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Veriler bilgilendirme amaçlıdır. Yatırım tavsiyesi değildir.</span>

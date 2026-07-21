@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X, Code } from 'lucide-react';
@@ -63,7 +64,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="ml-4 py-2 px-4 bg-brand-dark hover:bg-brand-blue text-white rounded-full text-xs font-bold transition-all transform hover:scale-105 shadow-md flex items-center border border-brand-blue/30"
           >
-            <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-2 object-contain" />
+            <Image src="/hilal.png" alt="Vakt-i Huzur Logo" width={20} height={20} className="w-5 h-5 mr-2 object-contain" />
             Vakt-i Huzur
           </a>
         </nav>
@@ -110,7 +111,7 @@ export default function Header() {
               onClick={() => setIsOpen(false)}
               className="flex items-center justify-center py-2.5 px-4 mt-2 bg-brand-dark hover:bg-brand-blue text-white rounded-lg font-bold border border-brand-blue/50"
             >
-              <img src="/hilal.png" alt="Logo" className="w-5 h-5 mr-3 object-contain" />
+              <Image src="/hilal.png" alt="Vakt-i Huzur Logo" width={20} height={20} className="w-5 h-5 mr-3 object-contain" />
               Vakt-i Huzur'u İndir
             </a>
           </motion.div>

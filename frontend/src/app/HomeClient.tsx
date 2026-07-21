@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
 import LazyRender from '@/components/LazyRender';
+import FAQ from '@/components/FAQ';
 import { motion } from 'framer-motion';
 import { Smartphone, Shield, Code, Key, Compass, ChevronRight, MessageSquare, Lightbulb, Handshake, Globe } from 'lucide-react';
 
@@ -149,7 +151,7 @@ export default function HomeClient() {
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-start justify-between mb-6">
                       <div className="w-20 h-20 bg-white dark:bg-zinc-950 rounded-2xl shadow-lg flex items-center justify-center p-3 transform group-hover:rotate-3 transition-transform duration-500">
-                        <img src="/hilal.png" alt="Vakt-i Huzur" className="w-full h-full object-contain" loading="lazy" />
+                        <Image src="/hilal.png" alt="Vakt-i Huzur Uygulama Logosu" width={80} height={80} className="w-full h-full object-contain" />
                       </div>
                       <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
                     </div>
@@ -174,7 +176,7 @@ export default function HomeClient() {
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-start justify-between mb-6">
                       <div className="w-20 h-20 bg-white dark:bg-zinc-950 rounded-2xl shadow-lg flex items-center justify-center p-4 transform group-hover:-rotate-3 transition-transform duration-500">
-                        <img src="/tektiklaLogo.png" alt="Tek Tıkla" className="w-full h-full object-contain" loading="lazy" />
+                        <Image src="/tektiklaLogo.png" alt="Tek Tıkla Uygulama Logosu" width={80} height={80} className="w-full h-full object-contain" />
                       </div>
                       <span className="px-3 py-1 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-450 text-[10px] font-bold rounded-full tracking-wider uppercase">Yeni</span>
                     </div>
@@ -379,6 +381,34 @@ export default function HomeClient() {
             </div>
           </div>
         </section>
+      </LazyRender>
+
+      {/* Sıkça Sorulan Sorular */}
+      <LazyRender height={400}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FAQ
+            title="Sıkça Sorulan Sorular"
+            subtitle="Platform, projeler ve geliştirici araçları hakkında merak ettikleriniz"
+            items={[
+              {
+                question: "Tayfun Taşdemir kimdir ve bu sitede neler bulunmaktadır?",
+                answer: "Tayfun Taşdemir, mobil ve web teknolojileri geliştiren bir yazılım uzmanıdır. Bu platformda yazılım makaleleri, ücretsiz geliştirici araçları (JSON, JWT, Regex, Base64 vb.) ve mobil uygulamalar (Vakt-i Huzur, Tek Tıkla) yer almaktadır."
+              },
+              {
+                question: "Geliştirici araçlarını (JSON Formatter, JWT Decoder vb.) kullanmak ücretsiz mi?",
+                answer: "Evet, sitedeki tüm çevrimiçi geliştirici ve hesaplama araçları tamamen ücretsizdir ve verileriniz tarayıcınız dışına çıkmadan yerel olarak işlenir."
+              },
+              {
+                question: "Vakt-i Huzur ve Tek Tıkla uygulamalarını nereden indirebilirim?",
+                answer: "Vakt-i Huzur ve Tek Tıkla mobil uygulamalarını hem iOS App Store hem de Android Google Play Store üzerinden ücretsiz indirebilirsiniz."
+              },
+              {
+                question: "Tayfun Taşdemir ile projem için nasıl iletişime geçebilirim?",
+                answer: "İletişim sayfası üzerinden mesaj gönderebilir veya direkt WhatsApp ikonuna tıklayarak anında iletişime geçebilirsiniz."
+              }
+            ]}
+          />
+        </div>
       </LazyRender>
     </PageTransition>
   );

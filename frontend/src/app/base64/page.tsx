@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Shield, Trash, Type, FileText, Lock, Unlock, UploadCloud, Download, Check, Copy, Globe, LockKeyhole, Zap } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -381,6 +382,16 @@ export default function Base64() {
               </div>
             </div>
           </div>
+
+          <FAQ
+            title="Base64 Encoder / Decoder SSS"
+            subtitle="Base64 kodlama, şifreleme ile farkı ve dosya dönüşümleri hakkında sorular"
+            items={[
+              { question: "Base64 kodlama nedir?", answer: "Base64, ikili (binary) verileri ASCII metin dizgilerine dönüştüren bir kodlama algoritmasıdır. Özellikle e-posta ve web transferlerinde veri kaybını önler." },
+              { question: "Base64 bir şifreleme yöntemi midir?", answer: "Hayır, Base64 şifreleme (encryption) değil kodlamadır (encoding). Anahtarsız olarak herkes tarafından geri çözülebilir (decode edilebilir)." },
+              { question: "Hangi dosya türlerini Base64 formatına çevirebilirim?", answer: "Resim (PNG, JPG, SVG), PDF, ses ve video dahil tüm dosya formatlarını Base64 metnine dönüştürebilirsiniz." }
+            ]}
+          />
 
           <OtherTools />
 

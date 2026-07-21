@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { api } from '@/lib/api';
 import { Info, Book, RefreshCw, HelpCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -262,6 +263,15 @@ export default function Sozluk() {
               </div>
             )}
           </div>
+
+          <FAQ
+            title="Yazılımcı Sözlüğü SSS"
+            subtitle="Yazılım terimleri, İngilizce/Türkçe karşılıkları ve öğrenim hakkında sorular"
+            items={[
+              { question: "Yazılımcı sözlüğü nedir?", answer: "Yazılım geliştirme süreçlerinde sık kullanılan teknik terimler, mimari kavramlar ve kısaltmaların anlaşılır Türkçe karşılıklarını sunan interaktif bir terimler kümesidir." },
+              { question: "Terim kartları nasıl kullanılır?", answer: "Kartların üzerine tıklayarak anlamını görüntüleyebilir, CTRL tuşuna basılı tutarak tıklarsanız tahmin modunda 3 saniye süre kazanabilirsiniz." }
+            ]}
+          />
         </div>
 
         {/* Bilgi Modalı */}

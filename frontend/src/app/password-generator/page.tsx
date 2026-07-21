@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Info, ShieldAlert, Lock, X } from 'lucide-react';
 
 export default function PasswordGenerator() {
@@ -191,6 +192,16 @@ export default function PasswordGenerator() {
             </div>
           )}
 
+        <div className="mt-12 max-w-4xl mx-auto">
+          <FAQ
+            title="Güçlü Şifre Oluşturucu SSS"
+            subtitle="Güvenli parolar ve şifre oluşturma hakkında merak edilenler"
+            items={[
+              { question: "Güçlü bir şifre nasıl olmalıdır?", answer: "En az 12-16 karakter uzunluğunda olmalı; büyük harf, küçük harf, rakam ve özel semboller (!@#$%) içermelidir." },
+              { question: "Oluşturduğum şifreler sunucuya kaydediliyor mu?", answer: "Hayır, tüm şifre üretimi tamamen sizin bilgisayarınızın tarayıcısında (kriptografik crypto.getRandomValues) gerçekleşir. Sunucularımıza hiçbir şifre gitmez." },
+              { question: "Şifrelerimi nerede saklamalıyım?", answer: "Şifrelerinizi bir kağıda yazmak yerine 1Password, Bitwarden veya Keepass gibi güvenilir şifre yöneticilerinde saklamanız önerilir." }
+            ]}
+          />
         </div>
 
         {/* Bilgi Modalı */}
@@ -226,6 +237,7 @@ export default function PasswordGenerator() {
         )}
 
       </div>
-    </PageTransition>
-  );
+    </div>
+  </PageTransition>
+);
 }

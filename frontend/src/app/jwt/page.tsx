@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Key, Copy, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -403,6 +404,16 @@ export default function JwtDecoder() {
               </div>
             </div>
           </div>
+
+          <FAQ
+            title="JWT Decoder SSS"
+            subtitle="JSON Web Token yapısı, imza doğrulaması ve güvenlik soruları"
+            items={[
+              { question: "JWT (JSON Web Token) nedir?", answer: "JWT, taraflar arasında verileri güvenli bir biçimde JSON nesnesi olarak aktarmak için kullanılan açık bir standarttır (RFC 7519)." },
+              { question: "JWT üç parçası nedir?", answer: "JWT nokta (.) ile ayrılmış üç bölümden oluşur: Header (Başlık), Payload (Taşınan Veri) ve Signature (İmza)." },
+              { question: "Girdiğim JWT token'lar sunucunuza kaydediliyor mu?", answer: "Hayır, JWT ayrıştırma ve imza doğrulama işlemleri tamamen tarayıcınızda istemci tarafında gerçekleşir." }
+            ]}
+          />
 
           <OtherTools />
 

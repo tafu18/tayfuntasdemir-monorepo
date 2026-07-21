@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { Moon, CalendarCheck, CalendarDays, Calculator, ArrowRightLeft, Star } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
@@ -350,6 +351,26 @@ export default function HicriConverter() {
               </div>
             </div>
           </div>
+
+          {/* FAQ Section */}
+          <FAQ
+            title="Hicri Takvim Çevirici SSS"
+            subtitle="Hicri ve Miladi takvim dönüşümleri ile ilgili merak edilenler"
+            items={[
+              {
+                question: "Hicri takvim nedir ve nasıl hesaplanır?",
+                answer: "Hicri takvim, Hz. Muhammed'in (s.a.v.) Mekke'den Medine'ye hicretini esas alan ve Ay'ın Dünya etrafındaki dönüşüne göre hesaplanan kameri takvimdir."
+              },
+              {
+                question: "Hicri yıl ile Miladi yıl arasındaki fark nedir?",
+                answer: "Hicri yıl 354 veya 355 gün iken Miladi yıl 365 gündür. Bu nedenle Hicri takvim günleri her yıl Miladi takvime göre yaklaşık 10-11 gün geriye kayar."
+              },
+              {
+                question: "Dini günler ve kandil tarihleri nasıl belirlenir?",
+                answer: "Ramazan, Kurban Bayramı ve Kandil geceleri Hicri ayların belirli günlerine denk gelir ve aracımız ile otomatik tespit edilebilir."
+              }
+            ]}
+          />
 
           <OtherTools />
 

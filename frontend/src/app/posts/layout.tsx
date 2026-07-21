@@ -1,41 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Yazılım & Teknoloji Blogu | Tayfun Taşdemir',
-  description: 'Laravel, NestJS, Next.js, clean code prensipleri ve veritabanı optimizasyonu üzerine güncel teknik makaleler ve rehberler.',
+  title: 'Yazılım & Teknoloji Makaleleri | Tayfun Taşdemir Blog',
+  description: 'Tayfun Taşdemir kişisel blogundaki tüm yazılım, mobil uygulama, backend, Node.js ve teknoloji makaleleri.',
+  keywords: ['Yazılım Blogu', 'Node.js Dersleri', 'React Rehberi', 'Teknoloji Makaleleri', 'Tayfun Taşdemir Blog'],
 };
 
 export default function PostsLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Ana Sayfa",
-            "item": "https://tayfuntasdemir.com.tr"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Gönderiler",
-            "item": "https://tayfuntasdemir.com.tr/posts"
-          }
-        ]
-      }
-    ]
-  };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

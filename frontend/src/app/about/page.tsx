@@ -3,9 +3,25 @@
 import { useEffect, useState } from 'react';
 import PageTransition from '@/components/PageTransition';
 import Link from 'next/link';
+import Image from 'next/image';
+import FAQ from '@/components/FAQ';
 import { motion } from 'framer-motion';
 
 export default function About() {
+  const aboutFAQ = [
+    {
+      question: "Tayfun Taşdemir kaç yıllık deneyime sahiptir?",
+      answer: "3 yılı aşkın süredir profesyonel olarak backend (Node.js, Express) ve mobil (Flutter, React Native) yazılım alanında çalışmaktayım."
+    },
+    {
+      question: "Hangi dilleri ve teknolojileri aktif kullanıyorsunuz?",
+      answer: "JavaScript, TypeScript, Node.js, Express, React, Next.js, Flutter, Dart, PostgreSQL, MongoDB ve Redis."
+    },
+    {
+      question: "Uzaktan (Remote) çalışma veya serbest (Freelance) iş birliklerine açık mısınız?",
+      answer: "Evet, yeni vizyoner projeler ve sürdürülebilir ürün geliştirme süreçleri için remote veya freelance iş birliklerine açığım."
+    }
+  ];
   const quotes = [
     "Mevlana: 'Kendini bilmeyen, alemi bilemez.'",
     "İbn Arabi: 'Kendini bilen, Yaratan'ı bulur.'",
@@ -94,14 +110,13 @@ export default function About() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             <div className="w-48 h-48 md:w-56 md:h-56 shrink-0 relative rounded-full overflow-hidden shadow-2xl border-4 border-zinc-100 dark:border-zinc-800">
-              <img
+              <Image
                 src="/favicon.png"
-                alt="Tayfun - Profil Fotoğrafı"
+                alt="Tayfun Taşdemir Profil Fotoğrafı"
+                width={224}
+                height={224}
                 className="w-full h-full object-cover"
-                loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop';
-                }}
+                priority
               />
             </div>
             <div className="md:w-2/3 text-center md:text-left space-y-4">
@@ -151,6 +166,15 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* Sıkça Sorulan Sorular */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FAQ
+          title="Hakkımda SSS"
+          subtitle="Kariyerim, deneyimlerim ve çalışma modelim hakkında merak edilenler"
+          items={aboutFAQ}
+        />
+      </div>
 
       {/* Collaboration Call to Action */}
       <section className="bg-white dark:bg-zinc-950 py-20 text-center transition-colors duration-300">

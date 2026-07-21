@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
 import LazyRender from '@/components/LazyRender';
@@ -202,10 +203,10 @@ export default function PostDetail({ params }: PostDetailProps) {
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Uygulamalarım:</span>
                       <Link href="/vakti-huzur" className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-zinc-950 shadow-sm border border-zinc-200 dark:border-zinc-800 hover:scale-110 transition-transform overflow-hidden p-1.5" title="Vakt-i Huzur">
-                        <img src="/hilal.png" alt="Vakt-i Huzur" className="w-full h-full object-contain" loading="lazy" />
+                        <Image src="/hilal.png" alt="Vakt-i Huzur" width={30} height={30} className="w-full h-full object-contain" />
                       </Link>
                       <Link href="/tek-tikla" className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-zinc-950 shadow-sm border border-zinc-200 dark:border-zinc-800 hover:scale-110 transition-transform overflow-hidden p-1" title="Tek Tıkla">
-                        <img src="/tektiklaLogo.png" alt="Tek Tıkla" className="w-full h-full object-contain rounded-full" loading="lazy" />
+                        <Image src="/tektiklaLogo.png" alt="Tek Tıkla" width={30} height={30} className="w-full h-full object-contain rounded-full" />
                       </Link>
                     </div>
                   </div>

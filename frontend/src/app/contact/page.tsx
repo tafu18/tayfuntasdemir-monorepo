@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import PageTransition from '@/components/PageTransition';
+import FAQ from '@/components/FAQ';
 import { api } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from 'lucide-react';
@@ -274,6 +275,17 @@ export default function Contact() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-16">
+            <FAQ
+              title="İletişim SSS"
+              subtitle="Geri dönüş süreleri ve iletişim yöntemleri hakkında sorular"
+              items={[
+                { question: "Gönderilen mesajlara ne kadar sürede dönüş yapılıyor?", answer: "Form üzerinden iletilen tüm mesajlara en geç 24 saat içerisinde e-posta yoluyla dönüş yapılmaktadır." },
+                { question: "Acil durumlar için nasıl hızlıca ulaşabilirim?", answer: "Acil iletişim veya teklif talepleriniz için WhatsApp ikonuna tıklayarak direkt mesaj atabilirsiniz." }
+              ]}
+            />
           </div>
         </div>
       </section>
