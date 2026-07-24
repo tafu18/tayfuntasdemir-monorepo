@@ -7,6 +7,7 @@ import Link from 'next/link';
 export default function Applications() {
   const apps = [
     // ARAÇLAR
+    { name: 'Format Atölyesi', desc: 'Tarayıcı tabanlı görsel, PDF ve Word dönüştürücü.', path: '/converter', icon: '🔄', color: 'text-purple-500 hover:shadow-purple-500/20' },
     { name: 'PusulaAPI', desc: 'Gelişmiş API test aracı.', path: '/pusula-api', icon: '🧭', color: 'text-brand-blue hover:shadow-blue-500/20' },
     { name: 'Namaz Vakitleri', desc: 'Konumunuza göre güncel namaz vakitleri.', path: '/namaz-vakitleri', icon: '🕌', color: 'text-green-500 hover:shadow-green-500/20' },
     { name: 'Şifre Oluşturucu', desc: 'Güvenli ve güçlü parolalar oluşturun.', path: '/password-generator', icon: '🔑', color: 'text-yellow-500 hover:shadow-yellow-500/20' },
