@@ -20,4 +20,5 @@ jobs:
             git pull origin main
             docker compose pull
             docker compose -f docker-compose.yml up -d --build
-            docker image prune -f  # Gereksiz eski imajları siler
+            docker image prune -af      # Çalışmayan tüm eski imajları temizler
+            docker builder prune -f    # Derleme önbelleğini temizler

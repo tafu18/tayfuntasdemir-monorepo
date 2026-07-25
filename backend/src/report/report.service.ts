@@ -3,9 +3,9 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
 import { Post } from '../posts/entities/Post.entity';
 import { PostView } from '../posts/entities/PostView.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReportService {
@@ -19,6 +19,7 @@ export class ReportService {
     private readonly postViewRepository: Repository<PostView>,
 
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -181,19 +182,6 @@ export class ReportService {
   }
 
   private async sendMail(html: string, date: Date): Promise<void> {
-    const host = this.configService.get<string>('MAIL_HOST', 'smtp-relay.brevo.com');
-    const port = this.configService.get<number>('MAIL_PORT', 587);
-    const user = this.configService.get<string>('MAIL_USERNAME', '');
-    const pass = this.configService.get<string>('MAIL_PASSWORD', '');
-    const from = this.configService.get<string>('MAIL_FROM', 'noreply@tayfuntasdemir.com.tr');
-    const to = this.configService.get<string>('MAIL_REPORT_TO', 'info@tayfuntasdemir.com.tr');
-
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: false,
-      auth: { user, pass },
-    });
 
     const dateStr = date.toLocaleDateString('tr-TR', {
       year: 'numeric',
@@ -201,9 +189,9 @@ export class ReportService {
       day: 'numeric',
     });
 
-    await transporter.sendMail({
-      from: `"tayfuntasdemir.com.tr Raporu" <${from}>`,
-      to,
+    await this.mailService.sendMail({
+      to: 'akademiktayfuntasdemir@gmail.com',
+      fromName: 'Günlük Rapor',
       subject: `📊 Günlük Görüntülenme Raporu - ${dateStr}`,
       html,
     });

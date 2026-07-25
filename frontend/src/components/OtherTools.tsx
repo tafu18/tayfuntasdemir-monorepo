@@ -14,7 +14,10 @@ import {
   Link as LinkIcon, 
   Columns,
   Grid,
-  Settings
+  Settings,
+  Image as ImageIcon,
+  Code,
+  KeyRound
 } from 'lucide-react';
 
 interface ToolItem {
@@ -28,11 +31,14 @@ interface ToolItem {
 export default function OtherTools() {
   const pathname = usePathname();
 
-const tools: ToolItem[] = [
+  const tools: ToolItem[] = [
+    { name: 'Görsel Dönüştürücü', path: '/converter', icon: ImageIcon, desc: 'PNG, JPEG, WebP dönüştürücü', color: '#ec4899' },
+    { name: 'HTML Canlı Önizleme', path: '/compiler', icon: Code, desc: 'HTML & CSS canlı izleyici', color: '#f97316' },
     { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
-    { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color:  '#f59e0b' },
+    { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: '#f59e0b' },
     { name: 'JSON Formatter', path: '/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
     { name: 'Base64 Atölyesi', path: '/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
+    { name: 'Şifre Oluşturucu', path: '/password-generator', icon: KeyRound, desc: 'Güçlü şifre üretici', color: '#eab308' },
     { name: 'Hicri Dönüştürücü', path: '/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },
     { name: 'İnteraktif Terminal', path: '/terminal', icon: TerminalIcon, desc: 'Komut satırı arayüzü', color: '#475569' },
     { name: 'Regex Tester', path: '/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },

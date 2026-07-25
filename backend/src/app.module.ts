@@ -17,9 +17,11 @@ import { PrayerModule } from './prayer/prayer.module';
 import { WordsModule } from './words/words.module';
 import { GamesModule } from './games/games.module';
 import { ReportModule } from './report/report.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '../.env',
