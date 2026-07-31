@@ -10,6 +10,7 @@ import { Region } from './prayer/entities/Region.entity';
 import { City } from './prayer/entities/City.entity';
 import { PrayerTime } from './prayer/entities/PrayerTime.entity';
 import { ContactMessage } from './contact/entities/ContactMessage.entity';
+import { TestSheet } from './test-sheets/entities/TestSheet.entity';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { ContactModule } from './contact/contact.module';
@@ -18,6 +19,7 @@ import { WordsModule } from './words/words.module';
 import { GamesModule } from './games/games.module';
 import { ReportModule } from './report/report.module';
 import { MailModule } from './mail/mail.module';
+import { TestSheetsModule } from './test-sheets/test-sheets.module';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { MailModule } from './mail/mail.module';
           City,
           PrayerTime,
           ContactMessage,
+          TestSheet,
         ],
         synchronize: false, // Geliştirme ortamı için true. Canlı ortamda migration tercih edilir.
       }),
@@ -57,6 +60,8 @@ import { MailModule } from './mail/mail.module';
     WordsModule,
     GamesModule,
     ReportModule,
+    TestSheetsModule,
   ],
 })
 export class AppModule { }
+

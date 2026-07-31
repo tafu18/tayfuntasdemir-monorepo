@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, FileText, Mail, LogOut, Menu, X, ChevronRight, User, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { LayoutDashboard, FileText, Mail, LogOut, Menu, X, ChevronRight, User, Send, CheckCircle, AlertCircle, Loader2, FileSpreadsheet } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -72,6 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Genel Bakış', path: '/admin', icon: LayoutDashboard },
     { name: 'Gönderiler', path: '/admin/posts', icon: FileText },
     { name: 'Mesajlar', path: '/admin/contact', icon: Mail },
+    { name: 'Test Case Excel', path: '/admin/test-sheets', icon: FileSpreadsheet },
   ];
 
   if (pathname === '/admin/login') {
