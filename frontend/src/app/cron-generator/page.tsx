@@ -1,25 +1,19 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import PageTransition from '@/components/PageTransition';
 import FAQ from '@/components/FAQ';
 import OtherTools from '@/components/OtherTools';
 import {
   Clock,
-  Calendar,
   Sparkles,
   Copy,
   Check,
-  RotateCcw,
-  Zap,
   Code2,
   CalendarDays,
-  Play,
+  Zap,
   Terminal,
-  HelpCircle,
-  ShieldCheck,
-  CheckCircle2,
-  ArrowRight
+  RotateCcw
 } from 'lucide-react';
 
 interface CronPreset {
@@ -48,67 +42,53 @@ const PRESETS: CronPreset[] = [
 ];
 
 export default function CronGenerator() {
-  // Cron 5 Fields
-  const [minute, setMinute] = useState<string>('*');
-  const [hour, setHour] = useState<string>('*');
-  const [dayOfMonth, setDayOfMonth] = useState<string>('*');
-  const [month, setMonth] = useState<string>('*');
-  const [dayOfWeek, setDayOfWeek] = useState<string>('*');
+  // Master Cron Input (User can type freely anything, e.g. "* 1 * * 2")
+  const [cronInput, setCronInput] = useState<string>('*/5 * * * *');
 
-  // Active builder tab
+  // Active visual builder tab
   const [builderTab, setBuilderTab] = useState<'minutes' | 'hours' | 'day' | 'month' | 'weekday'>('minutes');
 
   // Copy state
   const [copied, setCopied] = useState<boolean>(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-  // Full expression string
-  const currentCron = useMemo(() => {
-    return `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`.trim();
-  }, [minute, hour, dayOfMonth, month, dayOfWeek]);
+  // Parse the 5 fields from cronInput safely
+  const { minute, hour, dayOfMonth, month, dayOfWeek } = useMemo(() => {
+    const parts = cronInput.trim().split(/\s+/);
+    return {
+      minute: parts[0] || '*',
+      hour: parts[1] || '*',
+      dayOfMonth: parts[2] || '*',
+      month: parts[3] || '*',
+      dayOfWeek: parts[4] || '*',
+    };
+  }, [cronInput]);
 
-  // Load from input
-  const handleCronStringChange = (val: string) => {
-    const parts = val.trim().split(/\s+/);
-    if (parts.length === 5) {
-      setMinute(parts[0]);
-      setHour(parts[1]);
-      setDayOfMonth(parts[2]);
-      setMonth(parts[3]);
-      setDayOfWeek(parts[4]);
-    }
+  // Update a single field while keeping the rest
+  const updateSingleField = (fieldIndex: number, newValue: string) => {
+    const parts = cronInput.trim().split(/\s+/);
+    while (parts.length < 5) parts.push('*');
+    parts[fieldIndex] = newValue;
+    setCronInput(parts.join(' '));
   };
 
   const applyPreset = (presetCron: string) => {
-    handleCronStringChange(presetCron);
+    setCronInput(presetCron);
   };
 
-  // Turkish Humanizer Logic
+  // Turkish Humanizer Logic (Works with ANY custom expression like "* 1 * * 2")
   const humanizedDescription = useMemo(() => {
     try {
-      const m = minute;
-      const h = hour;
-      const dom = dayOfMonth;
-      const mon = month;
-      const dow = dayOfWeek;
+      const parts = cronInput.trim().split(/\s+/);
+      if (parts.length !== 5) {
+        return 'Lütfen 5 haneli standart bir Cron ifadesi girin (Örn: */5 * * * * veya * 1 * * 2).';
+      }
+
+      const [m, h, dom, mon, dow] = parts;
 
       if (m === '*' && h === '*' && dom === '*' && mon === '*' && dow === '*') {
         return 'Her dakika kesintisiz olarak çalışır.';
       }
-
-      let minuteDesc = '';
-      if (m === '*') minuteDesc = 'her dakika';
-      else if (m.startsWith('*/')) minuteDesc = `her ${m.replace('*/', '')} dakikada bir`;
-      else if (m.includes(',')) minuteDesc = `${m}. dakikalarda`;
-      else if (m.includes('-')) minuteDesc = `${m} dakikaları arasında`;
-      else minuteDesc = `${m}. dakikada`;
-
-      let hourDesc = '';
-      if (h === '*') hourDesc = 'günün her saati';
-      else if (h.startsWith('*/')) hourDesc = `her ${h.replace('*/', '')} saatte bir`;
-      else if (h.includes(',')) hourDesc = `saat ${h}'de`;
-      else if (h.includes('-')) hourDesc = `saat ${h} aralığında`;
-      else hourDesc = `saat ${h.padStart(2, '0')}:${m === '*' ? '00' : m.padStart(2, '0')}'da`;
 
       const dayNames: Record<string, string> = {
         '0': 'Pazar', '1': 'Pazartesi', '2': 'Salı', '3': 'Çarşamba',
@@ -118,66 +98,86 @@ export default function CronGenerator() {
         '0,6': 'Hafta sonu (Cumartesi - Pazar)',
       };
 
+      const monthNames: Record<string, string> = {
+        '1': 'Ocak', '2': 'Şubat', '3': 'Mart', '4': 'Nisan', '5': 'Mayıs', '6': 'Haziran',
+        '7': 'Temmuz', '8': 'Ağustos', '9': 'Eylül', '10': 'Ekim', '11': 'Kasım', '12': 'Aralık'
+      };
+
       let dowDesc = '';
       if (dow !== '*') {
         if (dayNames[dow]) {
-          dowDesc = dayNames[dow];
+          dowDesc = `Her ${dayNames[dow]}`;
+        } else if (dow.includes('-')) {
+          const [s, e] = dow.split('-');
+          dowDesc = `${dayNames[s] || s} ile ${dayNames[e] || e} arasındaki günlerde`;
         } else {
           const mapped = dow.split(',').map(d => dayNames[d] || d).join(', ');
-          dowDesc = `haftanın ${mapped} günleri`;
+          dowDesc = `Haftanın ${mapped} günlerinde`;
         }
       }
 
       let domDesc = '';
       if (dom !== '*') {
         if (dom.startsWith('*/')) domDesc = `her ${dom.replace('*/', '')} günde bir`;
+        else if (dom.includes(',')) domDesc = `ayın ${dom}. günlerinde`;
         else domDesc = `ayın ${dom}. günü`;
       }
 
       let monDesc = '';
-      const monthNames: Record<string, string> = {
-        '1': 'Ocak', '2': 'Şubat', '3': 'Mart', '4': 'Nisan', '5': 'Mayıs', '6': 'Haziran',
-        '7': 'Temmuz', '8': 'Ağustos', '9': 'Eylül', '10': 'Ekim', '11': 'Kasım', '12': 'Aralık'
-      };
       if (mon !== '*') {
         if (mon.startsWith('*/')) monDesc = `her ${mon.replace('*/', '')} ayda bir`;
+        else if (monthNames[mon]) monDesc = `${monthNames[mon]} ayında`;
         else {
           const mNames = mon.split(',').map(mo => monthNames[mo] || mo).join(', ');
-          monDesc = `${mNames} ayında`;
+          monDesc = `${mNames} aylarında`;
         }
       }
 
-      // Compose sentence
-      let sentence = '';
-      if (dowDesc) sentence += `${dowDesc}, `;
-      if (domDesc) sentence += `${domDesc}, `;
-      if (monDesc) sentence += `${monDesc}, `;
-      
-      if (h !== '*' && !h.startsWith('*/') && !h.includes(',') && !h.includes('-')) {
-        sentence += `saat ${h.padStart(2, '0')}:${m === '*' ? '00' : m.padStart(2, '0')}'da çalışır.`;
+      let timeDesc = '';
+      const isSpecificMinute = m !== '*' && !m.startsWith('*/') && !m.includes(',') && !m.includes('-');
+      const isSpecificHour = h !== '*' && !h.startsWith('*/') && !h.includes(',') && !h.includes('-');
+
+      if (isSpecificHour && isSpecificMinute) {
+        timeDesc = `saat ${h.padStart(2, '0')}:${m.padStart(2, '0')}'da`;
+      } else if (isSpecificHour && m === '*') {
+        timeDesc = `saat ${h.padStart(2, '0')}:00 - ${h.padStart(2, '0')}:59 arasında her dakika`;
+      } else if (isSpecificHour && m.startsWith('*/')) {
+        timeDesc = `saat ${h.padStart(2, '0')}:00'da başlayarak her ${m.replace('*/', '')} dakikada bir`;
+      } else if (h === '*' && m.startsWith('*/')) {
+        timeDesc = `her saat ${m.replace('*/', '')} dakikada bir`;
+      } else if (h === '*' && isSpecificMinute) {
+        timeDesc = `her saatin ${m}. dakikasında`;
+      } else if (h.startsWith('*/') && isSpecificMinute) {
+        timeDesc = `her ${h.replace('*/', '')} saatte bir (${m}. dakikada)`;
+      } else if (h.startsWith('*/') && m === '*') {
+        timeDesc = `her ${h.replace('*/', '')} saatte bir (tüm saat boyunca her dakika)`;
       } else {
-        sentence += `${hourDesc} (${minuteDesc}) çalışır.`;
+        timeDesc = `[Saat: ${h}, Dakika: ${m}] zamanında`;
       }
 
-      return sentence.trim();
+      const partsList = [dowDesc, domDesc, monDesc, timeDesc].filter(Boolean);
+      return `${partsList.join(', ')} çalışır.`;
     } catch {
       return 'Geçerli bir Cron ifadesi girildiğinde çalışma planı burada görünecektir.';
     }
-  }, [minute, hour, dayOfMonth, month, dayOfWeek]);
+  }, [cronInput]);
 
   // Compute Next 5 Execution Times
   const nextRuns = useMemo(() => {
     const dates: Date[] = [];
     try {
+      const parts = cronInput.trim().split(/\s+/);
+      if (parts.length !== 5) return [];
+
+      const [m, h, dom, mon, dow] = parts;
       let current = new Date();
       current.setSeconds(0, 0);
 
-      // Simple match checker
       const matchField = (val: number, expr: string): boolean => {
         if (expr === '*') return true;
         if (expr.startsWith('*/')) {
           const step = parseInt(expr.replace('*/', ''), 10);
-          return val % step === 0;
+          return !isNaN(step) && step > 0 && val % step === 0;
         }
         if (expr.includes(',')) {
           return expr.split(',').map(Number).includes(val);
@@ -194,17 +194,17 @@ export default function CronGenerator() {
         attempts++;
         current = new Date(current.getTime() + 60000); // add 1 minute
 
-        const m = current.getMinutes();
-        const h = current.getHours();
-        const dom = current.getDate();
-        const mon = current.getMonth() + 1; // 1-12
-        const dow = current.getDay(); // 0-6
+        const currM = current.getMinutes();
+        const currH = current.getHours();
+        const currDom = current.getDate();
+        const currMon = current.getMonth() + 1; // 1-12
+        const currDow = current.getDay(); // 0-6
 
-        const mMatch = matchField(m, minute);
-        const hMatch = matchField(h, hour);
-        const domMatch = matchField(dom, dayOfMonth);
-        const monMatch = matchField(mon, month);
-        const dowMatch = matchField(dow, dayOfWeek);
+        const mMatch = matchField(currM, m);
+        const hMatch = matchField(currH, h);
+        const domMatch = matchField(currDom, dom);
+        const monMatch = matchField(currMon, mon);
+        const dowMatch = matchField(currDow, dow);
 
         if (mMatch && hMatch && domMatch && monMatch && dowMatch) {
           dates.push(new Date(current));
@@ -214,7 +214,7 @@ export default function CronGenerator() {
       console.error('Schedule calc error', e);
     }
     return dates;
-  }, [minute, hour, dayOfMonth, month, dayOfWeek]);
+  }, [cronInput]);
 
   const copyToClipboard = (text: string, type?: string) => {
     navigator.clipboard.writeText(text);
@@ -234,7 +234,7 @@ export default function CronGenerator() {
     },
     {
       question: '5 haneli Cron sözdizimi (Syntax) ne anlama gelir?',
-      answer: 'Standart Cron ifadesi boşlukla ayrılmış 5 alandan oluşur: [1. Dakika (0-59)] [2. Saat (0-23)] [3. Ayın Günü (1-31)] [4. Ay (1-12)] [5. Haftanın Günü (0-6, 0=Pazar)]. Örneğin "0 9 * * 1-5" ifadesi hafta içi her gün sabah 09:00 anlamına gelir.'
+      answer: 'Standart Cron ifadesi boşlukla ayrılmış 5 alandan oluşur: [1. Dakika (0-59)] [2. Saat (0-23)] [3. Ayın Günü (1-31)] [4. Ay (1-12)] [5. Haftanın Günü (0-6, 0=Pazar)]. Örneğin "* 1 * * 2" ifadesi Salı günleri saat 01:00-01:59 arası her dakika anlamına gelir.'
     },
     {
       question: 'Cron ifadelerinde özel karakterler ne işe yarar?',
@@ -260,7 +260,7 @@ export default function CronGenerator() {
             Cron Expression Generator & Açıklayıcı
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400">
-            Linux Crontab, Node.js, NestJS ve Spring Boot için görsel olarak Cron ifadeleri oluşturun, Türkçe insan diline çevirin ve sonraki çalışma zamanlarını görün.
+            İstediğiniz Cron ifadesini manuel yazın veya görsel butonlarla oluşturun; anında Türkçe karşılığını ve sonraki çalışma zamanlarını görün.
           </p>
         </div>
 
@@ -272,7 +272,7 @@ export default function CronGenerator() {
             <div className="flex items-center justify-between">
               <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
                 <Terminal className="w-4 h-4 text-brand-blue" />
-                Oluşturulan Cron İfadesi
+                Cron İfadesi (Manuel Yazabilir veya Değiştirebilirsiniz)
               </label>
               <span className="text-[11px] font-mono text-slate-400">
                 [dakika] [saat] [gün] [ay] [haftanın günü]
@@ -282,13 +282,14 @@ export default function CronGenerator() {
             <div className="relative">
               <input
                 type="text"
-                value={currentCron}
-                onChange={(e) => handleCronStringChange(e.target.value)}
-                className="w-full p-4 pr-32 font-mono text-xl sm:text-2xl font-bold bg-slate-900 text-emerald-400 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 select-all tracking-wider"
+                value={cronInput}
+                onChange={(e) => setCronInput(e.target.value)}
+                placeholder="* * * * * veya * 1 * * 2"
+                className="w-full p-4 pr-32 font-mono text-xl sm:text-2xl font-bold bg-slate-900 text-emerald-400 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 tracking-wider"
               />
               <button
                 type="button"
-                onClick={() => copyToClipboard(currentCron)}
+                onClick={() => copyToClipboard(cronInput)}
                 className={`absolute right-2.5 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                   copied
                     ? 'bg-emerald-600 text-white'
@@ -316,39 +317,48 @@ export default function CronGenerator() {
             </div>
           </div>
 
-          {/* 5 Field Visual Column Indicators */}
-          <div className="grid grid-cols-5 gap-2 pt-2">
-            {[
-              { id: 'minutes', label: 'Dakika', val: minute, range: '0-59' },
-              { id: 'hours', label: 'Saat', val: hour, range: '0-23' },
-              { id: 'day', label: 'Ayın Günü', val: dayOfMonth, range: '1-31' },
-              { id: 'month', label: 'Ay', val: month, range: '1-12' },
-              { id: 'weekday', label: 'Hafta Günü', val: dayOfWeek, range: '0-6 (Pzr=0)' },
-            ].map((col) => (
-              <button
-                key={col.id}
-                type="button"
-                onClick={() => setBuilderTab(col.id as any)}
-                className={`p-3 rounded-2xl text-center transition-all cursor-pointer border ${
-                  builderTab === col.id
-                    ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-sm'
-                    : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
-                }`}
-              >
-                <div className="text-[11px] font-extrabold uppercase">{col.label}</div>
-                <div className="font-mono text-base font-black my-1 text-slate-900 dark:text-white">{col.val}</div>
-                <div className="text-[10px] text-slate-400">{col.range}</div>
-              </button>
-            ))}
+          {/* 5 Field Visual Interactive Column Editors */}
+          <div className="space-y-2 pt-2">
+            <div className="text-xs font-bold text-slate-600 dark:text-zinc-400">
+              Alanları Ayrı Ayrı Düzenleyin:
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                { id: 'minutes', label: 'Dakika', val: minute, idx: 0, range: '0-59' },
+                { id: 'hours', label: 'Saat', val: hour, idx: 1, range: '0-23' },
+                { id: 'day', label: 'Ayın Günü', val: dayOfMonth, idx: 2, range: '1-31' },
+                { id: 'month', label: 'Ay', val: month, idx: 3, range: '1-12' },
+                { id: 'weekday', label: 'Hafta Günü', val: dayOfWeek, idx: 4, range: '0-6 (Pzr=0)' },
+              ].map((col) => (
+                <div
+                  key={col.id}
+                  onClick={() => setBuilderTab(col.id as any)}
+                  className={`p-3 rounded-2xl text-center transition-all cursor-pointer border ${
+                    builderTab === col.id
+                      ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-sm'
+                      : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="text-[11px] font-extrabold uppercase">{col.label}</div>
+                  <input
+                    type="text"
+                    value={col.val}
+                    onChange={(e) => updateSingleField(col.idx, e.target.value)}
+                    className="w-full text-center font-mono text-base font-black my-1 p-1 rounded bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
+                  />
+                  <div className="text-[10px] text-slate-400">{col.range}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Interactive Builder Area */}
+          {/* Interactive Quick Buttons Area */}
           <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80 space-y-4">
             
             {/* Minutes Tab */}
             {builderTab === 'minutes' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Dakika Ayarları:</h4>
+                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Hızlı Dakika Seçenekleri:</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Her Dakika (*)', val: '*' },
@@ -364,7 +374,7 @@ export default function CronGenerator() {
                     <button
                       key={item.val}
                       type="button"
-                      onClick={() => setMinute(item.val)}
+                      onClick={() => updateSingleField(0, item.val)}
                       className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         minute === item.val
                           ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
@@ -381,24 +391,24 @@ export default function CronGenerator() {
             {/* Hours Tab */}
             {builderTab === 'hours' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Saat Ayarları:</h4>
+                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Hızlı Saat Seçenekleri:</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Her Saat (*)', val: '*' },
                     { label: 'Her 2 Saatte Bir (*/2)', val: '*/2' },
                     { label: 'Her 4 Saatte Bir (*/4)', val: '*/4' },
                     { label: 'Her 6 Saatte Bir (*/6)', val: '*/6' },
-                    { label: 'Her 12 Saatte Bir (*/12)', val: '*/12' },
-                    { label: 'Gece 00:00', val: '0' },
-                    { label: 'Sabah 06:00', val: '6' },
-                    { label: 'Sabah 09:00', val: '9' },
-                    { label: 'Öğle 12:00', val: '12' },
-                    { label: 'Akşam 18:00', val: '18' },
+                    { label: 'Saat 01:00 (1)', val: '1' },
+                    { label: 'Gece 00:00 (0)', val: '0' },
+                    { label: 'Sabah 06:00 (6)', val: '6' },
+                    { label: 'Sabah 09:00 (9)', val: '9' },
+                    { label: 'Öğle 12:00 (12)', val: '12' },
+                    { label: 'Akşam 18:00 (18)', val: '18' },
                   ].map((item) => (
                     <button
                       key={item.val}
                       type="button"
-                      onClick={() => setHour(item.val)}
+                      onClick={() => updateSingleField(1, item.val)}
                       className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         hour === item.val
                           ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
@@ -415,7 +425,7 @@ export default function CronGenerator() {
             {/* Day of Month Tab */}
             {builderTab === 'day' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ayın Günü Ayarları:</h4>
+                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ayın Günü Seçenekleri:</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Her Gün (*)', val: '*' },
@@ -429,7 +439,7 @@ export default function CronGenerator() {
                     <button
                       key={item.val}
                       type="button"
-                      onClick={() => setDayOfMonth(item.val)}
+                      onClick={() => updateSingleField(2, item.val)}
                       className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         dayOfMonth === item.val
                           ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
@@ -446,7 +456,7 @@ export default function CronGenerator() {
             {/* Month Tab */}
             {builderTab === 'month' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ay Ayarları:</h4>
+                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ay Seçenekleri:</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Her Ay (*)', val: '*' },
@@ -461,7 +471,7 @@ export default function CronGenerator() {
                     <button
                       key={item.val}
                       type="button"
-                      onClick={() => setMonth(item.val)}
+                      onClick={() => updateSingleField(3, item.val)}
                       className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         month === item.val
                           ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
@@ -478,7 +488,7 @@ export default function CronGenerator() {
             {/* Weekday Tab */}
             {builderTab === 'weekday' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Haftanın Günü Ayarları:</h4>
+                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Haftanın Günü Seçenekleri:</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Her Gün (*)', val: '*' },
@@ -495,7 +505,7 @@ export default function CronGenerator() {
                     <button
                       key={item.val}
                       type="button"
-                      onClick={() => setDayOfWeek(item.val)}
+                      onClick={() => updateSingleField(4, item.val)}
                       className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         dayOfWeek === item.val
                           ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
@@ -545,7 +555,7 @@ export default function CronGenerator() {
                 ))
               ) : (
                 <div className="p-4 text-center text-xs text-slate-400">
-                  Yakın zamanlı çalışma takvimi hesaplanamadı.
+                  Yakın zamanlı çalışma takvimi hesaplanamadı (Lütfen geçerli 5 haneli cron ifadesi girin).
                 </div>
               )}
             </div>
@@ -565,7 +575,7 @@ export default function CronGenerator() {
                   type="button"
                   onClick={() => applyPreset(p.cron)}
                   className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer group ${
-                    currentCron === p.cron
+                    cronInput === p.cron
                       ? 'bg-brand-blue/10 border-brand-blue text-brand-blue'
                       : 'bg-slate-50 dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 hover:border-slate-300'
                   }`}
@@ -598,22 +608,22 @@ export default function CronGenerator() {
               {
                 id: 'crontab',
                 label: 'Linux Crontab',
-                code: `${currentCron} /usr/bin/php /var/www/artisan schedule:run >> /dev/null 2>&1`,
+                code: `${cronInput} /usr/bin/php /var/www/artisan schedule:run >> /dev/null 2>&1`,
               },
               {
                 id: 'node',
                 label: 'Node.js (node-cron)',
-                code: `cron.schedule('${currentCron}', () => {\n  console.log('Task executed');\n});`,
+                code: `cron.schedule('${cronInput}', () => {\n  console.log('Task executed');\n});`,
               },
               {
                 id: 'nestjs',
                 label: 'NestJS (@nestjs/schedule)',
-                code: `@Cron('${currentCron}')\nhandleCron() {\n  this.logger.debug('Called');\n}`,
+                code: `@Cron('${cronInput}')\nhandleCron() {\n  this.logger.debug('Called');\n}`,
               },
               {
                 id: 'spring',
                 label: 'Spring Boot (Java)',
-                code: `@Scheduled(cron = "${currentCron}")\npublic void executeTask() {\n  // your task\n}`,
+                code: `@Scheduled(cron = "${cronInput}")\npublic void executeTask() {\n  // your task\n}`,
               },
               {
                 id: 'python',
@@ -623,7 +633,7 @@ export default function CronGenerator() {
               {
                 id: 'golang',
                 label: 'Go (robfig/cron)',
-                code: `c := cron.New()\nc.AddFunc("${currentCron}", func() {\n  fmt.Println("Run")\n})`,
+                code: `c := cron.New()\nc.AddFunc("${cronInput}", func() {\n  fmt.Println("Run")\n})`,
               },
             ].map((item) => (
               <div
