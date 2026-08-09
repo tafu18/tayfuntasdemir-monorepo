@@ -400,7 +400,7 @@ export default function CronGenerator() {
                 value={cronInput}
                 onChange={(e) => setCronInput(e.target.value)}
                 placeholder="* * * * * veya * 1 * * 2"
-                className={`w-full p-4 pr-32 font-mono text-xl sm:text-2xl font-bold rounded-2xl border transition-colors tracking-wider focus:outline-none ${
+                className={`w-full p-3.5 sm:p-4 pr-26 sm:pr-32 font-mono text-base sm:text-2xl font-bold rounded-2xl border transition-colors tracking-wider focus:outline-none ${
                   validationResult.isValid
                     ? 'bg-slate-900 text-emerald-400 border-slate-800 focus:ring-2 focus:ring-brand-blue/30'
                     : 'bg-slate-900 text-red-400 border-red-500/80 focus:ring-2 focus:ring-red-500/30'
@@ -410,13 +410,13 @@ export default function CronGenerator() {
                 type="button"
                 onClick={() => copyToClipboard(cronInput)}
                 disabled={!validationResult.isValid}
-                className={`absolute right-2.5 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                   copied
                     ? 'bg-emerald-600 text-white'
                     : 'bg-brand-blue hover:bg-brand-blue/90 text-white shadow-lg shadow-brand-blue/20'
                 }`}
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                 <span>{copied ? 'Kopyalandı!' : 'Kopyala'}</span>
               </button>
             </div>
@@ -454,11 +454,16 @@ export default function CronGenerator() {
           )}
 
           {/* 5 Field Visual Interactive Column Editors */}
-          <div className="space-y-2 pt-2">
-            <div className="text-xs font-bold text-slate-600 dark:text-zinc-400">
-              Alanları Ayrı Ayrı Düzenleyin:
+          <div className="space-y-2.5 pt-2">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 dark:text-zinc-400">
+              <span>Alanları Ayrı Ayrı Düzenleyin:</span>
+              <span className="text-[11px] text-brand-blue font-semibold sm:hidden">
+                Kaydırın &rarr;
+              </span>
             </div>
-            <div className="grid grid-cols-5 gap-2">
+
+            {/* Mobile Scrollable Snap Container & Desktop 5-Col Grid */}
+            <div className="flex sm:grid sm:grid-cols-5 gap-2.5 overflow-x-auto pb-2 pt-1 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none snap-x">
               {[
                 { id: 'minutes', label: 'Dakika', val: minute, idx: 0, range: '0-59' },
                 { id: 'hours', label: 'Saat', val: hour, idx: 1, range: '0-23' },
@@ -467,30 +472,35 @@ export default function CronGenerator() {
                 { id: 'weekday', label: 'Hafta Günü', val: dayOfWeek, idx: 4, range: '0-6 (Pzr=0)' },
               ].map((col) => {
                 const isFieldInvalid = validationResult.errorField === col.idx;
+                const isSelected = builderTab === col.id;
                 return (
                   <div
                     key={col.id}
                     onClick={() => setBuilderTab(col.id as any)}
-                    className={`p-3 rounded-2xl text-center transition-all cursor-pointer border ${
+                    className={`min-w-[105px] sm:min-w-0 flex-1 snap-start p-3 sm:p-3.5 rounded-2xl text-center transition-all cursor-pointer border select-none ${
                       isFieldInvalid
                         ? 'bg-red-50 dark:bg-red-950/40 border-red-500 text-red-600 dark:text-red-400 shadow-sm'
-                        : builderTab === col.id
-                        ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-sm'
+                        : isSelected
+                        ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-md ring-2 ring-brand-blue/20'
                         : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
                     }`}
                   >
-                    <div className="text-[11px] font-extrabold uppercase">{col.label}</div>
+                    <div className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide truncate">
+                      {col.label}
+                    </div>
                     <input
                       type="text"
                       value={col.val}
                       onChange={(e) => updateSingleField(col.idx, e.target.value)}
-                      className={`w-full text-center font-mono text-base font-black my-1 p-1 rounded bg-white dark:bg-zinc-900 border text-slate-900 dark:text-white focus:outline-none focus:ring-1 ${
+                      className={`w-full text-center font-mono text-sm sm:text-base font-black my-1.5 p-1 rounded-xl bg-white dark:bg-zinc-900 border text-slate-900 dark:text-white focus:outline-none focus:ring-2 ${
                         isFieldInvalid
                           ? 'border-red-500 text-red-600 dark:text-red-400 focus:ring-red-500'
-                          : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-blue'
+                          : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-blue/40'
                       }`}
                     />
-                    <div className="text-[10px] text-slate-400">{col.range}</div>
+                    <div className="text-[9px] sm:text-[10px] text-slate-400 font-mono">
+                      {col.range}
+                    </div>
                   </div>
                 );
               })}
@@ -503,32 +513,49 @@ export default function CronGenerator() {
             {/* Minutes Tab */}
             {builderTab === 'minutes' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Hızlı Dakika Seçenekleri:</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
+                    Hızlı Dakika Seçenekleri:
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    (0 - 59 aralığı)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
-                    { label: 'Her Dakika (*)', val: '*' },
-                    { label: 'Her 5 Dakikada Bir (*/5)', val: '*/5' },
-                    { label: 'Her 10 Dakikada Bir (*/10)', val: '*/10' },
-                    { label: 'Her 15 Dakikada Bir (*/15)', val: '*/15' },
-                    { label: 'Her 30 Dakikada Bir (*/30)', val: '*/30' },
-                    { label: '0. Dakika (Saat Başı)', val: '0' },
+                    { label: 'Her Dakika', val: '*' },
+                    { label: 'Her 5 Dakikada Bir', val: '*/5' },
+                    { label: 'Her 10 Dakikada Bir', val: '*/10' },
+                    { label: 'Her 15 Dakikada Bir', val: '*/15' },
+                    { label: 'Her 30 Dakikada Bir', val: '*/30' },
+                    { label: '0. Dk (Saat Başı)', val: '0' },
                     { label: '15. Dakika', val: '15' },
                     { label: '30. Dakika', val: '30' },
                     { label: '45. Dakika', val: '45' },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => updateSingleField(0, item.val)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                        minute === item.val
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
-                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                  ].map((item) => {
+                    const isSelected = minute === item.val;
+                    return (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => updateSingleField(0, item.val)}
+                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <span className="truncate text-left">{item.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-zinc-700/60 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                          {item.val}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -536,33 +563,50 @@ export default function CronGenerator() {
             {/* Hours Tab */}
             {builderTab === 'hours' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Hızlı Saat Seçenekleri:</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
+                    Hızlı Saat Seçenekleri:
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    (0 - 23 aralığı)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
-                    { label: 'Her Saat (*)', val: '*' },
-                    { label: 'Her 2 Saatte Bir (*/2)', val: '*/2' },
-                    { label: 'Her 4 Saatte Bir (*/4)', val: '*/4' },
-                    { label: 'Her 6 Saatte Bir (*/6)', val: '*/6' },
-                    { label: 'Saat 01:00 (1)', val: '1' },
-                    { label: 'Gece 00:00 (0)', val: '0' },
-                    { label: 'Sabah 06:00 (6)', val: '6' },
-                    { label: 'Sabah 09:00 (9)', val: '9' },
-                    { label: 'Öğle 12:00 (12)', val: '12' },
-                    { label: 'Akşam 18:00 (18)', val: '18' },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => updateSingleField(1, item.val)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                        hour === item.val
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
-                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                    { label: 'Her Saat', val: '*' },
+                    { label: 'Her 2 Saatte Bir', val: '*/2' },
+                    { label: 'Her 4 Saatte Bir', val: '*/4' },
+                    { label: 'Her 6 Saatte Bir', val: '*/6' },
+                    { label: 'Saat 01:00', val: '1' },
+                    { label: 'Gece 00:00', val: '0' },
+                    { label: 'Sabah 06:00', val: '6' },
+                    { label: 'Sabah 09:00', val: '9' },
+                    { label: 'Öğle 12:00', val: '12' },
+                    { label: 'Akşam 18:00', val: '18' },
+                  ].map((item) => {
+                    const isSelected = hour === item.val;
+                    return (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => updateSingleField(1, item.val)}
+                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <span className="truncate text-left">{item.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-zinc-700/60 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                          {item.val}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -570,30 +614,47 @@ export default function CronGenerator() {
             {/* Day of Month Tab */}
             {builderTab === 'day' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ayın Günü Seçenekleri:</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
+                    Ayın Günü Seçenekleri:
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    (1 - 31 aralığı)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
-                    { label: 'Her Gün (*)', val: '*' },
-                    { label: 'Her 2 Günde Bir (*/2)', val: '*/2' },
-                    { label: 'Her 5 Günde Bir (*/5)', val: '*/5' },
+                    { label: 'Her Gün', val: '*' },
+                    { label: 'Her 2 Günde Bir', val: '*/2' },
+                    { label: 'Her 5 Günde Bir', val: '*/5' },
                     { label: 'Ayın 1. Günü', val: '1' },
                     { label: 'Ayın 15. Günü', val: '15' },
                     { label: 'Ayın Son Günü (31)', val: '31' },
                     { label: '1. ve 15. Günler', val: '1,15' },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => updateSingleField(2, item.val)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                        dayOfMonth === item.val
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
-                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                  ].map((item) => {
+                    const isSelected = dayOfMonth === item.val;
+                    return (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => updateSingleField(2, item.val)}
+                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <span className="truncate text-left">{item.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-zinc-700/60 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                          {item.val}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -601,31 +662,48 @@ export default function CronGenerator() {
             {/* Month Tab */}
             {builderTab === 'month' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Ay Seçenekleri:</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
+                    Ay Seçenekleri:
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    (1 - 12 aralığı)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
-                    { label: 'Her Ay (*)', val: '*' },
-                    { label: 'Her 3 Ayda Bir (Çeyrek / */3)', val: '*/3' },
-                    { label: 'Her 6 Ayda Bir (*/6)', val: '*/6' },
-                    { label: 'Ocak (1)', val: '1' },
-                    { label: 'Nisan (4)', val: '4' },
-                    { label: 'Temmuz (7)', val: '7' },
-                    { label: 'Ekim (10)', val: '10' },
-                    { label: 'Aralık (12)', val: '12' },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => updateSingleField(3, item.val)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                        month === item.val
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
-                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                    { label: 'Her Ay', val: '*' },
+                    { label: 'Her 3 Ayda Bir', val: '*/3' },
+                    { label: 'Her 6 Ayda Bir', val: '*/6' },
+                    { label: 'Ocak', val: '1' },
+                    { label: 'Nisan', val: '4' },
+                    { label: 'Temmuz', val: '7' },
+                    { label: 'Ekim', val: '10' },
+                    { label: 'Aralık', val: '12' },
+                  ].map((item) => {
+                    const isSelected = month === item.val;
+                    return (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => updateSingleField(3, item.val)}
+                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <span className="truncate text-left">{item.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-zinc-700/60 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                          {item.val}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -633,33 +711,50 @@ export default function CronGenerator() {
             {/* Weekday Tab */}
             {builderTab === 'weekday' && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">Haftanın Günü Seçenekleri:</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
+                    Haftanın Günü Seçenekleri:
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    (0=Pazar, 1=Pzt, 6=Cts)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
-                    { label: 'Her Gün (*)', val: '*' },
-                    { label: 'Hafta İçi (Pazartesi - Cuma / 1-5)', val: '1-5' },
-                    { label: 'Hafta Sonu (Cumartesi - Pazar / 6,0)', val: '6,0' },
-                    { label: 'Pazartesi (1)', val: '1' },
-                    { label: 'Salı (2)', val: '2' },
-                    { label: 'Çarşamba (3)', val: '3' },
-                    { label: 'Perşembe (4)', val: '4' },
-                    { label: 'Cuma (5)', val: '5' },
-                    { label: 'Cumartesi (6)', val: '6' },
-                    { label: 'Pazar (0)', val: '0' },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => updateSingleField(4, item.val)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                        dayOfWeek === item.val
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-sm'
-                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                    { label: 'Her Gün', val: '*' },
+                    { label: 'Hafta İçi (Pzt-Cum)', val: '1-5' },
+                    { label: 'Hafta Sonu (Cts-Pzr)', val: '6,0' },
+                    { label: 'Pazartesi', val: '1' },
+                    { label: 'Salı', val: '2' },
+                    { label: 'Çarşamba', val: '3' },
+                    { label: 'Perşembe', val: '4' },
+                    { label: 'Cuma', val: '5' },
+                    { label: 'Cumartesi', val: '6' },
+                    { label: 'Pazar', val: '0' },
+                  ].map((item) => {
+                    const isSelected = dayOfWeek === item.val;
+                    return (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => updateSingleField(4, item.val)}
+                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                        }`}
+                      >
+                        <span className="truncate text-left">{item.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-zinc-700/60 text-slate-600 dark:text-zinc-400'
+                        }`}>
+                          {item.val}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
