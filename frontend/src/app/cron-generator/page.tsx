@@ -15,6 +15,7 @@ import {
   Terminal,
   AlertCircle,
   CheckCircle2,
+  Edit3
 } from 'lucide-react';
 
 interface CronPreset {
@@ -338,6 +339,16 @@ export default function CronGenerator() {
     }
   };
 
+  const fieldList = [
+    { id: 'minutes', label: 'Dakika', val: minute, idx: 0, range: '0-59', hint: 'Dakika (0-59, örn: */5)' },
+    { id: 'hours', label: 'Saat', val: hour, idx: 1, range: '0-23', hint: 'Saat (0-23, örn: 9-18)' },
+    { id: 'day', label: 'Gün', val: dayOfMonth, idx: 2, range: '1-31', hint: 'Ayın Günü (1-31, örn: 1,15)' },
+    { id: 'month', label: 'Ay', val: month, idx: 3, range: '1-12', hint: 'Ay (1-12, örn: 1-6)' },
+    { id: 'weekday', label: 'Hafta', val: dayOfWeek, idx: 4, range: '0-6', hint: 'Haftanın Günü (0=Pzr, 1=Pzt)' },
+  ];
+
+  const currentFieldMeta = fieldList.find(f => f.id === builderTab) || fieldList[0];
+
   const faqItems = [
     {
       question: 'Cron ve Crontab nedir?',
@@ -363,34 +374,34 @@ export default function CronGenerator() {
 
   return (
     <PageTransition>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 font-['Plus_Jakarta_Sans',sans-serif]">
+      <div className="w-full max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 font-['Plus_Jakarta_Sans',sans-serif] overflow-x-hidden">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-blue/10 dark:bg-brand-blue/20 text-brand-blue font-semibold text-xs border border-brand-blue/20">
+        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-brand-blue/10 dark:bg-brand-blue/20 text-brand-blue font-semibold text-xs border border-brand-blue/20">
             <Clock className="w-3.5 h-3.5" />
             <span>Zamanlayıcı & Crontab Aracı</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] tracking-tight">
-            Cron Expression Generator & Açıklayıcı
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] tracking-tight">
+            Cron Expression Generator
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-400">
-            İstediğiniz Cron ifadesini manuel yazın veya görsel butonlarla oluşturun; anında Türkçe karşılığını ve sonraki çalışma zamanlarını görün.
+          <p className="text-xs sm:text-base text-slate-600 dark:text-zinc-400">
+            İstediğiniz Cron ifadesini manuel yazın veya görsel butonlarla oluşturun; anında Türkçe karşılığını ve çalışma zamanlarını görün.
           </p>
         </div>
 
         {/* Main Display Box */}
-        <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200 dark:border-zinc-800 p-6 sm:p-8 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-6 mb-8">
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-zinc-800 p-4 sm:p-7 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-5 mb-8">
           
           {/* Editable Cron String */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
-                <Terminal className="w-4 h-4 text-brand-blue" />
-                Cron İfadesi (Manuel Yazabilir veya Değiştirebilirsiniz)
+          <div className="space-y-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <label className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
+                <Terminal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-blue" />
+                <span>Cron İfadesi (Manuel Yazabilirsiniz)</span>
               </label>
-              <span className="text-[11px] font-mono text-slate-400">
-                [dakika] [saat] [gün] [ay] [haftanın günü]
+              <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 dark:text-zinc-500">
+                [dakika] [saat] [gün] [ay] [hafta]
               </span>
             </div>
 
@@ -399,8 +410,8 @@ export default function CronGenerator() {
                 type="text"
                 value={cronInput}
                 onChange={(e) => setCronInput(e.target.value)}
-                placeholder="* * * * * veya * 1 * * 2"
-                className={`w-full p-3.5 sm:p-4 pr-26 sm:pr-32 font-mono text-base sm:text-2xl font-bold rounded-2xl border transition-colors tracking-wider focus:outline-none ${
+                placeholder="* * * * *"
+                className={`w-full p-3 sm:p-4 pr-24 sm:pr-32 font-mono text-lg sm:text-2xl font-bold rounded-xl sm:rounded-2xl border transition-colors tracking-wider focus:outline-none ${
                   validationResult.isValid
                     ? 'bg-slate-900 text-emerald-400 border-slate-800 focus:ring-2 focus:ring-brand-blue/30'
                     : 'bg-slate-900 text-red-400 border-red-500/80 focus:ring-2 focus:ring-red-500/30'
@@ -410,10 +421,10 @@ export default function CronGenerator() {
                 type="button"
                 onClick={() => copyToClipboard(cronInput)}
                 disabled={!validationResult.isValid}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                   copied
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-brand-blue hover:bg-brand-blue/90 text-white shadow-lg shadow-brand-blue/20'
+                    : 'bg-brand-blue hover:bg-brand-blue/90 text-white shadow-md'
                 }`}
               >
                 {copied ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
@@ -424,60 +435,101 @@ export default function CronGenerator() {
 
           {/* Validation & Humanized Description Banner */}
           {validationResult.isValid ? (
-            <div className="p-4 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 flex items-start sm:items-center gap-3.5">
-              <div className="p-2 rounded-xl bg-emerald-600 text-white shrink-0 shadow-md shadow-emerald-600/20">
-                <CheckCircle2 className="w-5 h-5" />
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 flex items-start sm:items-center gap-3">
+              <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-emerald-600 text-white shrink-0 shadow-md">
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div className="flex-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
-                  Geçerli Cron İfadesi (Açıklama):
+              <div className="flex-1 min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                  Geçerli Cron İfadesi:
                 </span>
-                <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mt-0.5">
+                <p className="text-xs sm:text-base font-bold text-slate-900 dark:text-white mt-0.5 break-words">
                   {humanizedDescription}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="p-4 rounded-2xl bg-red-500/10 dark:bg-red-950/40 border border-red-500/30 flex items-start sm:items-center gap-3.5">
-              <div className="p-2 rounded-xl bg-red-600 text-white shrink-0 shadow-md shadow-red-600/20">
-                <AlertCircle className="w-5 h-5" />
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-red-500/10 dark:bg-red-950/40 border border-red-500/30 flex items-start sm:items-center gap-3">
+              <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-red-600 text-white shrink-0 shadow-md">
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div className="flex-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 block">
+              <div className="flex-1 min-w-0">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 block">
                   Geçersiz Cron Sözdizimi (Hata):
                 </span>
-                <p className="text-sm sm:text-base font-bold text-red-700 dark:text-red-300 mt-0.5">
+                <p className="text-xs sm:text-base font-bold text-red-700 dark:text-red-300 mt-0.5 break-words">
                   {validationResult.error}
                 </p>
               </div>
             </div>
           )}
 
-          {/* 5 Field Visual Interactive Column Editors */}
-          <div className="space-y-2.5 pt-2">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-600 dark:text-zinc-400">
-              <span>Alanları Ayrı Ayrı Düzenleyin:</span>
-              <span className="text-[11px] text-brand-blue font-semibold sm:hidden">
-                Kaydırın &rarr;
-              </span>
+          {/* --- MOBILE APP STYLE FIELD SELECTOR (ONLY ON MOBILE) --- */}
+          <div className="block sm:hidden space-y-3 pt-2">
+            <div className="text-[11px] font-extrabold uppercase text-slate-500 dark:text-zinc-400">
+              Düzenlenecek Alanı Seçin:
+            </div>
+            
+            {/* 5 Tab Buttons */}
+            <div className="grid grid-cols-5 gap-1.5 p-1 bg-slate-100 dark:bg-zinc-800/80 rounded-xl">
+              {fieldList.map((f) => {
+                const isActive = builderTab === f.id;
+                const isFieldInvalid = validationResult.errorField === f.idx;
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setBuilderTab(f.id as any)}
+                    className={`py-2 px-1 rounded-lg text-center transition-all cursor-pointer flex flex-col items-center justify-center ${
+                      isActive
+                        ? 'bg-brand-blue text-white shadow-sm font-black'
+                        : isFieldInvalid
+                        ? 'bg-red-500/10 text-red-500 font-bold'
+                        : 'text-slate-600 dark:text-zinc-300 font-bold'
+                    }`}
+                  >
+                    <span className="text-[10px] leading-none opacity-80">{f.label}</span>
+                    <span className="text-xs font-mono font-black mt-1">{f.val}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Mobile Scrollable Snap Container & Desktop 5-Col Grid */}
-            <div className="flex sm:grid sm:grid-cols-5 gap-2.5 overflow-x-auto pb-2 pt-1 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none snap-x">
-              {[
-                { id: 'minutes', label: 'Dakika', val: minute, idx: 0, range: '0-59' },
-                { id: 'hours', label: 'Saat', val: hour, idx: 1, range: '0-23' },
-                { id: 'day', label: 'Ayın Günü', val: dayOfMonth, idx: 2, range: '1-31' },
-                { id: 'month', label: 'Ay', val: month, idx: 3, range: '1-12' },
-                { id: 'weekday', label: 'Hafta Günü', val: dayOfWeek, idx: 4, range: '0-6 (Pzr=0)' },
-              ].map((col) => {
+            {/* Mobile Active Field Quick Editor */}
+            <div className="p-3 bg-slate-50 dark:bg-zinc-950/60 rounded-xl border border-slate-200 dark:border-zinc-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
+                  <Edit3 className="w-3.5 h-3.5 text-brand-blue" />
+                  {currentFieldMeta.label} Değeri ({currentFieldMeta.range})
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  Mevcut: {currentFieldMeta.val}
+                </span>
+              </div>
+              <input
+                type="text"
+                value={currentFieldMeta.val}
+                onChange={(e) => updateSingleField(currentFieldMeta.idx, e.target.value)}
+                className="w-full text-center font-mono text-lg font-black p-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              />
+            </div>
+          </div>
+
+          {/* --- DESKTOP 5-COLUMN EDITOR (ONLY ON DESKTOP) --- */}
+          <div className="hidden sm:block space-y-2.5 pt-2">
+            <div className="text-xs font-bold text-slate-600 dark:text-zinc-400">
+              Alanları Ayrı Ayrı Düzenleyin:
+            </div>
+
+            <div className="grid grid-cols-5 gap-2.5">
+              {fieldList.map((col) => {
                 const isFieldInvalid = validationResult.errorField === col.idx;
                 const isSelected = builderTab === col.id;
                 return (
                   <div
                     key={col.id}
                     onClick={() => setBuilderTab(col.id as any)}
-                    className={`min-w-[105px] sm:min-w-0 flex-1 snap-start p-3 sm:p-3.5 rounded-2xl text-center transition-all cursor-pointer border select-none ${
+                    className={`p-3.5 rounded-2xl text-center transition-all cursor-pointer border select-none ${
                       isFieldInvalid
                         ? 'bg-red-50 dark:bg-red-950/40 border-red-500 text-red-600 dark:text-red-400 shadow-sm'
                         : isSelected
@@ -485,20 +537,20 @@ export default function CronGenerator() {
                         : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
                     }`}
                   >
-                    <div className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide truncate">
+                    <div className="text-xs font-extrabold uppercase tracking-wide truncate">
                       {col.label}
                     </div>
                     <input
                       type="text"
                       value={col.val}
                       onChange={(e) => updateSingleField(col.idx, e.target.value)}
-                      className={`w-full text-center font-mono text-sm sm:text-base font-black my-1.5 p-1 rounded-xl bg-white dark:bg-zinc-900 border text-slate-900 dark:text-white focus:outline-none focus:ring-2 ${
+                      className={`w-full text-center font-mono text-base font-black my-1.5 p-1 rounded-xl bg-white dark:bg-zinc-900 border text-slate-900 dark:text-white focus:outline-none focus:ring-2 ${
                         isFieldInvalid
                           ? 'border-red-500 text-red-600 dark:text-red-400 focus:ring-red-500'
                           : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-blue/40'
                       }`}
                     />
-                    <div className="text-[9px] sm:text-[10px] text-slate-400 font-mono">
+                    <div className="text-[10px] text-slate-400 font-mono">
                       {col.range}
                     </div>
                   </div>
@@ -507,21 +559,21 @@ export default function CronGenerator() {
             </div>
           </div>
 
-          {/* Interactive Quick Buttons Area */}
-          <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80 space-y-4">
+          {/* Interactive Quick Buttons Area (Responsive Grid) */}
+          <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80 space-y-3">
             
             {/* Minutes Tab */}
             {builderTab === 'minutes' && (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
                     Hızlı Dakika Seçenekleri:
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    (0 - 59 aralığı)
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    (0 - 59)
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {[
                     { label: 'Her Dakika', val: '*' },
                     { label: 'Her 5 Dakikada Bir', val: '*/5' },
@@ -539,10 +591,10 @@ export default function CronGenerator() {
                         key={item.val}
                         type="button"
                         onClick={() => updateSingleField(0, item.val)}
-                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                        className={`p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1 ${
                           isSelected
-                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
-                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40'
                         }`}
                       >
                         <span className="truncate text-left">{item.label}</span>
@@ -562,16 +614,16 @@ export default function CronGenerator() {
 
             {/* Hours Tab */}
             {builderTab === 'hours' && (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
                     Hızlı Saat Seçenekleri:
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    (0 - 23 aralığı)
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    (0 - 23)
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {[
                     { label: 'Her Saat', val: '*' },
                     { label: 'Her 2 Saatte Bir', val: '*/2' },
@@ -590,10 +642,10 @@ export default function CronGenerator() {
                         key={item.val}
                         type="button"
                         onClick={() => updateSingleField(1, item.val)}
-                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                        className={`p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1 ${
                           isSelected
-                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
-                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40'
                         }`}
                       >
                         <span className="truncate text-left">{item.label}</span>
@@ -613,16 +665,16 @@ export default function CronGenerator() {
 
             {/* Day of Month Tab */}
             {builderTab === 'day' && (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
                     Ayın Günü Seçenekleri:
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    (1 - 31 aralığı)
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    (1 - 31)
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {[
                     { label: 'Her Gün', val: '*' },
                     { label: 'Her 2 Günde Bir', val: '*/2' },
@@ -638,10 +690,10 @@ export default function CronGenerator() {
                         key={item.val}
                         type="button"
                         onClick={() => updateSingleField(2, item.val)}
-                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                        className={`p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1 ${
                           isSelected
-                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
-                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40'
                         }`}
                       >
                         <span className="truncate text-left">{item.label}</span>
@@ -661,16 +713,16 @@ export default function CronGenerator() {
 
             {/* Month Tab */}
             {builderTab === 'month' && (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
                     Ay Seçenekleri:
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    (1 - 12 aralığı)
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    (1 - 12)
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {[
                     { label: 'Her Ay', val: '*' },
                     { label: 'Her 3 Ayda Bir', val: '*/3' },
@@ -687,10 +739,10 @@ export default function CronGenerator() {
                         key={item.val}
                         type="button"
                         onClick={() => updateSingleField(3, item.val)}
-                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                        className={`p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1 ${
                           isSelected
-                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
-                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40'
                         }`}
                       >
                         <span className="truncate text-left">{item.label}</span>
@@ -710,16 +762,16 @@ export default function CronGenerator() {
 
             {/* Weekday Tab */}
             {builderTab === 'weekday' && (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
                     Haftanın Günü Seçenekleri:
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
-                    (0=Pazar, 1=Pzt, 6=Cts)
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    (0=Pzr, 1=Pzt)
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {[
                     { label: 'Her Gün', val: '*' },
                     { label: 'Hafta İçi (Pzt-Cum)', val: '1-5' },
@@ -738,10 +790,10 @@ export default function CronGenerator() {
                         key={item.val}
                         type="button"
                         onClick={() => updateSingleField(4, item.val)}
-                        className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                        className={`p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-between gap-1 ${
                           isSelected
-                            ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20'
-                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40 hover:bg-white dark:hover:bg-zinc-800'
+                            ? 'bg-brand-blue text-white border-brand-blue shadow-md'
+                            : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700/80 hover:border-brand-blue/40'
                         }`}
                       >
                         <span className="truncate text-left">{item.label}</span>
@@ -764,53 +816,53 @@ export default function CronGenerator() {
         </div>
 
         {/* 2-Column Grid: Next Runs & Presets */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mb-8">
           
           {/* Next 5 Execution Times */}
-          <div className="lg:col-span-6 bg-white dark:bg-zinc-900 p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-emerald-500" />
-              Gelecek 5 Çalışma Zamanı (Next Schedules)
+          <div className="lg:col-span-6 bg-white dark:bg-zinc-900 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
+              <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
+              Gelecek 5 Çalışma Zamanı
             </h3>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {nextRuns.length > 0 ? (
                 nextRuns.map((date, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 flex items-center justify-between"
+                    className="p-2.5 sm:p-3 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 flex items-center justify-between"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs flex items-center justify-center">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px] sm:text-xs flex items-center justify-center shrink-0">
                         {idx + 1}
                       </span>
-                      <span className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200">
-                        {date.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      <span className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 truncate">
+                        {date.toLocaleDateString('tr-TR', { weekday: 'short', month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-                    <span className="font-mono text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg border border-emerald-200 dark:border-emerald-800/40">
-                      {date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    <span className="font-mono text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg border border-emerald-200 dark:border-emerald-800/40 shrink-0">
+                      {date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 ))
               ) : (
-                <div className="p-6 text-center text-xs text-slate-400 bg-slate-50/50 dark:bg-zinc-950/50 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800">
+                <div className="p-4 text-center text-xs text-slate-400 bg-slate-50/50 dark:bg-zinc-950/50 rounded-xl border border-dashed border-slate-200 dark:border-zinc-800">
                   {validationResult.isValid
                     ? 'Yakın zamanlı çalışma takvimi hesaplanamadı.'
-                    : 'Geçerli bir Cron ifadesi girildiğinde çalışma takvimi burada listelenecektir.'}
+                    : 'Geçerli bir Cron ifadesi girildiğinde takvim hesaplanacaktır.'}
                 </div>
               )}
             </div>
           </div>
 
           {/* Quick Presets */}
-          <div className="lg:col-span-6 bg-white dark:bg-zinc-900 p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
-              <Zap className="w-5 h-5 text-amber-500" />
+          <div className="lg:col-span-6 bg-white dark:bg-zinc-900 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
               Popüler Hazır Şablonlar
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[280px] overflow-y-auto pr-1">
               {PRESETS.map((p) => (
                 <button
                   key={p.name}
@@ -839,9 +891,9 @@ export default function CronGenerator() {
         </div>
 
         {/* Code Snippets for Developers */}
-        <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200 dark:border-zinc-800 p-6 sm:p-8 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-4 mb-8">
-          <h3 className="text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
-            <Code2 className="w-5 h-5 text-purple-500" />
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-zinc-800 p-4 sm:p-7 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-4 mb-8">
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white font-['Outfit'] flex items-center gap-2">
+            <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
             Tek Tıkla Projenize Ekleyin (Kodlama Şablonları)
           </h3>
 
@@ -855,46 +907,46 @@ export default function CronGenerator() {
               {
                 id: 'node',
                 label: 'Node.js (node-cron)',
-                code: `cron.schedule('${cronInput}', () => {\n  console.log('Task executed');\n});`,
+                code: `cron.schedule('${cronInput}', () => {\n  console.log('Executed');\n});`,
               },
               {
                 id: 'nestjs',
                 label: 'NestJS (@nestjs/schedule)',
-                code: `@Cron('${cronInput}')\nhandleCron() {\n  this.logger.debug('Called');\n}`,
+                code: `@Cron('${cronInput}')\nhandleCron() {\n  this.logger.debug('Run');\n}`,
               },
               {
                 id: 'spring',
                 label: 'Spring Boot (Java)',
-                code: `@Scheduled(cron = "${cronInput}")\npublic void executeTask() {\n  // your task\n}`,
+                code: `@Scheduled(cron = "${cronInput}")\npublic void executeTask() {}`,
               },
               {
                 id: 'python',
-                label: 'Python (Celery / croniter)',
-                code: `from celery.schedules import crontab\n\n'schedule': crontab('${minute}', '${hour}', '${dayOfMonth}', '${month}', '${dayOfWeek}')`,
+                label: 'Python (Celery)',
+                code: `crontab('${minute}', '${hour}', '${dayOfMonth}', '${month}', '${dayOfWeek}')`,
               },
               {
                 id: 'golang',
                 label: 'Go (robfig/cron)',
-                code: `c := cron.New()\nc.AddFunc("${cronInput}", func() {\n  fmt.Println("Run")\n})`,
+                code: `c.AddFunc("${cronInput}", func() {\n  fmt.Println("Run")\n})`,
               },
             ].map((item) => (
               <div
                 key={item.id}
-                className="p-3.5 bg-slate-50 dark:bg-zinc-950 rounded-2xl border border-slate-200 dark:border-zinc-800 flex flex-col justify-between gap-2"
+                className="p-3 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 flex flex-col justify-between gap-2 overflow-hidden"
               >
-                <div>
+                <div className="min-w-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-800 dark:text-zinc-200">{item.label}</span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 truncate">{item.label}</span>
                     <button
                       type="button"
                       onClick={() => copyToClipboard(item.code, item.id)}
-                      className="p-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 hover:text-brand-blue transition-colors cursor-pointer"
+                      className="p-1 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 hover:text-brand-blue transition-colors cursor-pointer shrink-0"
                       title="Kopyala"
                     >
                       {copiedCode === item.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                   </div>
-                  <pre className="mt-2 p-2 bg-slate-900 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto whitespace-pre-wrap">
+                  <pre className="mt-2 p-2 bg-slate-900 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto break-all whitespace-pre-wrap">
                     {item.code}
                   </pre>
                 </div>
@@ -904,7 +956,7 @@ export default function CronGenerator() {
         </div>
 
         {/* FAQs */}
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
           <FAQ items={faqItems} />
         </div>
 
