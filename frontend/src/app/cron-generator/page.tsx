@@ -13,7 +13,9 @@ import {
   CalendarDays,
   Zap,
   Terminal,
-  RotateCcw
+  AlertCircle,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 
 interface CronPreset {
@@ -64,6 +66,103 @@ export default function CronGenerator() {
     };
   }, [cronInput]);
 
+  // Validation Helper
+  const validateField = (val: string, min: number, max: number, name: string): { valid: boolean; error?: string } => {
+    if (!val || val === '') return { valid: false, error: `${name} alanı boş bırakılamaz.` };
+    if (val === '*') return { valid: true };
+
+    const isNumericString = (s: string) => /^\d+$/.test(s);
+
+    // Step (e.g. */5 or 10-30/5 or 1/5)
+    if (val.includes('/')) {
+      const parts = val.split('/');
+      if (parts.length !== 2) {
+        return { valid: false, error: `${name} alanında geçersiz adım formatı ("${val}").` };
+      }
+      const [base, stepStr] = parts;
+      const step = parseInt(stepStr, 10);
+      if (!isNumericString(stepStr) || isNaN(step) || step <= 0 || step > max) {
+        return { valid: false, error: `${name} alanında geçersiz adım değeri ("${stepStr}"). 1-${max} arasında bir sayı olmalıdır.` };
+      }
+      if (base !== '*') {
+        const baseValidation = validateField(base, min, max, name);
+        if (!baseValidation.valid) return baseValidation;
+      }
+      return { valid: true };
+    }
+
+    // Lists (e.g. 1,5,10)
+    if (val.includes(',')) {
+      const items = val.split(',');
+      for (const item of items) {
+        if (!item || !validateField(item, min, max, name).valid) {
+          return { valid: false, error: `${name} alanındaki "${item}" değeri geçersizdir (${min}-${max} arasında geçerli bir değer olmalıdır).` };
+        }
+      }
+      return { valid: true };
+    }
+
+    // Ranges (e.g. 1-5)
+    if (val.includes('-')) {
+      const parts = val.split('-');
+      if (parts.length !== 2) {
+        return { valid: false, error: `${name} alanında geçersiz aralık formatı ("${val}").` };
+      }
+      const [startStr, endStr] = parts;
+      if (!isNumericString(startStr) || !isNumericString(endStr)) {
+        return { valid: false, error: `${name} aralığı sadece sayılardan oluşmalıdır ("${val}").` };
+      }
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < min || end > max || start > end) {
+        return { valid: false, error: `${name} alanında geçersiz aralık ("${val}"). ${min}-${max} arasında ve küçükten büyüğe olmalıdır.` };
+      }
+      return { valid: true };
+    }
+
+    // Single number
+    if (!isNumericString(val)) {
+      return { valid: false, error: `${name} alanında geçersiz karakter ("${val}"). Sadece ${min}-${max} arası sayı, * veya */adım kullanılabilir.` };
+    }
+    const num = parseInt(val, 10);
+    if (isNaN(num) || num < min || num > max) {
+      return { valid: false, error: `${name} değeri ${min}-${max} sınırları dışında ("${val}").` };
+    }
+
+    return { valid: true };
+  };
+
+  // Full Expression Validation
+  const validationResult = useMemo(() => {
+    const parts = cronInput.trim().split(/\s+/);
+    if (parts.length !== 5) {
+      return {
+        isValid: false,
+        error: `Cron ifadesi tam 5 alandan oluşmalıdır (Şu an: ${parts.length} alan). Örn: */5 * * * *`,
+        errorField: null,
+      };
+    }
+
+    const [m, h, dom, mon, dow] = parts;
+
+    const mCheck = validateField(m, 0, 59, '1. Alan (Dakika)');
+    if (!mCheck.valid) return { isValid: false, error: mCheck.error, errorField: 0 };
+
+    const hCheck = validateField(h, 0, 23, '2. Alan (Saat)');
+    if (!hCheck.valid) return { isValid: false, error: hCheck.error, errorField: 1 };
+
+    const domCheck = validateField(dom, 1, 31, '3. Alan (Ayın Günü)');
+    if (!domCheck.valid) return { isValid: false, error: domCheck.error, errorField: 2 };
+
+    const monCheck = validateField(mon, 1, 12, '4. Alan (Ay)');
+    if (!monCheck.valid) return { isValid: false, error: monCheck.error, errorField: 3 };
+
+    const dowCheck = validateField(dow, 0, 7, '5. Alan (Haftanın Günü)');
+    if (!dowCheck.valid) return { isValid: false, error: dowCheck.error, errorField: 4 };
+
+    return { isValid: true, error: null, errorField: null };
+  }, [cronInput]);
+
   // Update a single field while keeping the rest
   const updateSingleField = (fieldIndex: number, newValue: string) => {
     const parts = cronInput.trim().split(/\s+/);
@@ -76,14 +175,14 @@ export default function CronGenerator() {
     setCronInput(presetCron);
   };
 
-  // Turkish Humanizer Logic (Works with ANY custom expression like "* 1 * * 2")
+  // Turkish Humanizer Logic (Only runs when valid)
   const humanizedDescription = useMemo(() => {
+    if (!validationResult.isValid) {
+      return null;
+    }
+
     try {
       const parts = cronInput.trim().split(/\s+/);
-      if (parts.length !== 5) {
-        return 'Lütfen 5 haneli standart bir Cron ifadesi girin (Örn: */5 * * * * veya * 1 * * 2).';
-      }
-
       const [m, h, dom, mon, dow] = parts;
 
       if (m === '*' && h === '*' && dom === '*' && mon === '*' && dow === '*') {
@@ -160,15 +259,15 @@ export default function CronGenerator() {
     } catch {
       return 'Geçerli bir Cron ifadesi girildiğinde çalışma planı burada görünecektir.';
     }
-  }, [cronInput]);
+  }, [cronInput, validationResult]);
 
   // Compute Next 5 Execution Times
   const nextRuns = useMemo(() => {
+    if (!validationResult.isValid) return [];
+
     const dates: Date[] = [];
     try {
       const parts = cronInput.trim().split(/\s+/);
-      if (parts.length !== 5) return [];
-
       const [m, h, dom, mon, dow] = parts;
       let current = new Date();
       current.setSeconds(0, 0);
@@ -214,7 +313,7 @@ export default function CronGenerator() {
       console.error('Schedule calc error', e);
     }
     return dates;
-  }, [cronInput]);
+  }, [cronInput, validationResult]);
 
   const copyToClipboard = (text: string, type?: string) => {
     navigator.clipboard.writeText(text);
@@ -285,12 +384,17 @@ export default function CronGenerator() {
                 value={cronInput}
                 onChange={(e) => setCronInput(e.target.value)}
                 placeholder="* * * * * veya * 1 * * 2"
-                className="w-full p-4 pr-32 font-mono text-xl sm:text-2xl font-bold bg-slate-900 text-emerald-400 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 tracking-wider"
+                className={`w-full p-4 pr-32 font-mono text-xl sm:text-2xl font-bold rounded-2xl border transition-colors tracking-wider focus:outline-none ${
+                  validationResult.isValid
+                    ? 'bg-slate-900 text-emerald-400 border-slate-800 focus:ring-2 focus:ring-brand-blue/30'
+                    : 'bg-slate-900 text-red-400 border-red-500/80 focus:ring-2 focus:ring-red-500/30'
+                }`}
               />
               <button
                 type="button"
                 onClick={() => copyToClipboard(cronInput)}
-                className={`absolute right-2.5 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
+                disabled={!validationResult.isValid}
+                className={`absolute right-2.5 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                   copied
                     ? 'bg-emerald-600 text-white'
                     : 'bg-brand-blue hover:bg-brand-blue/90 text-white shadow-lg shadow-brand-blue/20'
@@ -302,20 +406,36 @@ export default function CronGenerator() {
             </div>
           </div>
 
-          {/* Humanized Description Banner */}
-          <div className="p-4 rounded-2xl bg-brand-blue/5 dark:bg-brand-blue/10 border border-brand-blue/20 flex items-start sm:items-center gap-3.5">
-            <div className="p-2 rounded-xl bg-brand-blue text-white shrink-0 shadow-md shadow-brand-blue/20">
-              <Sparkles className="w-5 h-5" />
+          {/* Validation & Humanized Description Banner */}
+          {validationResult.isValid ? (
+            <div className="p-4 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 flex items-start sm:items-center gap-3.5">
+              <div className="p-2 rounded-xl bg-emerald-600 text-white shrink-0 shadow-md shadow-emerald-600/20">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                  Geçerli Cron İfadesi (Açıklama):
+                </span>
+                <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mt-0.5">
+                  {humanizedDescription}
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-brand-blue block">
-                Türkçe İnsan Dili Açıklaması:
-              </span>
-              <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mt-0.5">
-                {humanizedDescription}
-              </p>
+          ) : (
+            <div className="p-4 rounded-2xl bg-red-500/10 dark:bg-red-950/40 border border-red-500/30 flex items-start sm:items-center gap-3.5">
+              <div className="p-2 rounded-xl bg-red-600 text-white shrink-0 shadow-md shadow-red-600/20">
+                <AlertCircle className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 block">
+                  Geçersiz Cron Sözdizimi (Hata):
+                </span>
+                <p className="text-sm sm:text-base font-bold text-red-700 dark:text-red-300 mt-0.5">
+                  {validationResult.error}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* 5 Field Visual Interactive Column Editors */}
           <div className="space-y-2 pt-2">
@@ -329,26 +449,35 @@ export default function CronGenerator() {
                 { id: 'day', label: 'Ayın Günü', val: dayOfMonth, idx: 2, range: '1-31' },
                 { id: 'month', label: 'Ay', val: month, idx: 3, range: '1-12' },
                 { id: 'weekday', label: 'Hafta Günü', val: dayOfWeek, idx: 4, range: '0-6 (Pzr=0)' },
-              ].map((col) => (
-                <div
-                  key={col.id}
-                  onClick={() => setBuilderTab(col.id as any)}
-                  className={`p-3 rounded-2xl text-center transition-all cursor-pointer border ${
-                    builderTab === col.id
-                      ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-sm'
-                      : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="text-[11px] font-extrabold uppercase">{col.label}</div>
-                  <input
-                    type="text"
-                    value={col.val}
-                    onChange={(e) => updateSingleField(col.idx, e.target.value)}
-                    className="w-full text-center font-mono text-base font-black my-1 p-1 rounded bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
-                  />
-                  <div className="text-[10px] text-slate-400">{col.range}</div>
-                </div>
-              ))}
+              ].map((col) => {
+                const isFieldInvalid = validationResult.errorField === col.idx;
+                return (
+                  <div
+                    key={col.id}
+                    onClick={() => setBuilderTab(col.id as any)}
+                    className={`p-3 rounded-2xl text-center transition-all cursor-pointer border ${
+                      isFieldInvalid
+                        ? 'bg-red-50 dark:bg-red-950/40 border-red-500 text-red-600 dark:text-red-400 shadow-sm'
+                        : builderTab === col.id
+                        ? 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue text-brand-blue shadow-sm'
+                        : 'bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="text-[11px] font-extrabold uppercase">{col.label}</div>
+                    <input
+                      type="text"
+                      value={col.val}
+                      onChange={(e) => updateSingleField(col.idx, e.target.value)}
+                      className={`w-full text-center font-mono text-base font-black my-1 p-1 rounded bg-white dark:bg-zinc-900 border text-slate-900 dark:text-white focus:outline-none focus:ring-1 ${
+                        isFieldInvalid
+                          ? 'border-red-500 text-red-600 dark:text-red-400 focus:ring-red-500'
+                          : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-blue'
+                      }`}
+                    />
+                    <div className="text-[10px] text-slate-400">{col.range}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -554,8 +683,10 @@ export default function CronGenerator() {
                   </div>
                 ))
               ) : (
-                <div className="p-4 text-center text-xs text-slate-400">
-                  Yakın zamanlı çalışma takvimi hesaplanamadı (Lütfen geçerli 5 haneli cron ifadesi girin).
+                <div className="p-6 text-center text-xs text-slate-400 bg-slate-50/50 dark:bg-zinc-950/50 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800">
+                  {validationResult.isValid
+                    ? 'Yakın zamanlı çalışma takvimi hesaplanamadı.'
+                    : 'Geçerli bir Cron ifadesi girildiğinde çalışma takvimi burada listelenecektir.'}
                 </div>
               )}
             </div>
