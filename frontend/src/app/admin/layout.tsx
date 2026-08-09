@@ -25,10 +25,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
-    
-    if (!token) {
-      router.push('/admin/login');
-    } else {
+
+    if (token) {
       setIsAuthenticated(true);
       if (userStr) {
         try {
@@ -37,8 +35,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           console.error(e);
         }
       }
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    // Token yoksa Authelia SSO doğrulaması dene
+    const attemptSSO = async () => {
+      try {
+        const res = await fetch('/api/auth/sso');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.access_token) {
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            setAdminUser(data.user);
+            setIsAuthenticated(true);
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('SSO Auto-login failed:', err);
+      }
+
+      // SSO başarısızsa veya yerel ortamdaysa login sayfasına yönlendir
+      router.push('/admin/login');
+      setIsLoading(false);
+    };
+
+    attemptSSO();
   }, [pathname, router]);
 
   const handleLogout = () => {

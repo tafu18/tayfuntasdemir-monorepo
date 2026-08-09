@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/User.entity';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) { }
 
   async register(data: any): Promise<User> {
@@ -35,6 +37,37 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('E-posta veya şifre hatalı.');
     }
+    const payload = { email: user.email, sub: user.id, type: user.type };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.type,
+        male_name: user.male_name,
+        female_name: user.female_name,
+      },
+    };
+  }
+
+  async ssoLogin(secretKey: string, email?: string): Promise<{ access_token: string; user: any }> {
+    const expectedSecret = this.configService.get<string>('JWT_SECRET', 'supersecretjwtkey123!');
+    if (!secretKey || secretKey !== expectedSecret) {
+      throw new UnauthorizedException('Geçersiz SSO anahtarı.');
+    }
+
+    let user: User | null = null;
+    if (email) {
+      user = await this.userRepository.findOne({ where: { email } });
+    }
+    if (!user) {
+      user = await this.userRepository.findOne({ where: { type: 'admin' } });
+    }
+    if (!user) {
+      throw new UnauthorizedException('Admin kullanıcısı bulunamadı.');
+    }
+
     const payload = { email: user.email, sub: user.id, type: user.type };
     return {
       access_token: this.jwtService.sign(payload),

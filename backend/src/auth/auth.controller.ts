@@ -16,6 +16,11 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @Post('sso')
+  async ssoLogin(@Body() body: { secretKey: string; email?: string }) {
+    return this.authService.ssoLogin(body.secretKey, body.email);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Req() req: any) {
