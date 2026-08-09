@@ -15,7 +15,6 @@ import {
   Terminal,
   AlertCircle,
   CheckCircle2,
-  AlertTriangle
 } from 'lucide-react';
 
 interface CronPreset {
@@ -175,7 +174,7 @@ export default function CronGenerator() {
     setCronInput(presetCron);
   };
 
-  // Turkish Humanizer Logic (Only runs when valid)
+  // Natural Turkish Humanizer Logic
   const humanizedDescription = useMemo(() => {
     if (!validationResult.isValid) {
       return null;
@@ -202,10 +201,15 @@ export default function CronGenerator() {
         '7': 'Temmuz', '8': 'Ağustos', '9': 'Eylül', '10': 'Ekim', '11': 'Kasım', '12': 'Aralık'
       };
 
+      // 1. Hafta Günü Açıklaması
       let dowDesc = '';
       if (dow !== '*') {
         if (dayNames[dow]) {
-          dowDesc = `Her ${dayNames[dow]}`;
+          dowDesc = `Her ${dayNames[dow]} günü`;
+        } else if (dow.startsWith('*/')) {
+          const step = parseInt(dow.replace('*/', ''), 10);
+          const matchedDays = [0, 1, 2, 3, 4, 5, 6].filter(d => d % step === 0).map(d => dayNames[String(d)]);
+          dowDesc = `${matchedDays.join(' ve ')} günleri (Haftada her ${step} günde bir)`;
         } else if (dow.includes('-')) {
           const [s, e] = dow.split('-');
           dowDesc = `${dayNames[s] || s} ile ${dayNames[e] || e} arasındaki günlerde`;
@@ -215,13 +219,16 @@ export default function CronGenerator() {
         }
       }
 
+      // 2. Ayın Günü Açıklaması
       let domDesc = '';
       if (dom !== '*') {
         if (dom.startsWith('*/')) domDesc = `her ${dom.replace('*/', '')} günde bir`;
         else if (dom.includes(',')) domDesc = `ayın ${dom}. günlerinde`;
+        else if (dom.includes('-')) domDesc = `ayın ${dom}. günleri arasında`;
         else domDesc = `ayın ${dom}. günü`;
       }
 
+      // 3. Ay Açıklaması
       let monDesc = '';
       if (mon !== '*') {
         if (mon.startsWith('*/')) monDesc = `her ${mon.replace('*/', '')} ayda bir`;
@@ -232,6 +239,7 @@ export default function CronGenerator() {
         }
       }
 
+      // 4. Saat & Dakika Zamanlama Açıklaması
       let timeDesc = '';
       const isSpecificMinute = m !== '*' && !m.startsWith('*/') && !m.includes(',') && !m.includes('-');
       const isSpecificHour = h !== '*' && !h.startsWith('*/') && !h.includes(',') && !h.includes('-');
@@ -239,19 +247,23 @@ export default function CronGenerator() {
       if (isSpecificHour && isSpecificMinute) {
         timeDesc = `saat ${h.padStart(2, '0')}:${m.padStart(2, '0')}'da`;
       } else if (isSpecificHour && m === '*') {
-        timeDesc = `saat ${h.padStart(2, '0')}:00 - ${h.padStart(2, '0')}:59 arasında her dakika`;
+        timeDesc = `saat ${h.padStart(2, '0')}:00 - ${h.padStart(2, '0')}:59 aralığında her dakika`;
       } else if (isSpecificHour && m.startsWith('*/')) {
-        timeDesc = `saat ${h.padStart(2, '0')}:00'da başlayarak her ${m.replace('*/', '')} dakikada bir`;
+        timeDesc = `saat ${h.padStart(2, '0')}:00'da başlayarak saat boyunca her ${m.replace('*/', '')} dakikada bir`;
       } else if (h === '*' && m.startsWith('*/')) {
-        timeDesc = `her saat ${m.replace('*/', '')} dakikada bir`;
+        timeDesc = `her ${m.replace('*/', '')} dakikada bir`;
       } else if (h === '*' && isSpecificMinute) {
         timeDesc = `her saatin ${m}. dakikasında`;
       } else if (h.startsWith('*/') && isSpecificMinute) {
         timeDesc = `her ${h.replace('*/', '')} saatte bir (${m}. dakikada)`;
+      } else if (h.startsWith('*/') && m.startsWith('*/')) {
+        timeDesc = `her ${h.replace('*/', '')} saatte bir ve o saatlerde her ${m.replace('*/', '')} dakikada bir`;
       } else if (h.startsWith('*/') && m === '*') {
         timeDesc = `her ${h.replace('*/', '')} saatte bir (tüm saat boyunca her dakika)`;
+      } else if (h === '*' && m === '*') {
+        timeDesc = `her dakika`;
       } else {
-        timeDesc = `[Saat: ${h}, Dakika: ${m}] zamanında`;
+        timeDesc = `[Saat: ${h}, Dakika: ${m}]`;
       }
 
       const partsList = [dowDesc, domDesc, monDesc, timeDesc].filter(Boolean);
@@ -334,6 +346,10 @@ export default function CronGenerator() {
     {
       question: '5 haneli Cron sözdizimi (Syntax) ne anlama gelir?',
       answer: 'Standart Cron ifadesi boşlukla ayrılmış 5 alandan oluşur: [1. Dakika (0-59)] [2. Saat (0-23)] [3. Ayın Günü (1-31)] [4. Ay (1-12)] [5. Haftanın Günü (0-6, 0=Pazar)]. Örneğin "* 1 * * 2" ifadesi Salı günleri saat 01:00-01:59 arası her dakika anlamına gelir.'
+    },
+    {
+      question: 'Haftanın Günü alanında "*/5" kullanmak ne anlama gelir?',
+      answer: 'Cron standartlarında 5. alan (Haftanın Günü) 0 (Pazar) ile 6 (Cumartesi) arasındadır. "*/5" yazıldığında 0\'dan başlayarak her 5. gün hesaplanır ve bu da Pazar (0) ile Cuma (5) günlerine denk gelir. Eğer her 5 günde bir çalıştırmak istiyorsanız bunu genellikle Ayın Günü (3. alan: "* * */5 * *") üzerinden tanımlamak daha yaygındır.'
     },
     {
       question: 'Cron ifadelerinde özel karakterler ne işe yarar?',
