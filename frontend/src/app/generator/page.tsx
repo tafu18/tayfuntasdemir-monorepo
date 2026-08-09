@@ -83,8 +83,8 @@ export default function DataGenerator() {
   const [activeTab, setActiveTab] = useState<MainCategory>('identity');
   const [count, setCount] = useState<number>(5);
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('raw');
-  const [selectedBank, setSelectedBank] = useState<string>('00064'); // Default İş Bankası
-  const [selectedCardBrand, setSelectedCardBrand] = useState<'visa' | 'mastercard' | 'troy' | 'amex'>('visa');
+  const [selectedBank, setSelectedBank] = useState<string>('00010'); // Default İş Bankası
+  const [selectedCardBrand, setSelectedCardBrand] = useState<'troy' | 'visa' | 'mastercard' | 'amex'>('troy');
   const [selectedGender, setSelectedGender] = useState<'any' | 'male' | 'female'>('any');
   const [phoneFormat, setPhoneFormat] = useState<'e164' | 'national' | 'spaced'>('spaced');
   const [vinBrand, setVinBrand] = useState<string>('WBA'); // Default BMW
@@ -104,7 +104,7 @@ export default function DataGenerator() {
   // 1. TCKN Generator (Gerçek Algoritmik Checksum)
   const createTCKN = (isForeign: boolean = false): string => {
     const digits = new Array(11);
-    
+
     if (isForeign) {
       digits[0] = 9;
       digits[1] = 9;
@@ -180,10 +180,10 @@ export default function DataGenerator() {
     for (let i = 0; i < 16; i++) {
       accountNum += Math.floor(Math.random() * 10).toString();
     }
-    
+
     // BBAN = BankCode(5) + Reserve(0) + Account(16)
     const bban = `${bCode}0${accountNum}`;
-    
+
     // Check digits calculation: (BBAN + '292700') % 97
     // T=29, R=27 -> '292700'
     const numericStr = `${bban}292700`;
@@ -194,7 +194,7 @@ export default function DataGenerator() {
   };
 
   // 5. Test Kredi Kartı Generator (Luhn Algoritması)
-  const createCreditCard = (brand: 'visa' | 'mastercard' | 'troy' | 'amex') => {
+  const createCreditCard = (brand: 'troy' | 'visa' | 'mastercard' | 'amex') => {
     let length = 16;
     let prefix = '4'; // Visa
 
@@ -257,11 +257,11 @@ export default function DataGenerator() {
   // 7. Kişi / İsim Üretici
   const createPerson = () => {
     const isMale = selectedGender === 'male' ? true : selectedGender === 'female' ? false : Math.random() > 0.5;
-    const firstName = isMale 
+    const firstName = isMale
       ? FIRST_NAMES_MALE[Math.floor(Math.random() * FIRST_NAMES_MALE.length)]
       : FIRST_NAMES_FEMALE[Math.floor(Math.random() * FIRST_NAMES_FEMALE.length)];
     const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
-    
+
     // Turkish char clean for email
     const cleanStr = (s: string) => s.toLowerCase()
       .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
@@ -480,9 +480,9 @@ export default function DataGenerator() {
       if (actualCheck === expectedCheck) {
         const bankCode = cleanIban.substring(4, 9);
         const bankObj = BANKS.find(b => b.code === bankCode);
-        setValidationResult({ 
-          isValid: true, 
-          message: `Geçerli TR IBAN ✅ (Banka: ${bankObj ? bankObj.name : 'Bilinmeyen / Kod: ' + bankCode})` 
+        setValidationResult({
+          isValid: true,
+          message: `Geçerli TR IBAN ✅ (Banka: ${bankObj ? bankObj.name : 'Bilinmeyen / Kod: ' + bankCode})`
         });
       } else {
         setValidationResult({ isValid: false, message: 'Geçersiz IBAN (Kontrol basamağı hatalı) ❌' });
@@ -556,7 +556,7 @@ export default function DataGenerator() {
   return (
     <PageTransition>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold text-xs border border-emerald-500/20">
@@ -596,11 +596,10 @@ export default function DataGenerator() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id as MainCategory)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-white dark:bg-zinc-800 text-brand-blue dark:text-white shadow-md'
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${isActive
+                  ? 'bg-white dark:bg-zinc-800 text-brand-blue dark:text-white shadow-md'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
@@ -611,13 +610,13 @@ export default function DataGenerator() {
 
         {/* Main Tool Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* Controls Column */}
           <div className="lg:col-span-6 space-y-6">
-            
+
             {/* Generator Action Card */}
             <div className="bg-white dark:bg-zinc-900 p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-6">
-              
+
               {/* Tab 1: Identity & Tax */}
               {activeTab === 'identity' && (
                 <div className="space-y-4">
@@ -711,16 +710,15 @@ export default function DataGenerator() {
                   <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 space-y-2">
                     <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300">Kart Tipi (Luhn Algoritmalı):</label>
                     <div className="grid grid-cols-4 gap-2">
-                      {(['visa', 'mastercard', 'troy', 'amex'] as const).map((brand) => (
+                      {(['troy', 'visa', 'mastercard', 'amex'] as const).map((brand) => (
                         <button
                           key={brand}
                           type="button"
                           onClick={() => setSelectedCardBrand(brand)}
-                          className={`p-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer border ${
-                            selectedCardBrand === brand
-                              ? 'bg-emerald-500 text-white border-emerald-500'
-                              : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                          }`}
+                          className={`p-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer border ${selectedCardBrand === brand
+                            ? 'bg-emerald-500 text-white border-emerald-500'
+                            : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
+                            }`}
                         >
                           {brand}
                         </button>
@@ -757,11 +755,10 @@ export default function DataGenerator() {
                         key={g.id}
                         type="button"
                         onClick={() => setSelectedGender(g.id as any)}
-                        className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                          selectedGender === g.id
-                            ? 'bg-purple-600 text-white border-purple-600'
-                            : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                        }`}
+                        className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${selectedGender === g.id
+                          ? 'bg-purple-600 text-white border-purple-600'
+                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
+                          }`}
                       >
                         {g.label}
                       </button>
@@ -834,7 +831,7 @@ export default function DataGenerator() {
                     <Car className="w-5 h-5 text-amber-500" />
                     Araç Plaka ve Şasi (VIN)
                   </h3>
-                  
+
                   <div className="space-y-2">
                     <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300">Marka Kodu (VIN İçin):</label>
                     <select
@@ -890,11 +887,10 @@ export default function DataGenerator() {
                         key={v.id}
                         type="button"
                         onClick={() => { setValidateType(v.id as any); setValidationResult(null); }}
-                        className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
-                          validateType === v.id
-                            ? 'bg-emerald-500 text-white border-emerald-500'
-                            : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
-                        }`}
+                        className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${validateType === v.id
+                          ? 'bg-emerald-500 text-white border-emerald-500'
+                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700'
+                          }`}
                       >
                         {v.label}
                       </button>
@@ -908,8 +904,8 @@ export default function DataGenerator() {
                       onChange={(e) => setValidateInput(e.target.value)}
                       placeholder={
                         validateType === 'tckn' ? '11 haneli TCKN girin...' :
-                        validateType === 'vkn' ? '10 haneli Vergi No girin...' :
-                        validateType === 'iban' ? 'TR... IBAN girin...' : 'Kart numarası girin...'
+                          validateType === 'vkn' ? '10 haneli Vergi No girin...' :
+                            validateType === 'iban' ? 'TR... IBAN girin...' : 'Kart numarası girin...'
                       }
                       className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-xl text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                     />
@@ -923,11 +919,10 @@ export default function DataGenerator() {
                   </div>
 
                   {validationResult && (
-                    <div className={`p-4 rounded-xl text-xs font-bold border flex items-center gap-2 ${
-                      validationResult.isValid
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
-                        : 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
-                    }`}>
+                    <div className={`p-4 rounded-xl text-xs font-bold border flex items-center gap-2 ${validationResult.isValid
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                      : 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+                      }`}>
                       {validationResult.isValid ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
                       <span>{validationResult.message}</span>
                     </div>
@@ -948,11 +943,10 @@ export default function DataGenerator() {
                             key={c}
                             type="button"
                             onClick={() => setCount(c)}
-                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                              count === c
-                                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                                : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'
-                            }`}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${count === c
+                              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+                              : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'
+                              }`}
                           >
                             {c}
                           </button>
@@ -974,11 +968,10 @@ export default function DataGenerator() {
                             key={f.id}
                             type="button"
                             onClick={() => setOutputFormat(f.id as OutputFormat)}
-                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                              outputFormat === f.id
-                                ? 'bg-brand-blue text-white'
-                                : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'
-                            }`}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${outputFormat === f.id
+                              ? 'bg-brand-blue text-white'
+                              : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'
+                              }`}
                           >
                             {f.label}
                           </button>
@@ -995,13 +988,13 @@ export default function DataGenerator() {
           {/* Output Results Column */}
           <div className="lg:col-span-6 space-y-6">
             <div className="bg-white dark:bg-zinc-900 p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-4 flex flex-col h-full">
-              
+
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-zinc-800">
                 <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
                   <FileSpreadsheet className="w-4 h-4 text-brand-blue" />
                   Üretilen Test Verileri ({activeToolName})
                 </span>
-                
+
                 <div className="flex items-center gap-1.5">
                   {outputText && (
                     <>
@@ -1018,9 +1011,8 @@ export default function DataGenerator() {
                       <button
                         type="button"
                         onClick={copyToClipboard}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                          copied ? 'bg-emerald-600 text-white' : 'bg-brand-blue text-white shadow-sm'
-                        }`}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${copied ? 'bg-emerald-600 text-white' : 'bg-brand-blue text-white shadow-sm'
+                          }`}
                       >
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copied ? 'Kopyalandı!' : 'Kopyala'}</span>
