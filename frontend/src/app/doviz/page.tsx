@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import FAQ from '@/components/FAQ';
+import OtherTools from '@/components/OtherTools';
 
 type MarketData = {
   Alış: string;
@@ -182,6 +183,10 @@ export default function Doviz() {
               <i className="fas fa-info-circle text-blue-400 mr-3"></i>
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Veriler bilgilendirme amaçlıdır. Yatırım tavsiyesi değildir.</span>
             </div>
+          </div>
+
+          <div className="mt-12">
+            <OtherTools />
           </div>
 
         </div>

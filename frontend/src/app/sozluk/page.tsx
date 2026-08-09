@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import FAQ from '@/components/FAQ';
+import OtherTools from '@/components/OtherTools';
 import { api } from '@/lib/api';
 import { Info, Book, RefreshCw, HelpCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -272,20 +273,25 @@ export default function Sozluk() {
               { question: "Terim kartları nasıl kullanılır?", answer: "Kartların üzerine tıklayarak anlamını görüntüleyebilir, CTRL tuşuna basılı tutarak tıklarsanız tahmin modunda 3 saniye süre kazanabilirsiniz." }
             ]}
           />
+
+          {/* Other Tools Cross-Navigation */}
+          <div className="mt-16">
+            <OtherTools />
+          </div>
         </div>
 
         {/* Bilgi Modalı */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-auto p-6 animate-in fade-in duration-200">
-              <div className="flex justify-between items-center pb-3 border-b border-gray-200 mb-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200">
+            <div className="relative bg-white rounded-xl shadow-lg max-w-lg w-full mx-auto p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center pb-4 border-b border-gray-200 mb-4">
                 <h5 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <Book className="w-5 h-5 text-[#154667]" />
-                  Yazılımcı Sözlüğü Hakkında
+                  <HelpCircle className="w-6 h-6 text-[#154667]" />
+                  Nasıl Kullanılır?
                 </h5>
                 <button
                   type="button"
-                  className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+                  className="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold"
                   onClick={() => setIsModalOpen(false)}
                 >
                   &times;

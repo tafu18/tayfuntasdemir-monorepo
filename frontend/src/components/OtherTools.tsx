@@ -49,6 +49,8 @@ export default function OtherTools() {
     { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
     { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' },
     { name: 'Hicri Dönüştürücü', path: '/hicri', icon: Moon, desc: 'Miladi ↔ Hicri takvim', color: '#059669' },
+    { name: 'Döviz & Altın Kurları', path: '/doviz', icon: Globe, desc: 'Canlı piyasa kurları', color: '#10b981' },
+    { name: 'Yazılımcı Sözlüğü', path: '/sozluk', icon: Search, desc: 'Teknoloji & yazılım terimleri', color: '#6366f1' },
     { name: 'İnteraktif Terminal', path: '/terminal', icon: TerminalIcon, desc: 'Komut satırı arayüzü', color: '#475569' },
   ];
 

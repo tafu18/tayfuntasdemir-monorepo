@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import FAQ from '@/components/FAQ';
+import OtherTools from '@/components/OtherTools';
 
 export default function TekTiklaPage() {
   const faqItems = [
@@ -99,12 +100,16 @@ export default function TekTiklaPage() {
       </motion.div>
 
       {/* FAQ Section */}
-      <div className="w-full max-w-3xl text-left">
+      <div className="w-full max-w-4xl text-left">
         <FAQ
           title="Tek Tıkla Hakkında SSS"
           subtitle="Tek Tıkla uygulaması ile ilgili merak edilen sorular"
           items={faqItems}
         />
+
+        <div className="mt-12">
+          <OtherTools />
+        </div>
       </div>
 
       {/* Back link */}

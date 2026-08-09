@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import FAQ from '@/components/FAQ';
+import OtherTools from '@/components/OtherTools';
 import { Info, ShieldAlert, Lock, X } from 'lucide-react';
 
 export default function PasswordGenerator() {
@@ -202,6 +203,8 @@ export default function PasswordGenerator() {
               { question: "Şifrelerimi nerede saklamalıyım?", answer: "Şifrelerinizi bir kağıda yazmak yerine 1Password, Bitwarden veya Keepass gibi güvenilir şifre yöneticilerinde saklamanız önerilir." }
             ]}
           />
+
+          <OtherTools />
         </div>
 
         {/* Bilgi Modalı */}

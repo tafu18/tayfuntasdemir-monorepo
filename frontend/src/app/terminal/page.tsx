@@ -340,6 +340,10 @@ export default function TerminalCli() {
             <button onClick={(e) => { e.stopPropagation(); setTheme('dark'); }} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded border border-gray-700">Dark</button>
             <button onClick={(e) => { e.stopPropagation(); setTheme('light'); }} className="px-2 py-1 bg-white hover:bg-gray-100 text-slate-800 rounded border border-gray-300">Light</button>
           </div>
+
+          <div className="mt-12 max-w-5xl mx-auto">
+            <OtherTools />
+          </div>
         </div>
       </div>
     </PageTransition>

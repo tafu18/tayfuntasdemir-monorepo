@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import FAQ from '@/components/FAQ';
+import OtherTools from '@/components/OtherTools';
 
 export default function VaktiHuzurPage() {
   const faqItems = [
@@ -134,12 +135,16 @@ export default function VaktiHuzurPage() {
       </motion.div>
 
       {/* FAQ Section */}
-      <div className="w-full max-w-3xl text-left">
+      <div className="w-full max-w-4xl text-left">
         <FAQ
           title="Vakt-i Huzur Hakkında SSS"
           subtitle="Mobil uygulamamız ile ilgili merak edilen sorular"
           items={faqItems}
         />
+
+        <div className="mt-12">
+          <OtherTools />
+        </div>
       </div>
 
       {/* Back link */}
