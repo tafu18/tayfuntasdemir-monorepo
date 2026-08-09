@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { api, getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
 import LazyRender from '@/components/LazyRender';
-import { Calendar, Eye, ArrowLeft, BookOpen, Clock } from 'lucide-react';
+import OtherTools from '@/components/OtherTools';
+import { Calendar, Eye, ArrowLeft, BookOpen, Clock, Wrench, Sparkles, Key, Lock, FileCode, Search, ShieldCheck } from 'lucide-react';
 
 interface PostDetailProps {
   params: Promise<{ slug: string }>;
@@ -212,6 +213,49 @@ export default function PostDetail({ params }: PostDetailProps) {
                   </div>
                 </div>
 
+                {/* Popüler Geliştirici Araçları (Internal Linking SEO Widget) */}
+                <div className="bg-gradient-to-br from-brand-blue/5 via-emerald-500/5 to-transparent p-6 rounded-2xl border border-brand-blue/15 dark:border-brand-blue/25 shadow-sm space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-brand-blue text-white">
+                      <Wrench className="w-4 h-4" />
+                    </div>
+                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white font-['Outfit']">
+                      Geliştirici Araçları
+                    </h3>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {[
+                      { name: 'JWT Secret Üretici', path: '/jwt-secret-generator', badge: 'Yeni', color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950' },
+                      { name: 'JWT Decoder & Parser', path: '/jwt', badge: 'Popüler', color: 'text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-950' },
+                      { name: 'JSON Formatter', path: '/json', badge: null, color: '' },
+                      { name: 'Base64 Atölyesi', path: '/base64', badge: null, color: '' },
+                      { name: 'Güçlü Şifre Oluşturucu', path: '/password-generator', badge: null, color: '' },
+                      { name: 'Görsel Dönüştürücü', path: '/converter', badge: null, color: '' },
+                    ].map((tool) => (
+                      <Link
+                        key={tool.path}
+                        href={tool.path}
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-brand-blue dark:hover:text-brand-blue transition-all group"
+                      >
+                        <span className="truncate">{tool.name}</span>
+                        {tool.badge && (
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${tool.color}`}>
+                            {tool.badge}
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <Link
+                    href="/applications"
+                    className="block text-center text-xs font-bold text-brand-blue hover:underline pt-1"
+                  >
+                    Tüm 15+ Aracı Gör →
+                  </Link>
+                </div>
+
                 {/* Medium Block */}
                 {post.medium_link && (
                   <div className="bg-zinc-100 dark:bg-zinc-900 p-6 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800">
@@ -271,6 +315,11 @@ export default function PostDetail({ params }: PostDetailProps) {
 
               </div>
             </aside>
+          </div>
+
+          {/* Cross-Linking: Other Developer Tools under Blog Post */}
+          <div className="mt-16">
+            <OtherTools />
           </div>
         </div>
       </div>

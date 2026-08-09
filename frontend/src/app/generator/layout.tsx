@@ -1,8 +1,26 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Rastgele Veri Üretici (Auto Generate) - Tayfun Taşdemir',
-  description: 'Test süreçleriniz için kurallara uygun rastgele Şasi Numarası (VIN), Plaka, UUID ve Güvenli Şifre gibi veriler oluşturun.',
+  title: 'Test Verisi Üretici (TCKN, VKN, IBAN, Kredi Kartı, Plaka, UUID) - Tayfun Taşdemir',
+  description: 'Yazılım ve QA testleriniz için algoritmik olarak geçerli sahte TCKN, Vergi No (VKN), TR IBAN, Test Kredi Kartı, Türk Telefon No, İsim-Soyisim, Plaka, UUID ve MAC adresi üretin. %100 İstemci taraflı (Client-Side).',
+  keywords: [
+    'TCKN Üretici',
+    'Sahte TCKN Oluşturucu',
+    'Vergi Numarası Üretici',
+    'VKN Generator',
+    'TR IBAN Üretici',
+    'Test Kredi Kartı Üretici',
+    'Test Verisi Oluşturucu',
+    'Rastgele Türk İsim Üretici',
+    'Türkiye Plaka Üretici',
+    'UUID v4 Generator',
+    'Mock Data Generator Turkey'
+  ],
+  openGraph: {
+    title: 'Test Verisi Üretici (TCKN, VKN, IBAN, Kart, Plaka, UUID)',
+    description: 'Yazılım testleriniz için algoritmik kurallara uygun gerçekçi mock test verileri oluşturun.',
+    type: 'website',
+  },
 };
 
 export default function GeneratorLayout({ children }: { children: React.ReactNode }) {
@@ -27,7 +45,7 @@ export default function GeneratorLayout({ children }: { children: React.ReactNod
           {
             "@type": "ListItem",
             "position": 3,
-            "name": "Veri Üretici",
+            "name": "Test Verisi Üretici",
             "item": "https://tayfuntasdemir.com.tr/generator"
           }
         ]

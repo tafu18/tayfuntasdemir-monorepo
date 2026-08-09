@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PageTransition from '@/components/PageTransition';
 import FAQ from '@/components/FAQ';
-import { Key, Copy, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Key, Copy, Clock, AlertTriangle, CheckCircle, XCircle, Lock, Sparkles } from 'lucide-react';
 import OtherTools from '@/components/OtherTools';
 
 const defaultToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRheWZ1biBUYcWfZGVtaXIiLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MTc4NjkxMTAyMn0.SignatureHere";
@@ -285,6 +286,15 @@ export default function JwtDecoder() {
             <p className="text-slate-500 dark:text-slate-400 text-[1.05rem] max-w-[520px] mx-auto">
               JSON Web Token (JWT) kodlarını çözün, düzenleyin ve secret key ile anında imzalı token üretin.
             </p>
+            <div className="mt-4">
+              <Link
+                href="/jwt-secret-generator"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold transition-all shadow-sm"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Yeni: Güçlü JWT Secret Key & Token Generator Aracını Kullanın →</span>
+              </Link>
+            </div>
           </header>
 
           <div className="jwt-card mb-12">
