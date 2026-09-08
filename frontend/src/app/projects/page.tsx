@@ -119,7 +119,7 @@ export default function Projects() {
       subtitle: 'Saha Yönetim Sistemi',
       description: 'Dijital sözleşme yönetimi, QR kod ile müşteri anketleri ve çeşitli otomasyon geliştirmeleri yapıldı.',
       image: 'https://dashboard.fops.com.tr/_nuxt/img/fops_beyaz_logo.886ba78.png',
-      link: '#',
+      link: 'https://fops.com.tr/en',
       bgColor: 'bg-[#57b77e]'
     },
     {
