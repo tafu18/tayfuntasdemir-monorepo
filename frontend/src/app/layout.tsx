@@ -1,27 +1,45 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Image from "next/image";
 import "./globals.css";
 import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
 import Script from "next/script";
+import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, ogImageUrl } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
+};
+
+const defaultOgImage = {
+  url: ogImageUrl("Tayfun Taşdemir | Yazılım Uzmanı & Blog"),
+  width: 1200,
+  height: 630,
+  alt: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tayfuntasdemir.com.tr'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
     template: "%s | Tayfun Taşdemir",
   },
-  description: "Tayfun Taşdemir kişisel blogu, mobil ve web projeleri, geliştirici araçları (JSON, JWT, Regex, Base64, Vakt-i Huzur, Tek Tıkla).",
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  category: "technology",
   keywords: [
     "Tayfun Taşdemir",
     "Yazılım Uzmanı",
@@ -33,9 +51,10 @@ export const metadata: Metadata = {
     "Namaz Vakitleri",
     "Developer Tools",
   ],
-  authors: [{ name: "Tayfun Taşdemir", url: "https://tayfuntasdemir.com.tr" }],
-  creator: "Tayfun Taşdemir",
-  publisher: "Tayfun Taşdemir",
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: { telephone: false, email: false, address: false },
   robots: {
     index: true,
     follow: true,
@@ -50,24 +69,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "tr_TR",
-    url: "https://tayfuntasdemir.com.tr",
-    siteName: "Tayfun Taşdemir",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
     description: "Tayfun Taşdemir kişisel blogu, yazılım ve geliştirici araçları.",
-    images: [
-      {
-        url: "/icon.png",
-        width: 512,
-        height: 512,
-        alt: "Tayfun Taşdemir Logo",
-      },
-    ],
+    images: [defaultOgImage],
   },
   twitter: {
     card: "summary_large_image",
     title: "Tayfun Taşdemir | Yazılım Uzmanı & Blog",
     description: "Tayfun Taşdemir kişisel blogu, yazılım ve geliştirici araçları.",
-    images: ["/icon.png"],
+    images: [defaultOgImage.url],
+  },
+  alternates: {
+    types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
   },
   other: {
     "google-adsense-account": "ca-pub-7957415403888500",

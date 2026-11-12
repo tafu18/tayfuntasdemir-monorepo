@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/terminal', {
   title: 'Web Terminal Simülatörü | Tayfun Taşdemir',
   description: 'Tarayıcınızda çalışan interaktif Linux/Unix web terminal simülatörü. Komutları deneyin ve simülasyonu yaşayın.',
-};
+});
 
 export default function TerminalLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next';
+import { SITE_URL, absoluteImageUrl } from '@/lib/seo';
 
-const baseUrl = 'https://tayfuntasdemir.com.tr';
+const baseUrl = SITE_URL;
+
+// Sitemap her istekte değil, saatte bir yeniden üretilir (yeni yazılar 1 saat içinde görünür).
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
@@ -38,12 +42,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/doviz', priority: 0.8, changeFrequency: 'daily' as const },
     { path: '/sozluk', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/terminal', priority: 0.7, changeFrequency: 'monthly' as const },
-    { path: '/live-dashboard', priority: 0.7, changeFrequency: 'weekly' as const },
 
     // Mini Oyunlar
+    { path: '/game/hub', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/game/hangman', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/game/minesweeper', priority: 0.7, changeFrequency: 'monthly' as const },
-    { path: '/game/rock', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/game/snake', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/game/memory', priority: 0.7, changeFrequency: 'monthly' as const },
   ];
@@ -58,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dinamik Blog Yazıları
   let postEntries: MetadataRoute.Sitemap = [];
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const apiUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
     const res = await fetch(`${apiUrl}/api/posts?limit=500`, { next: { revalidate: 3600 } });
     if (res.ok) {
       const data = await res.json();
@@ -66,7 +69,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (Array.isArray(posts)) {
         postEntries = posts.map((post: any) => ({
           url: `${baseUrl}/post/${post.slug}`,
-          lastModified: new Date(post.updated_at || post.created_at || Date.now()),
+          lastModified: new Date(post.updated_at || post.publish_at || post.created_at || Date.now()),
+          ...(post.image ? { images: [absoluteImageUrl(post.image)!] } : {}),
           changeFrequency: 'monthly' as const,
           priority: 0.8,
         }));

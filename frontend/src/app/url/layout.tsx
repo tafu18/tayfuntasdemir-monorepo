@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/url', {
   title: 'URL Encoder & Decoder - URL Dönüştürücü | Tayfun Taşdemir',
   description: 'Web adresleriniz ve parametreleriniz için URL şifreleme (percent encoding) ve URL çözme işlemlerini güvenle gerçekleştirin.',
-};
+});
 
 export default function UrlLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

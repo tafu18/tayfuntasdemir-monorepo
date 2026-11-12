@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/namaz-vakitleri', {
   title: 'Namaz Vakitleri & Ezan Saatleri - Vakt-i Huzur | Tayfun Taşdemir',
   description: 'Tüm il ve ilçelerin günlük ezan saatleri, imsakiye, sabah, öğle, ikindi, akşam ve yatsı namaz vakitlerini takip edin. Vakt-i Huzur namaz vakitleri servisi.',
-};
+});
 
 export default function NamazVakitleriLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

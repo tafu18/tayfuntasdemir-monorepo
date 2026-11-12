@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/curl-converter', {
   title: 'cURL Dönüştürücü (cURL to Fetch, Axios, Python, Go, PHP) - Tayfun Taşdemir',
   description: 'cURL komutlarını anında JavaScript Fetch, Axios, Python Requests, PHP Guzzle, Go ve C# kodlarına dönüştürün. API test ve entegrasyon aracı.',
   keywords: [
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     description: 'cURL komutlarınızı tüm popüler programlama dillerine anında dönüştürün.',
     type: 'website',
   },
-};
+});
 
 export default function CurlConverterLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

@@ -4,6 +4,18 @@ import { Repository } from 'typeorm';
 import { Post } from './entities/Post.entity';
 import { PostView } from './entities/PostView.entity';
 
+/** Türkçe karakterleri koruyarak URL-dostu slug üretir (ör. "Şifre Güvenliği" -> "sifre-guvenligi"). */
+export function slugify(text: string): string {
+  const map: Record<string, string> = { ç: 'c', ğ: 'g', ı: 'i', i: 'i', ö: 'o', ş: 's', ü: 'u', â: 'a', î: 'i', û: 'u' };
+  return text
+    .toLocaleLowerCase('tr-TR')
+    .replace(/[çğıiöşüâîû]/g, (c) => map[c] ?? c)
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+}
+
 @Injectable()
 export class PostsService {
   constructor(
@@ -35,7 +47,8 @@ export class PostsService {
   }
 
   async findOneBySlug(slug: string): Promise<{ post: Post; related: Post[]; mostRead: Post[] }> {
-    const post = await this.postRepository.findOne({ where: { slug } });
+    // Taslaklar herkese açık URL'den görüntülenemez/indekslenemez
+    const post = await this.postRepository.findOne({ where: { slug, status: 'published' } });
     if (!post) {
       throw new NotFoundException('Yazı bulunamadı.');
     }
@@ -89,9 +102,7 @@ export class PostsService {
   }
 
   async create(data: any): Promise<Post> {
-    const slug = data.title.toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)+/g, '');
+    const slug = await this.uniqueSlug(slugify(data.slug || data.title));
 
     const post = this.postRepository.create({
       ...data,
@@ -106,14 +117,26 @@ export class PostsService {
       throw new NotFoundException('Yazı bulunamadı.');
     }
 
-    if (data.title) {
-      data.slug = data.title.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)+/g, '');
+    // Slug, başlık değişse bile korunur: yayınlanmış URL'ler değişirse indekslenmiş
+    // linkler 404 olur. Slug yalnızca açıkça gönderilirse güncellenir.
+    if (data.slug && slugify(data.slug) !== post.slug) {
+      data.slug = await this.uniqueSlug(slugify(data.slug), post.id);
+    } else {
+      delete data.slug;
     }
 
     Object.assign(post, data);
     return this.postRepository.save(post) as Promise<Post>;
+  }
+
+  private async uniqueSlug(base: string, excludeId?: number): Promise<string> {
+    const root = base || 'yazi';
+    let candidate = root;
+    for (let i = 2; ; i++) {
+      const existing = await this.postRepository.findOne({ where: { slug: candidate } });
+      if (!existing || existing.id === excludeId) return candidate;
+      candidate = `${root}-${i}`;
+    }
   }
 
   async remove(id: number): Promise<void> {

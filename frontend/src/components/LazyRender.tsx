@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 
 interface LazyRenderProps {
   children: React.ReactNode;
@@ -8,50 +6,20 @@ interface LazyRenderProps {
   className?: string;
 }
 
+/**
+ * Ekran dışındaki bölümlerin render/paint maliyetini tarayıcıya erteletir
+ * (`content-visibility: auto`), ama içeriği SSR HTML'inde tutar.
+ * Önceki IntersectionObserver sürümü içeriği HTML'den tamamen çıkarıyordu;
+ * bu da arama motorlarının yazı linklerini ve metinleri görmesini engelliyordu.
+ */
 export default function LazyRender({ children, height = '200px', className = '' }: LazyRenderProps) {
-  const [isIntersected, setIsIntersected] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-      setIsIntersected(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsIntersected(true);
-          if (containerRef.current) {
-            observer.unobserve(containerRef.current);
-          }
-        }
-      },
-      {
-        rootMargin: '200px 0px',
-        threshold: 0.01,
-      }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-      observer.disconnect();
-    };
-  }, []);
-
+  const size = typeof height === 'number' ? `${height}px` : height;
   return (
     <div
-      ref={containerRef}
       className={className}
-      style={!isIntersected ? { minHeight: typeof height === 'number' ? `${height}px` : height } : undefined}
+      style={{ contentVisibility: 'auto', containIntrinsicSize: `auto ${size}` }}
     >
-      {isIntersected ? children : null}
+      {children}
     </div>
   );
 }

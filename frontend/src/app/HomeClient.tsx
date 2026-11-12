@@ -3,16 +3,17 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { api, getImageUrl } from '@/lib/api';
+import { getImageUrl } from '@/lib/api';
 import PageTransition from '@/components/PageTransition';
 import LazyRender from '@/components/LazyRender';
 import FAQ from '@/components/FAQ';
 import { motion } from 'framer-motion';
 import { Smartphone, Shield, Code, Key, Compass, ChevronRight, MessageSquare, Lightbulb, Handshake, Globe } from 'lucide-react';
 
-export default function HomeClient() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+// Ana sayfa yazı verileri sunucuda çekilir (SSR) — yazı linkleri ilk HTML'de yer alır.
+export default function HomeClient({ initialData }: { initialData: any }) {
+  const data = initialData ?? { mostReadPostsToday: [], lastThreePosts: [], mostRead: [] };
+  const loading = false;
   const [randomQuote, setRandomQuote] = useState('Yükleniyor...');
 
   const quotes = [
@@ -32,17 +33,6 @@ export default function HomeClient() {
     const quote = quotes[Math.floor(Math.random() * quotes.length)];
     setRandomQuote(quote);
 
-    // Fetch homepage data
-    api.get('/posts/home')
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.error('Anasayfa verileri yüklenirken hata oluştu:', err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   }, []);
 
   return (
@@ -275,7 +265,7 @@ export default function HomeClient() {
                         </Link>
                         <div className="flex flex-col justify-center space-y-2">
                           <span className="text-xs text-zinc-500">
-                            {new Date(post.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            {new Date(post.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Istanbul' })}
                           </span>
                           <Link href={`/post/${post.slug}`}>
                             <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-brand-dark transition-colors leading-snug">

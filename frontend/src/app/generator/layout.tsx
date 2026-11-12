@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/generator', {
   title: 'Test Verisi Üretici (TCKN, VKN, IBAN, Kredi Kartı, Plaka, UUID) - Tayfun Taşdemir',
   description: 'Yazılım ve QA testleriniz için algoritmik olarak geçerli sahte TCKN, Vergi No (VKN), TR IBAN, Test Kredi Kartı, Türk Telefon No, İsim-Soyisim, Plaka, UUID ve MAC adresi üretin. %100 İstemci taraflı (Client-Side).',
   keywords: [
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     description: 'Yazılım testleriniz için algoritmik kurallara uygun gerçekçi mock test verileri oluşturun.',
     type: 'website',
   },
-};
+});
 
 export default function GeneratorLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

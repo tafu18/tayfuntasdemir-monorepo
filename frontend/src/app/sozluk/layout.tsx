@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/sozluk', {
   title: 'Yazılım & Bilişim Terimleri Sözlüğü | Tayfun Taşdemir',
   description: 'Yazılım ve teknoloji dünyasında kullanılan terimlerin İngilizce-Türkçe anlamları, detaylı açıklamaları ve kullanım örnekleri.',
-};
+});
 
 export default function SozlukLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

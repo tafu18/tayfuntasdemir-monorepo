@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/applications', {
   title: 'Geliştirici Araçları & Mobil Uygulamalar | Tayfun Taşdemir',
   description: 'Yazılımcılar ve web geliştiriciler için hayatı kolaylaştıran araçlar: Code Diff, JWT Decoder, JSON Formatter, IP adresi bulucu ve eğlenceli tarayıcı oyunları.',
-};
+});
 
 export default function ApplicationsLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

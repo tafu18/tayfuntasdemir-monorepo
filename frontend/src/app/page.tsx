@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 import HomeClient from './HomeClient';
+import { getHomeData } from '@/lib/posts-server';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/', {
   title: 'Tayfun Taşdemir | Kişisel Blog & Portfolyo - Full-Stack Developer',
   description: 'Tayfun Taşdemir\'in kişisel blogu ve portfolyosu. PHP, Laravel, NestJS, Next.js ve modern web teknolojileri üzerine yazılar, projeler ve geliştirici araçları.',
-};
+});
 
-export default function Home() {
+export default async function Home() {
+  const homeData = await getHomeData();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -66,7 +69,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomeClient />
+      <HomeClient initialData={homeData} />
     </>
   );
 }

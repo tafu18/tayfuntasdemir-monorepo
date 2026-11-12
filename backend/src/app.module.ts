@@ -50,7 +50,8 @@ import { TestSheetsModule } from './test-sheets/test-sheets.module';
           ContactMessage,
           TestSheet,
         ],
-        synchronize: false, // Geliştirme ortamı için true. Canlı ortamda migration tercih edilir.
+        // Varsayılan false (canlı ortam). Boş bir local DB'de tabloları oluşturmak için DB_SYNCHRONIZE=true verin.
+        synchronize: configService.get<string>('DB_SYNCHRONIZE') === 'true',
       }),
     }),
     AuthModule,

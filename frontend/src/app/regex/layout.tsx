@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/regex', {
   title: 'Regex Tester - Düzenli İfade Test Aracı | Tayfun Taşdemir',
   description: 'Yazdığınız düzenli ifadeleri (Regular Expressions) örnek metinler üzerinde anında eşleşme vurgulamalarıyla test edin.',
-};
+});
 
 export default function RegexLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { withSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSeo('/cron-generator', {
   title: 'Cron Expression Generator & Açıklayıcı (Crontab Rehberi) - Tayfun Taşdemir',
   description: 'Görsel arayüzle Linux Crontab, Node.js, NestJS ve Spring Boot için Cron ifadeleri oluşturun. Cron sözdizimini Türkçe insan diline çevirin ve sonraki çalışma zamanlarını görün.',
   keywords: [
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     description: 'Linux ve Backend için interaktif Cron ifadesi üretici ve Türkçe açıklama aracı.',
     type: 'website',
   },
-};
+});
 
 export default function CronGeneratorLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {
