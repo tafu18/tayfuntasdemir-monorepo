@@ -3,6 +3,14 @@ import { SITE_URL, absoluteImageUrl } from '@/lib/seo';
 
 const baseUrl = SITE_URL;
 
+interface SitemapPost {
+  slug: string;
+  updated_at?: string;
+  publish_at?: string;
+  created_at?: string;
+  image?: string;
+}
+
 // Sitemap her istekte değil, saatte bir yeniden üretilir (yeni yazılar 1 saat içinde görünür).
 export const revalidate = 3600;
 
@@ -34,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/compiler', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/epoch', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/url', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/qr', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/generator', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/ip', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/pusula-api', priority: 0.8, changeFrequency: 'weekly' as const },
@@ -67,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const data = await res.json();
       const posts = data.data || data || [];
       if (Array.isArray(posts)) {
-        postEntries = posts.map((post: any) => ({
+        postEntries = posts.map((post: SitemapPost) => ({
           url: `${baseUrl}/post/${post.slug}`,
           lastModified: new Date(post.updated_at || post.publish_at || post.created_at || Date.now()),
           ...(post.image ? { images: [absoluteImageUrl(post.image)!] } : {}),
@@ -76,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }));
       }
     }
-  } catch (e) {
+  } catch {
     // Fallback if backend API is offline during build
   }
 

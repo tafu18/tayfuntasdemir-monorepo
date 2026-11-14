@@ -20,6 +20,7 @@ export default function Applications() {
     { name: 'JSON Formatter', desc: 'JSON verilerini güzelleştirin.', path: '/json', icon: '💻', color: 'text-purple-500 hover:shadow-purple-500/20' },
     { name: 'Base64 Atölyesi', desc: 'Base64 kodlama ve çözme.', path: '/base64', icon: '🛡️', color: 'text-amber-500 hover:shadow-amber-500/20' },
     { name: 'Hash Üretici', desc: 'Metin ve dosyaların hash değerlerini hesaplayın.', path: '/hash', icon: '🔐', color: 'text-brand-blue hover:shadow-blue-500/20' },
+    { name: 'QR Kod Oluşturucu', desc: 'Metin, URL ve Wi-Fi için QR kod oluşturun.', path: '/qr', icon: '📱', color: 'text-sky-500 hover:shadow-sky-500/20' },
     { name: 'Hicri Dönüştürücü', desc: 'Hicri ve Miladi takvim dönüşümü.', path: '/hicri', icon: '🌙', color: 'text-green-500 hover:shadow-green-500/20' },
     { name: 'İnteraktif Terminal', desc: 'Web sitesini komut satırından deneyimleyin.', path: '/terminal', icon: '📟', color: 'text-gray-500 hover:shadow-gray-500/20' },
     { name: 'Regex Tester', desc: 'Düzenli ifadeleri test edin ve renklendirin.', path: '/regex', icon: '🔍', color: 'text-brand-blue hover:shadow-blue-500/20' },
