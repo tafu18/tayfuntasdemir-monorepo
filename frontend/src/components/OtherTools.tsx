@@ -18,15 +18,17 @@ import {
   Image as ImageIcon,
   Code,
   KeyRound,
-  ShieldCheck
+  ShieldCheck,
+  LockKeyhole
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface ToolItem {
   name: string;
   path: string;
   desc: string;
   color: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
 export default function OtherTools() {
@@ -40,6 +42,7 @@ export default function OtherTools() {
     { name: 'JWT Decoder', path: '/jwt', icon: Key, desc: 'JSON Web Token çözücü', color: '#8b5cf6' },
     { name: 'JSON Formatter', path: '/json', icon: FileCode, desc: 'JSON güzelleştir & doğrula', color: '#8b5cf6' },
     { name: 'Base64 Atölyesi', path: '/base64', icon: Lock, desc: 'Encode & Decode', color: '#0ea5e9' },
+    { name: 'Hash Üretici', path: '/hash', icon: LockKeyhole, desc: 'Metin ve dosyaların hash değerlerini hesaplayın.', color: '#6366f1' },
     { name: 'Şifre Oluşturucu', path: '/password-generator', icon: KeyRound, desc: 'Güçlü şifre üretici', color: '#eab308' },
     { name: 'Görsel Dönüştürücü', path: '/converter', icon: ImageIcon, desc: 'PNG, JPEG, WebP dönüştürücü', color: '#ec4899' },
     { name: 'HTML Canlı Önizleme', path: '/compiler', icon: Code, desc: 'HTML & CSS canlı izleyici', color: '#f97316' },
