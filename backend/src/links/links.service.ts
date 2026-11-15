@@ -265,6 +265,20 @@ export class LinksService implements OnModuleInit {
         })
         .execute();
       linkedCount = updateResult.affected || 0;
+
+      // Also bind Webhook endpoints and Uptime monitors belonging to this ownerId
+      try {
+        await this.repository.manager.query(
+          `UPDATE \`webhook_endpoints\` SET \`ownerEmail\` = ? WHERE \`ownerId\` = ? AND (\`ownerEmail\` IS NULL OR \`ownerEmail\` = ?)`,
+          [normalized, ownerId, normalized],
+        );
+        await this.repository.manager.query(
+          `UPDATE \`uptime_monitors\` SET \`ownerEmail\` = ? WHERE \`ownerId\` = ? AND (\`ownerEmail\` IS NULL OR \`ownerEmail\` = ?)`,
+          [normalized, ownerId, normalized],
+        );
+      } catch {
+        // ignore if tables are not yet initialized
+      }
     }
 
     const token = await this.jwtService.signAsync(

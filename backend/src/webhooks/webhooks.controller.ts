@@ -71,13 +71,28 @@ export class WebhooksController {
       }
     }
 
-    return { isAdmin, ownerId };
+    let ownerEmail: string | undefined;
+    const sessionHeader = req.headers['x-link-session'];
+    if (typeof sessionHeader === 'string' && sessionHeader.trim()) {
+      try {
+        const payload = await this.jwtService.verifyAsync<{ type?: string; email?: string }>(
+          sessionHeader.trim(),
+        );
+        if (payload?.type === 'link_owner' && payload.email) {
+          ownerEmail = payload.email;
+        }
+      } catch {
+        // ignore invalid session token
+      }
+    }
+
+    return { isAdmin, ownerId, ownerEmail };
   }
 
   @Post('endpoints')
   async createEndpoint(@Body() dto: CreateWebhookDto, @Req() req: Request) {
     const actor = await this.resolveActor(req);
-    return this.webhooksService.createEndpoint(dto.name, actor.ownerId);
+    return this.webhooksService.createEndpoint(dto.name, actor.ownerId, actor.ownerEmail);
   }
 
   @Get('endpoints')

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import OtherTools from '@/components/OtherTools';
+import EmailSyncBanner, { getWorkspaceHeaders } from '@/components/EmailSyncBanner';
 import { api } from '@/lib/api';
 
 interface WebhookEndpoint {
@@ -39,20 +40,7 @@ interface WebhookRequestItem {
   createdAt: string;
 }
 
-const OWNER_ID_KEY = 'kisalink_owner_id';
-
-function getOwnerHeaders(): Record<string, string> {
-  if (typeof window === 'undefined') return {};
-  let id = localStorage.getItem(OWNER_ID_KEY);
-  if (!id) {
-    id =
-      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-    localStorage.setItem(OWNER_ID_KEY, id);
-  }
-  return { 'x-owner-id': id };
-}
+const getOwnerHeaders = getWorkspaceHeaders;
 
 const METHOD_COLORS: Record<string, string> = {
   GET: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/30',
@@ -229,6 +217,13 @@ export default function WebhookPage() {
               Özel bir webhook adresi oluştur; dış servislerden gelen tüm HTTP isteklerini header, query ve body detaylarıyla canlı incele.
             </p>
           </div>
+
+          {/* Email Sync */}
+          <EmailSyncBanner
+            scopeLabel="webhook endpoint'lerine"
+            onChanged={() => void fetchEndpoints()}
+            onNotify={showToast}
+          />
 
           {/* Endpoint Bar */}
           <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/70 p-4 sm:p-5 space-y-4">

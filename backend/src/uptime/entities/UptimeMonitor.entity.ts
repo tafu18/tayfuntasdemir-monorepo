@@ -15,6 +15,10 @@ export class UptimeMonitor {
   @Column({ type: 'varchar', length: 64, nullable: true })
   ownerId: string | null;
 
+  @Index('IDX_uptime_monitors_ownerEmail')
+  @Column({ type: 'varchar', length: 160, nullable: true })
+  ownerEmail: string | null;
+
   @Column({ type: 'varchar', length: 160, nullable: true })
   alertEmail: string | null;
 

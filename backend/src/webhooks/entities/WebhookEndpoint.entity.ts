@@ -15,6 +15,10 @@ export class WebhookEndpoint {
   @Column({ type: 'varchar', length: 64, nullable: true })
   ownerId: string | null;
 
+  @Index('IDX_webhook_endpoints_ownerEmail')
+  @Column({ type: 'varchar', length: 160, nullable: true })
+  ownerEmail: string | null;
+
   @Column({ type: 'int', default: 200 })
   responseStatus: number;
 

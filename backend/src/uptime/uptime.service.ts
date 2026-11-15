@@ -16,6 +16,7 @@ import { MailService } from '../mail/mail.service';
 export interface UptimeActor {
   isAdmin: boolean;
   ownerId?: string;
+  ownerEmail?: string;
 }
 
 @Injectable()
@@ -37,6 +38,7 @@ export class UptimeService implements OnModuleInit {
         \`name\` varchar(80) NOT NULL,
         \`url\` text NOT NULL,
         \`ownerId\` varchar(64) NULL,
+        \`ownerEmail\` varchar(160) NULL,
         \`alertEmail\` varchar(160) NULL,
         \`isActive\` tinyint NOT NULL DEFAULT 1,
         \`lastStatus\` varchar(16) NOT NULL DEFAULT 'pending',
@@ -65,10 +67,20 @@ export class UptimeService implements OnModuleInit {
         PRIMARY KEY (\`id\`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
+
+    const cols = (await this.monitorRepo.query(
+      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'uptime_monitors' AND COLUMN_NAME = 'ownerEmail'`,
+    )) as { cnt: string | number }[];
+    if (Number(cols?.[0]?.cnt ?? 0) === 0) {
+      await this.monitorRepo.query(
+        `ALTER TABLE \`uptime_monitors\` ADD COLUMN \`ownerEmail\` varchar(160) NULL`,
+      );
+    }
   }
 
   private assertCanManage(monitor: UptimeMonitor, actor: UptimeActor): void {
     if (actor.isAdmin) return;
+    if (actor.ownerEmail && monitor.ownerEmail === actor.ownerEmail) return;
     if (actor.ownerId && monitor.ownerId === actor.ownerId) return;
     throw new ForbiddenException('Bu monitör üzerinde işlem yetkiniz yok');
   }
@@ -78,12 +90,14 @@ export class UptimeService implements OnModuleInit {
     url: string;
     alertEmail?: string;
     ownerId?: string;
+    ownerEmail?: string;
   }) {
     const entity = this.monitorRepo.create({
       name: input.name.trim(),
       url: input.url.trim(),
       alertEmail: input.alertEmail?.trim().toLowerCase() || null,
       ownerId: input.ownerId || null,
+      ownerEmail: input.ownerEmail || null,
       isActive: true,
       lastStatus: 'pending',
     });
@@ -95,12 +109,22 @@ export class UptimeService implements OnModuleInit {
   async findAllMonitors(actor: UptimeActor) {
     const monitors = actor.isAdmin
       ? await this.monitorRepo.find({ order: { createdAt: 'DESC' } })
-      : actor.ownerId
+      : actor.ownerEmail && actor.ownerId
         ? await this.monitorRepo.find({
-            where: { ownerId: actor.ownerId },
+            where: [{ ownerEmail: actor.ownerEmail }, { ownerId: actor.ownerId }],
             order: { createdAt: 'DESC' },
           })
-        : [];
+        : actor.ownerEmail
+          ? await this.monitorRepo.find({
+              where: { ownerEmail: actor.ownerEmail },
+              order: { createdAt: 'DESC' },
+            })
+          : actor.ownerId
+            ? await this.monitorRepo.find({
+                where: { ownerId: actor.ownerId },
+                order: { createdAt: 'DESC' },
+              })
+            : [];
 
     const withHistory = await Promise.all(
       monitors.map(async (m) => {

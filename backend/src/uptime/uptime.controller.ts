@@ -94,7 +94,22 @@ export class UptimeController {
       }
     }
 
-    return { isAdmin, ownerId };
+    let ownerEmail: string | undefined;
+    const sessionHeader = req.headers['x-link-session'];
+    if (typeof sessionHeader === 'string' && sessionHeader.trim()) {
+      try {
+        const payload = await this.jwtService.verifyAsync<{ type?: string; email?: string }>(
+          sessionHeader.trim(),
+        );
+        if (payload?.type === 'link_owner' && payload.email) {
+          ownerEmail = payload.email;
+        }
+      } catch {
+        // ignore invalid session token
+      }
+    }
+
+    return { isAdmin, ownerId, ownerEmail };
   }
 
   @Post('monitors')
@@ -105,6 +120,7 @@ export class UptimeController {
       url: dto.url,
       alertEmail: dto.alertEmail,
       ownerId: actor.ownerId,
+      ownerEmail: actor.ownerEmail,
     });
   }
 

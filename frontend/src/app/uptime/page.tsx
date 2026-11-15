@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import OtherTools from '@/components/OtherTools';
+import EmailSyncBanner, { getWorkspaceHeaders } from '@/components/EmailSyncBanner';
 import { api } from '@/lib/api';
 
 interface UptimeCheckItem {
@@ -41,20 +42,7 @@ interface UptimeMonitorItem {
   recentChecks: UptimeCheckItem[];
 }
 
-const OWNER_ID_KEY = 'kisalink_owner_id';
-
-function getOwnerHeaders(): Record<string, string> {
-  if (typeof window === 'undefined') return {};
-  let id = localStorage.getItem(OWNER_ID_KEY);
-  if (!id) {
-    id =
-      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-    localStorage.setItem(OWNER_ID_KEY, id);
-  }
-  return { 'x-owner-id': id };
-}
+const getOwnerHeaders = getWorkspaceHeaders;
 
 export default function UptimePage() {
   const [monitors, setMonitors] = useState<UptimeMonitorItem[]>([]);
@@ -177,6 +165,13 @@ export default function UptimePage() {
               Web sitelerini ve API uçlarını izle, yanıt süresini ve SSL sertifikasının kalan gününü takip et, kesintide e-posta uyarısı al.
             </p>
           </div>
+
+          {/* Email Sync */}
+          <EmailSyncBanner
+            scopeLabel="monitörlerine"
+            onChanged={() => void loadMonitors()}
+            onNotify={showToast}
+          />
 
           {/* Add Monitor Form */}
           <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/70 p-5 sm:p-6 space-y-4">

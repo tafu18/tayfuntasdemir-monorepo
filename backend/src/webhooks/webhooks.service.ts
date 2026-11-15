@@ -12,6 +12,7 @@ import { WebhookRequest } from './entities/WebhookRequest.entity';
 export interface WebhookActor {
   isAdmin: boolean;
   ownerId?: string;
+  ownerEmail?: string;
 }
 
 @Injectable()
@@ -30,11 +31,13 @@ export class WebhooksService implements OnModuleInit {
         \`token\` varchar(32) NOT NULL,
         \`name\` varchar(80) NULL,
         \`ownerId\` varchar(64) NULL,
+        \`ownerEmail\` varchar(160) NULL,
         \`responseStatus\` int NOT NULL DEFAULT 200,
         \`responseBody\` text NULL,
         \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         UNIQUE INDEX \`IDX_webhook_endpoints_token\` (\`token\`),
         INDEX \`IDX_webhook_endpoints_ownerId\` (\`ownerId\`),
+        INDEX \`IDX_webhook_endpoints_ownerEmail\` (\`ownerEmail\`),
         PRIMARY KEY (\`id\`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -54,6 +57,15 @@ export class WebhooksService implements OnModuleInit {
         PRIMARY KEY (\`id\`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
+
+    const cols = (await this.endpointRepo.query(
+      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'webhook_endpoints' AND COLUMN_NAME = 'ownerEmail'`,
+    )) as { cnt: string | number }[];
+    if (Number(cols?.[0]?.cnt ?? 0) === 0) {
+      await this.endpointRepo.query(
+        `ALTER TABLE \`webhook_endpoints\` ADD COLUMN \`ownerEmail\` varchar(160) NULL`,
+      );
+    }
   }
 
   private generateToken(): string {
@@ -67,16 +79,22 @@ export class WebhooksService implements OnModuleInit {
 
   private assertCanManage(endpoint: WebhookEndpoint, actor: WebhookActor): void {
     if (actor.isAdmin) return;
+    if (actor.ownerEmail && endpoint.ownerEmail === actor.ownerEmail) return;
     if (actor.ownerId && endpoint.ownerId === actor.ownerId) return;
     throw new ForbiddenException('Bu webhook üzerinde işlem yetkiniz yok');
   }
 
-  async createEndpoint(name: string | undefined, ownerId?: string): Promise<WebhookEndpoint> {
+  async createEndpoint(
+    name: string | undefined,
+    ownerId?: string,
+    ownerEmail?: string,
+  ): Promise<WebhookEndpoint> {
     const token = this.generateToken();
     const entity = this.endpointRepo.create({
       token,
       name: name?.trim() || `Webhook #${token.slice(0, 4)}`,
       ownerId: ownerId || null,
+      ownerEmail: ownerEmail || null,
       responseStatus: 200,
       responseBody: JSON.stringify({ ok: true, captured: true }),
     });
@@ -86,6 +104,18 @@ export class WebhooksService implements OnModuleInit {
   async findAllEndpoints(actor: WebhookActor): Promise<WebhookEndpoint[]> {
     if (actor.isAdmin) {
       return this.endpointRepo.find({ order: { createdAt: 'DESC' } });
+    }
+    if (actor.ownerEmail && actor.ownerId) {
+      return this.endpointRepo.find({
+        where: [{ ownerEmail: actor.ownerEmail }, { ownerId: actor.ownerId }],
+        order: { createdAt: 'DESC' },
+      });
+    }
+    if (actor.ownerEmail) {
+      return this.endpointRepo.find({
+        where: { ownerEmail: actor.ownerEmail },
+        order: { createdAt: 'DESC' },
+      });
     }
     if (!actor.ownerId) return [];
     return this.endpointRepo.find({
