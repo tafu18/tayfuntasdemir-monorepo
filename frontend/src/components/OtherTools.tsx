@@ -50,6 +50,7 @@ export default function OtherTools() {
     { name: 'HTML Canlı Önizleme', path: '/compiler', icon: Code, desc: 'HTML & CSS canlı izleyici', color: '#f97316' },
     { name: 'Regex Tester', path: '/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },
     { name: 'URL Codec', path: '/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
+    { name: 'KısaLink', path: '/kisa-link', icon: LinkIcon, desc: 'Link kısaltıcı, QR & analitik', color: '#2563eb' },
     { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: '#f59e0b' },
     { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
     { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' },

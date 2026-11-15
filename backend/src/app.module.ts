@@ -11,6 +11,7 @@ import { City } from './prayer/entities/City.entity';
 import { PrayerTime } from './prayer/entities/PrayerTime.entity';
 import { ContactMessage } from './contact/entities/ContactMessage.entity';
 import { TestSheet } from './test-sheets/entities/TestSheet.entity';
+import { ShortLink } from './links/entities/ShortLink.entity';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { ContactModule } from './contact/contact.module';
@@ -20,6 +21,7 @@ import { GamesModule } from './games/games.module';
 import { ReportModule } from './report/report.module';
 import { MailModule } from './mail/mail.module';
 import { TestSheetsModule } from './test-sheets/test-sheets.module';
+import { LinksModule } from './links/links.module';
 
 @Module({
   imports: [
@@ -49,6 +51,7 @@ import { TestSheetsModule } from './test-sheets/test-sheets.module';
           PrayerTime,
           ContactMessage,
           TestSheet,
+          ShortLink,
         ],
         // Varsayılan false (canlı ortam). Boş bir local DB'de tabloları oluşturmak için DB_SYNCHRONIZE=true verin.
         synchronize: configService.get<string>('DB_SYNCHRONIZE') === 'true',
@@ -62,6 +65,7 @@ import { TestSheetsModule } from './test-sheets/test-sheets.module';
     GamesModule,
     ReportModule,
     TestSheetsModule,
+    LinksModule,
   ],
 })
 export class AppModule { }
