@@ -30,6 +30,8 @@ export default function Applications() {
     { name: 'cURL Dönüştürücü', desc: 'cURL komutlarını Fetch, Axios, Python kodlarına dönüştürün.', path: '/curl-converter', icon: '🌐', color: 'text-indigo-500 hover:shadow-indigo-500/20' },
     { name: 'URL Codec', desc: 'URL kodlama ve çözme aracı.', path: '/url', icon: '🔗', color: 'text-brand-blue hover:shadow-blue-500/20' },
     { name: 'KısaLink', desc: 'Link kısaltıcı, QR kod ve tıklanma analitiği.', path: '/kisa-link', icon: '⚡', color: 'text-blue-500 hover:shadow-blue-500/20' },
+    { name: 'Webhook Yakalayıcı', desc: 'Canlı HTTP webhook isteklerini yakalayın ve inceleyin.', path: '/webhook', icon: '🪝', color: 'text-indigo-500 hover:shadow-indigo-500/20' },
+    { name: 'Uptime & SSL Monitörü', desc: 'Sitelerinizi 5 dakikada bir izleyin ve SSL süresini takip edin.', path: '/uptime', icon: '📡', color: 'text-emerald-500 hover:shadow-emerald-500/20' },
     { name: 'Code Diff Slider', desc: 'Kod karşılaştırma sürgüsü.', path: '/code-diff', icon: '📊', color: 'text-amber-500 hover:shadow-amber-500/20' },
     { name: 'Canlı Aktivite Paneli', desc: 'Blog anlık okuma hareketlerini canlı izleyin.', path: '/live-dashboard', icon: '📡', color: 'text-green-500 hover:shadow-green-500/20' },
   ];

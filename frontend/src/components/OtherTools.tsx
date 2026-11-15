@@ -51,6 +51,8 @@ export default function OtherTools() {
     { name: 'Regex Tester', path: '/regex', icon: Search, desc: 'Regex desen test aracı', color: '#4f46e5' },
     { name: 'URL Codec', path: '/url', icon: LinkIcon, desc: 'URL Encode & Decode', color: '#0ea5e9' },
     { name: 'KısaLink', path: '/kisa-link', icon: LinkIcon, desc: 'Link kısaltıcı, QR & analitik', color: '#2563eb' },
+    { name: 'Webhook Yakalayıcı', path: '/webhook', icon: TerminalIcon, desc: 'Canlı HTTP istek inceleyici', color: '#6366f1' },
+    { name: 'Uptime & SSL Monitörü', path: '/uptime', icon: Globe, desc: 'Site kesinti & SSL takibi', color: '#10b981' },
     { name: 'Epoch Converter', path: '/epoch', icon: Clock, desc: 'Zaman damgası dönüştürücü', color: '#f59e0b' },
     { name: 'IP Adresim', path: '/ip', icon: Globe, desc: 'IP adresinizi görün', color: '#6366f1' },
     { name: 'Code Diff Slider', path: '/code-diff', icon: Columns, desc: 'Kod karşılaştırma sürgüsü', color: '#f59e0b' },

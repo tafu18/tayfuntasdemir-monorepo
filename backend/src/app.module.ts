@@ -12,6 +12,10 @@ import { PrayerTime } from './prayer/entities/PrayerTime.entity';
 import { ContactMessage } from './contact/entities/ContactMessage.entity';
 import { TestSheet } from './test-sheets/entities/TestSheet.entity';
 import { ShortLink } from './links/entities/ShortLink.entity';
+import { WebhookEndpoint } from './webhooks/entities/WebhookEndpoint.entity';
+import { WebhookRequest } from './webhooks/entities/WebhookRequest.entity';
+import { UptimeMonitor } from './uptime/entities/UptimeMonitor.entity';
+import { UptimeCheck } from './uptime/entities/UptimeCheck.entity';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { ContactModule } from './contact/contact.module';
@@ -22,6 +26,8 @@ import { ReportModule } from './report/report.module';
 import { MailModule } from './mail/mail.module';
 import { TestSheetsModule } from './test-sheets/test-sheets.module';
 import { LinksModule } from './links/links.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
+import { UptimeModule } from './uptime/uptime.module';
 
 @Module({
   imports: [
@@ -52,6 +58,10 @@ import { LinksModule } from './links/links.module';
           ContactMessage,
           TestSheet,
           ShortLink,
+          WebhookEndpoint,
+          WebhookRequest,
+          UptimeMonitor,
+          UptimeCheck,
         ],
         // Varsayılan false (canlı ortam). Boş bir local DB'de tabloları oluşturmak için DB_SYNCHRONIZE=true verin.
         synchronize: configService.get<string>('DB_SYNCHRONIZE') === 'true',
@@ -66,6 +76,8 @@ import { LinksModule } from './links/links.module';
     ReportModule,
     TestSheetsModule,
     LinksModule,
+    WebhooksModule,
+    UptimeModule,
   ],
 })
 export class AppModule { }
