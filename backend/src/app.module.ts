@@ -28,6 +28,8 @@ import { TestSheetsModule } from './test-sheets/test-sheets.module';
 import { LinksModule } from './links/links.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { UptimeModule } from './uptime/uptime.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -79,6 +81,8 @@ import { UptimeModule } from './uptime/uptime.module';
     WebhooksModule,
     UptimeModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }
 
