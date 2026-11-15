@@ -18,6 +18,9 @@ import {
   Search,
   Sparkles,
   X,
+  Mail,
+  ShieldCheck,
+  LogOut,
 } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import OtherTools from '@/components/OtherTools';
@@ -86,6 +89,33 @@ function extractApiError(err: unknown): string {
   return anyErr?.message || 'Bir hata oluştu';
 }
 
+const OWNER_ID_KEY = 'kisalink_owner_id';
+const EMAIL_TOKEN_KEY = 'kisalink_email_token';
+const EMAIL_ADDR_KEY = 'kisalink_email';
+
+function getOrCreateOwnerId(): string {
+  if (typeof window === 'undefined') return '';
+  let id = localStorage.getItem(OWNER_ID_KEY);
+  if (!id) {
+    id =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+    localStorage.setItem(OWNER_ID_KEY, id);
+  }
+  return id;
+}
+
+function getLinkHeaders(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  const headers: Record<string, string> = {};
+  const ownerId = getOrCreateOwnerId();
+  if (ownerId) headers['x-owner-id'] = ownerId;
+  const emailToken = localStorage.getItem(EMAIL_TOKEN_KEY);
+  if (emailToken) headers['x-link-session'] = emailToken;
+  return headers;
+}
+
 export default function KisaLinkPage() {
   const [origin, setOrigin] = useState('');
   const [url, setUrl] = useState('');
@@ -114,6 +144,14 @@ export default function KisaLinkPage() {
   } | null>(null);
   const [savingEdit, setSavingEdit] = useState(false);
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [linkedEmail, setLinkedEmail] = useState<string | null>(null);
+  const [emailInput, setEmailInput] = useState('');
+  const [codeInput, setCodeInput] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [devCodeHint, setDevCodeHint] = useState<string | null>(null);
+
   const buildShortUrl = useCallback(
     (code: string) => `${origin || ''}/r/${code}`,
     [origin],
@@ -129,7 +167,7 @@ export default function KisaLinkPage() {
   const loadLinks = useCallback(async (silent = false) => {
     if (!silent) setRefreshing(true);
     try {
-      const { data } = await api.get<LinkItem[]>('/links');
+      const { data } = await api.get<LinkItem[]>('/links', { headers: getLinkHeaders() });
       setLinks(data);
       setError('');
     } catch (e) {
@@ -141,9 +179,13 @@ export default function KisaLinkPage() {
 
   useEffect(() => {
     setOrigin(window.location.origin);
+    getOrCreateOwnerId();
+    setIsAdmin(Boolean(localStorage.getItem('token')));
+    setLinkedEmail(localStorage.getItem(EMAIL_ADDR_KEY));
+
     let active = true;
     api
-      .get<LinkItem[]>('/links')
+      .get<LinkItem[]>('/links', { headers: getLinkHeaders() })
       .then(({ data }) => {
         if (active) {
           setLinks(data);
@@ -194,12 +236,16 @@ export default function KisaLinkPage() {
     setLoading(true);
     setError('');
     try {
-      const { data } = await api.post<LinkItem>('/links', {
-        originalUrl: trimmedUrl,
-        ...(trimmedCode ? { shortCode: trimmedCode } : {}),
-        ...(trimmedTitle ? { title: trimmedTitle } : {}),
-        ...(expiresAt ? { expiresAt } : {}),
-      });
+      const { data } = await api.post<LinkItem>(
+        '/links',
+        {
+          originalUrl: trimmedUrl,
+          ...(trimmedCode ? { shortCode: trimmedCode } : {}),
+          ...(trimmedTitle ? { title: trimmedTitle } : {}),
+          ...(expiresAt ? { expiresAt } : {}),
+        },
+        { headers: getLinkHeaders() },
+      );
       setLatestLink(data);
       setUrl('');
       setTitle('');
@@ -227,9 +273,11 @@ export default function KisaLinkPage() {
 
   const handleToggleActive = async (link: LinkItem) => {
     try {
-      await api.patch(`/links/${encodeURIComponent(link.id)}`, {
-        isActive: !link.isActive,
-      });
+      await api.patch(
+        `/links/${encodeURIComponent(link.id)}`,
+        { isActive: !link.isActive },
+        { headers: getLinkHeaders() },
+      );
       await loadLinks(true);
       showToast(link.isActive ? 'Link duraklatıldı' : 'Link tekrar aktifleştirildi');
     } catch (err) {
@@ -242,11 +290,15 @@ export default function KisaLinkPage() {
     if (!editModal) return;
     setSavingEdit(true);
     try {
-      await api.patch(`/links/${encodeURIComponent(editModal.link.id)}`, {
-        originalUrl: editModal.originalUrl.trim(),
-        title: editModal.title.trim() || null,
-        ...(editModal.clearExpiry ? { expiresAt: null } : {}),
-      });
+      await api.patch(
+        `/links/${encodeURIComponent(editModal.link.id)}`,
+        {
+          originalUrl: editModal.originalUrl.trim(),
+          title: editModal.title.trim() || null,
+          ...(editModal.clearExpiry ? { expiresAt: null } : {}),
+        },
+        { headers: getLinkHeaders() },
+      );
       setEditModal(null);
       await loadLinks(true);
       showToast('Link güncellendi');
@@ -274,7 +326,7 @@ export default function KisaLinkPage() {
   const handleDelete = async (code: string) => {
     setError('');
     try {
-      await api.delete(`/links/${encodeURIComponent(code)}`);
+      await api.delete(`/links/${encodeURIComponent(code)}`, { headers: getLinkHeaders() });
       if (latestLink?.shortCode === code) {
         setLatestLink(null);
       }
@@ -283,6 +335,64 @@ export default function KisaLinkPage() {
     } catch (err) {
       setError(extractApiError(err));
     }
+  };
+
+  const handleRequestEmailCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput.trim()) return;
+    setEmailLoading(true);
+    setDevCodeHint(null);
+    try {
+      const { data } = await api.post<{ sent: boolean; devCode?: string }>(
+        '/links/email/request',
+        { email: emailInput.trim() },
+        { headers: getLinkHeaders() },
+      );
+      setCodeSent(true);
+      if (data.devCode) {
+        setDevCodeHint(data.devCode);
+      }
+      showToast('Doğrulama kodu gönderildi');
+    } catch (err) {
+      showToast(extractApiError(err));
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  const handleVerifyEmailCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput.trim() || !codeInput.trim()) return;
+    setEmailLoading(true);
+    try {
+      const { data } = await api.post<{ token: string; email: string; linkedCount: number }>(
+        '/links/email/verify',
+        { email: emailInput.trim(), code: codeInput.trim() },
+        { headers: getLinkHeaders() },
+      );
+      localStorage.setItem(EMAIL_TOKEN_KEY, data.token);
+      localStorage.setItem(EMAIL_ADDR_KEY, data.email);
+      setLinkedEmail(data.email);
+      setCodeSent(false);
+      setCodeInput('');
+      setDevCodeHint(null);
+      await loadLinks(true);
+      showToast(`E-posta bağlandı! (${data.linkedCount} link senkronize edildi)`);
+    } catch (err) {
+      showToast(extractApiError(err));
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  const handleDisconnectEmail = async () => {
+    localStorage.removeItem(EMAIL_TOKEN_KEY);
+    localStorage.removeItem(EMAIL_ADDR_KEY);
+    setLinkedEmail(null);
+    setEmailInput('');
+    setCodeSent(false);
+    await loadLinks(true);
+    showToast('E-posta oturumu kapatıldı');
   };
 
   const handleExportCsv = () => {
@@ -359,7 +469,9 @@ export default function KisaLinkPage() {
           <div className="text-center space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/25 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
               <Sparkles className="w-3.5 h-3.5" />
-              Akıllı Link Yönetimi & Analitik
+              {isAdmin
+                ? 'Admin Modu — Tüm Linkler Görüntüleniyor'
+                : 'Akıllı Link Yönetimi & Analitik'}
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 dark:text-white tracking-tight font-['Outfit']">
               KısaLink
@@ -526,6 +638,101 @@ export default function KisaLinkPage() {
               </div>
             )}
           </section>
+
+          {/* Cross-device Email Sync Banner */}
+          {!isAdmin && (
+            <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/60 p-4 sm:p-5">
+              {linkedEmail ? (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 text-sm">
+                    <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
+                    <span className="text-zinc-700 dark:text-zinc-200">
+                      Linklerin <strong className="font-semibold">{linkedEmail}</strong> adresine
+                      bağlı — tüm cihazlarından erişebilirsin.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleDisconnectEmail}
+                    className="self-start sm:self-center inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Çıkış Yap
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2.5">
+                    <Mail className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">
+                      Linklerin şu an sadece bu tarayıcıya özel.{' '}
+                      <strong className="text-zinc-900 dark:text-white">
+                        Her cihazından erişmek istersen
+                      </strong>{' '}
+                      e-posta adresini doğrula; mevcut tüm linklerin hesabına bağlansın.
+                    </p>
+                  </div>
+
+                  {!codeSent ? (
+                    <form onSubmit={handleRequestEmailCode} className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="email"
+                        required
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        placeholder="ornek@eposta.com"
+                        className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3.5 py-2 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button
+                        type="submit"
+                        disabled={emailLoading || !emailInput.trim()}
+                        className="rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:opacity-90 px-4 py-2 text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                      >
+                        {emailLoading ? 'Gönderiliyor...' : 'Doğrulama Kodu Gönder'}
+                      </button>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleVerifyEmailCode} className="space-y-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <input
+                          type="text"
+                          required
+                          maxLength={6}
+                          value={codeInput}
+                          onChange={(e) => setCodeInput(e.target.value)}
+                          placeholder="6 haneli kod"
+                          className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3.5 py-2 text-sm font-mono tracking-widest text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                          type="submit"
+                          disabled={emailLoading || codeInput.trim().length !== 6}
+                          className="rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                        >
+                          {emailLoading ? 'Onaylanıyor...' : 'Onayla & Bağla'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCodeSent(false);
+                            setCodeInput('');
+                            setDevCodeHint(null);
+                          }}
+                          className="rounded-xl border border-zinc-200 dark:border-zinc-700 px-3 py-2 text-xs text-zinc-600 dark:text-zinc-300 cursor-pointer"
+                        >
+                          Geri
+                        </button>
+                      </div>
+                      {devCodeHint && (
+                        <p className="text-[11px] text-amber-600 dark:text-amber-400 font-mono">
+                          Local SMTP kapalı — test doğrulama kodu: <strong>{devCodeHint}</strong>
+                        </p>
+                      )}
+                    </form>
+                  )}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Stats Strip */}
           <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">

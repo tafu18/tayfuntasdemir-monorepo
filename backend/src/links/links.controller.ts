@@ -7,23 +7,27 @@ import {
   Delete,
   Param,
   Res,
+  Req,
   NotFoundException,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsDateString,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
+  Length,
   Matches,
   MaxLength,
 } from 'class-validator';
-import { LinksService } from './links.service';
+import { LinksService, LinkActor } from './links.service';
 import { ShortLink } from './entities/ShortLink.entity';
 
 export class CreateLinkDto {
@@ -78,6 +82,23 @@ export class UpdateLinkDto {
   expiresAt?: string | null;
 }
 
+export class RequestEmailDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  @IsEmail({}, { message: 'Geçerli bir e-posta adresi giriniz' })
+  email: string;
+}
+
+export class VerifyEmailDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  @IsEmail({}, { message: 'Geçerli bir e-posta adresi giriniz' })
+  email: string;
+
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsString()
+  @Length(6, 6, { message: 'Doğrulama kodu 6 haneli olmalıdır' })
+  code: string;
+}
+
 export interface LinkResponseDto {
   id: string;
   shortCode: string;
@@ -107,22 +128,80 @@ function serializeLink(link: ShortLink): LinkResponseDto {
 @Controller('links')
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 export class LinksController {
-  constructor(private readonly linksService: LinksService) {}
+  constructor(
+    private readonly linksService: LinksService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  private async resolveActor(req: Request): Promise<LinkActor> {
+    const rawOwnerId = req.headers['x-owner-id'];
+    const ownerId =
+      typeof rawOwnerId === 'string' && rawOwnerId.trim().length > 0
+        ? rawOwnerId.trim().slice(0, 64)
+        : undefined;
+
+    let isAdmin = false;
+    const authHeader = req.headers.authorization;
+    if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+      try {
+        const payload = await this.jwtService.verifyAsync<{ sub?: string; type?: string }>(
+          authHeader.slice(7),
+        );
+        if (payload?.sub && payload.type !== 'link_owner') {
+          isAdmin = true;
+        }
+      } catch {
+        // invalid or expired admin token -> treat as non-admin
+      }
+    }
+
+    let ownerEmail: string | undefined;
+    const sessionHeader = req.headers['x-link-session'];
+    if (typeof sessionHeader === 'string' && sessionHeader.trim()) {
+      try {
+        const payload = await this.jwtService.verifyAsync<{ type?: string; email?: string }>(
+          sessionHeader.trim(),
+        );
+        if (payload?.type === 'link_owner' && payload.email) {
+          ownerEmail = payload.email;
+        }
+      } catch {
+        // invalid or expired link session token
+      }
+    }
+
+    return { isAdmin, ownerId, ownerEmail };
+  }
+
+  @Post('email/request')
+  async requestEmail(@Body() dto: RequestEmailDto) {
+    return this.linksService.requestEmailVerification(dto.email);
+  }
+
+  @Post('email/verify')
+  async verifyEmail(@Body() dto: VerifyEmailDto, @Req() req: Request) {
+    const actor = await this.resolveActor(req);
+    return this.linksService.verifyEmailCode(dto.email, dto.code, actor.ownerId);
+  }
 
   @Post()
-  async create(@Body() dto: CreateLinkDto): Promise<LinkResponseDto> {
+  async create(@Body() dto: CreateLinkDto, @Req() req: Request): Promise<LinkResponseDto> {
+    const actor = await this.resolveActor(req);
     const link = await this.linksService.create({
       hedefUrl: dto.originalUrl,
       customCode: dto.shortCode,
       baslik: dto.title,
       sonKullanma: dto.expiresAt ? new Date(dto.expiresAt) : null,
+      ownerId: actor.ownerId,
+      ownerEmail: actor.ownerEmail,
     });
     return serializeLink(link);
   }
 
   @Get()
-  async findAll(): Promise<LinkResponseDto[]> {
-    const links = await this.linksService.findAll();
+  async findAll(@Req() req: Request): Promise<LinkResponseDto[]> {
+    const actor = await this.resolveActor(req);
+    const links = await this.linksService.findAllForActor(actor);
     return links.map(serializeLink);
   }
 
@@ -136,24 +215,34 @@ export class LinksController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdateLinkDto): Promise<LinkResponseDto> {
-    const link = await this.linksService.update(id, {
-      hedefUrl: dto.originalUrl,
-      baslik: dto.title,
-      aktif: dto.isActive,
-      sonKullanma:
-        dto.expiresAt === undefined
-          ? undefined
-          : dto.expiresAt === null
-            ? null
-            : new Date(dto.expiresAt),
-    });
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateLinkDto,
+    @Req() req: Request,
+  ): Promise<LinkResponseDto> {
+    const actor = await this.resolveActor(req);
+    const link = await this.linksService.update(
+      id,
+      {
+        hedefUrl: dto.originalUrl,
+        baslik: dto.title,
+        aktif: dto.isActive,
+        sonKullanma:
+          dto.expiresAt === undefined
+            ? undefined
+            : dto.expiresAt === null
+              ? null
+              : new Date(dto.expiresAt),
+      },
+      actor,
+    );
     return serializeLink(link);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ deleted: boolean }> {
-    await this.linksService.remove(id);
+  async remove(@Param('id') id: string, @Req() req: Request): Promise<{ deleted: boolean }> {
+    const actor = await this.resolveActor(req);
+    await this.linksService.remove(id, actor);
     return { deleted: true };
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 'typeorm';
 
 @Entity('short_links')
 export class ShortLink {
@@ -13,6 +13,14 @@ export class ShortLink {
 
   @Column({ type: 'varchar', length: 80, nullable: true })
   baslik: string | null;
+
+  @Index('IDX_short_links_ownerId')
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  ownerId: string | null;
+
+  @Index('IDX_short_links_ownerEmail')
+  @Column({ type: 'varchar', length: 160, nullable: true })
+  ownerEmail: string | null;
 
   @Column({ type: 'boolean', default: true })
   aktif: boolean;

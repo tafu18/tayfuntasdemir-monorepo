@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { LinksService } from './links.service';
 import { ShortLink } from './entities/ShortLink.entity';
+import { MailService } from '../mail/mail.service';
 
 describe('LinksService', () => {
   let service: LinksService;
@@ -24,6 +26,8 @@ describe('LinksService', () => {
         tiklanma: 0,
         aktif: true,
         baslik: null,
+        ownerId: null,
+        ownerEmail: null,
         sonTiklanma: null,
         sonKullanma: null,
         olusturulma: new Date('2026-01-01T00:00:00Z'),
@@ -39,6 +43,14 @@ describe('LinksService', () => {
           provide: getRepositoryToken(ShortLink),
           useValue: repository,
         },
+        {
+          provide: MailService,
+          useValue: { sendMail: jest.fn().mockResolvedValue(true) },
+        },
+        {
+          provide: JwtService,
+          useValue: { signAsync: jest.fn().mockResolvedValue('jwt-token') },
+        },
       ],
     }).compile();
 
@@ -48,10 +60,14 @@ describe('LinksService', () => {
   it('creates a short link with a random 6-char code', async () => {
     repository.findOne.mockResolvedValue(null);
 
-    const created = await service.create({ hedefUrl: 'https://example.com' });
+    const created = await service.create({
+      hedefUrl: 'https://example.com',
+      ownerId: 'owner-1',
+    });
 
     expect(created.hedefUrl).toBe('https://example.com');
     expect(created.kod).toHaveLength(6);
+    expect(created.ownerId).toBe('owner-1');
   });
 
   it('throws ConflictException when custom code already exists', async () => {
@@ -60,6 +76,35 @@ describe('LinksService', () => {
     await expect(
       service.create({ hedefUrl: 'https://example.com', customCode: 'taken' }),
     ).rejects.toThrow(ConflictException);
+  });
+
+  it('returns all links for admin and only owned links for regular visitors', async () => {
+    repository.find.mockResolvedValue([{ id: '1' }]);
+
+    await service.findAllForActor({ isAdmin: true });
+    expect(repository.find).toHaveBeenLastCalledWith({ order: { olusturulma: 'DESC' } });
+
+    await service.findAllForActor({ isAdmin: false, ownerId: 'owner-1' });
+    expect(repository.find).toHaveBeenLastCalledWith({
+      where: { ownerId: 'owner-1' },
+      order: { olusturulma: 'DESC' },
+    });
+
+    expect(await service.findAllForActor({ isAdmin: false })).toEqual([]);
+  });
+
+  it('enforces ownership on remove unless admin', async () => {
+    repository.findOne.mockResolvedValueOnce({ id: 'uuid-1', ownerId: 'owner-1', ownerEmail: null });
+    await expect(
+      service.remove('uuid-1', { isAdmin: false, ownerId: 'other-owner' }),
+    ).rejects.toThrow(ForbiddenException);
+
+    repository.findOne.mockResolvedValueOnce({ id: 'uuid-1', ownerId: 'owner-1', ownerEmail: null });
+    await expect(service.remove('uuid-1', { isAdmin: true })).resolves.toBeUndefined();
+    expect(repository.delete).toHaveBeenCalledWith({ id: 'uuid-1' });
+
+    repository.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(null);
+    await expect(service.remove('missing', { isAdmin: true })).rejects.toThrow(NotFoundException);
   });
 
   it('handles active, inactive, expired, and missing links on resolveClick', async () => {
@@ -91,13 +136,5 @@ describe('LinksService', () => {
     if (result.status === 'ok') {
       expect(result.link.tiklanma).toBe(3);
     }
-  });
-
-  it('removes a link and throws NotFoundException when missing', async () => {
-    repository.delete.mockResolvedValueOnce({ affected: 1 });
-    await expect(service.remove('uuid-1')).resolves.toBeUndefined();
-
-    repository.delete.mockResolvedValueOnce({ affected: 0 }).mockResolvedValueOnce({ affected: 0 });
-    await expect(service.remove('unknown')).rejects.toThrow(NotFoundException);
   });
 });
